@@ -3,10 +3,3 @@
  * @file
  * Update hooks for events_config.
  */
-
-/**
- * BLip this is oemthing thjing that makes no sense AND has a giant comment, which should fail testing if all goes well.
- */
-function whateven_is_theCase($here) {
-  return false;
-}
