@@ -1,0 +1,3 @@
+html/sites/default/settings*.php
+html/sites/*/files
+html/sites/*/private
