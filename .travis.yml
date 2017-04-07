@@ -7,6 +7,7 @@ env:
   global:
      - DRUPAL_REPO='git://drupalcode.org/project/drupal.git'
      - DRUPAL_VERSION='7.x'
+     - DRUSH_VERSION='7.*'
      - PHPCS_VERSION='2.0.*@dev'
      - CODER_VERSION='dev-7.x-2.x'
 
@@ -20,8 +21,7 @@ before_script:
   - composer self-update
 
   # Drush.
-  - composer global require "youngj/httpserver:dev-master#41dd2b7"
-  - composer global require drush/drush:dev-master
+  - composer global require drush/drush:$DRUSH_VERSION
 
   # Codesniffer.
   - composer global require squizlabs/php_codesniffer:$PHPCS_VERSION
