@@ -1,0 +1,37 @@
+language: php
+
+php:
+  - 5.6
+
+env:
+  global:
+     - DRUPAL_REPO='git://drupalcode.org/project/drupal.git'
+     - DRUPAL_VERSION='7.x'
+     - PHPCS_VERSION='2.0.*@dev'
+     - CODER_VERSION='dev-7.x-2.x'
+
+before_script:
+  # Ensure we have the latest sources.
+  - sudo apt-get -y update
+
+  Composer.
+  - sed -i '1i export PATH="$HOME/.composer/vendor/bin:$PATH"' $HOME/.bashrc
+  - source $HOME/.bashrc
+  - composer self-update
+
+  # Drush.
+  - composer global require "youngj/httpserver:dev-master#41dd2b7"
+  - composer global require drush/drush:dev-master
+
+  # Codesniffer.
+  - composer global require squizlabs/php_codesniffer:$PHPCS_VERSION
+
+  # Coder.
+  - composer global require drupal/coder:$CODER_VERSION
+  - ln -s ~/.composer/vendor/drupal/coder/coder_sniffer/Drupal ~/.composer/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/
+
+  # Ensure the PHP environment is ready.
+  - phpenv rehash
+
+script:
+  - phpcs --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom/$MODULE_NAME
