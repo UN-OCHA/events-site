@@ -1,0 +1,8 @@
+name = Events Configuration
+description = Contains configuration and update hooks for the Events site.
+core = 7.x
+version = 7.x-1.0
+package = Events
+
+dependencies[] = ctools
+dependencies[] = environment_indicator
