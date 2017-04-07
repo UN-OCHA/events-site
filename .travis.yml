@@ -8,7 +8,7 @@ env:
      - DRUPAL_REPO='git://drupalcode.org/project/drupal.git'
      - DRUPAL_VERSION='7.x'
      - DRUSH_VERSION='7.*'
-     - PHPCS_VERSION='2.0.*@dev'
+     - PHPCS_VERSION='1.5.*@dev'
      - CODER_VERSION='dev-7.x-2.x'
 
 before_script:
@@ -34,4 +34,5 @@ before_script:
   - phpenv rehash
 
 script:
-  - phpcs --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom/$MODULE_NAME
+  - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && phpcs --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
+  - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && phpcs --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
