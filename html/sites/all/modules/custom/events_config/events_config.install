@@ -3,3 +3,11 @@
  * @file
  * Update hooks for events_config.
  */
+
+/**
+ * Disable piwik.
+ */
+function events_config_update_7001() {
+  module_enable(array('features', 'strongarm'));
+  module_enable(array('events_event'));
+}
