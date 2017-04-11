@@ -5,9 +5,16 @@
  */
 
 /**
- * Disable piwik.
+ * Enable events.
  */
 function events_config_update_7001() {
   module_enable(array('features', 'strongarm'));
   module_enable(array('events_event'));
+}
+
+/**
+ * Enable hybridauth.
+ */
+function events_config_update_7002() {
+  module_enable(array('hybridauth'));
 }
