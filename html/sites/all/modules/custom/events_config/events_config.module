@@ -1,11 +1,79 @@
 <?php
 /**
  * @file
- * Code for the sdfsdf feature.
+ * Drupal hooks for events_config.
  */
 
 include_once 'events_config.features.inc';
+
 /**
- * @file
- * Drupal hooks for events_config.
+ * Fetch user data from HID.
  */
+function events_config_get_user_data($account = NULL) {
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  if (!isset($account->data['hybridauth']['id'])) {
+    return array(
+      'organizations' => array(),
+    );
+  }
+
+  $secret = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA';
+
+  $endpoint = 'https://api.humanitarian.id/api/v2/';
+  $endpoint .= 'user/' . $account->data['hybridauth']['id'];
+
+  $headers = array(
+    'Accept' => 'application/json',
+    'Authorization' => 'Bearer ' . $secret,
+    'Content-Type' => 'application/json',
+  );
+
+  $response = drupal_http_request($endpoint, array(
+    'headers' => $headers,
+    'method' => 'GET',
+  ));
+
+  $organisations = array();
+  if ($response->data) {
+    $data = json_decode($response->data);
+    foreach ($data->organizations as $organization) {
+      // Make sure term exists.
+      $terms = taxonomy_get_term_by_name($organization->name, 'ev_organization');
+      if (!$terms) {
+        $vocabularies = taxonomy_vocabulary_get_names();
+        $term = (object) array(
+          'vid' => $vocabularies['ev_organization']->vid,
+          'name' => $organization->name,
+          'vocabulary_machine_name' => 'ev_organization',
+        );
+        taxonomy_term_save($term);
+      }
+      else {
+        $term = array_shift($terms);
+      }
+
+      $organisations[$term->tid] = $term->name;
+    }
+  }
+
+  return array(
+    'organisations' => $organisations,
+  );
+}
+
+/**
+ * Fetch user organizations from HID.
+ */
+function events_config_get_user_organizations($account = NULL) {
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  $data = events_config_get_user_data($account);
+  return $data['organisations'];
+}

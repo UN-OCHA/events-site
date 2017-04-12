@@ -83,6 +83,22 @@ function events_event_views_default_views() {
     'ev_event' => 'ev_event',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Content: Organization (field_event_organization) */
+  $handler->display->display_options['filters']['field_event_organization_tid']['id'] = 'field_event_organization_tid';
+  $handler->display->display_options['filters']['field_event_organization_tid']['table'] = 'field_data_field_event_organization';
+  $handler->display->display_options['filters']['field_event_organization_tid']['field'] = 'field_event_organization_tid';
+  $handler->display->display_options['filters']['field_event_organization_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_event_organization_tid']['expose']['operator_id'] = 'field_event_organization_tid_op';
+  $handler->display->display_options['filters']['field_event_organization_tid']['expose']['label'] = 'Organization';
+  $handler->display->display_options['filters']['field_event_organization_tid']['expose']['operator'] = 'field_event_organization_tid_op';
+  $handler->display->display_options['filters']['field_event_organization_tid']['expose']['identifier'] = 'field_event_organization_tid';
+  $handler->display->display_options['filters']['field_event_organization_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['filters']['field_event_organization_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_event_organization_tid']['vocabulary'] = 'ev_organization';
 
   /* Display: Master */
   $handler = $view->new_display('page', 'Master', 'master');
@@ -104,15 +120,6 @@ function events_event_views_default_views() {
   $handler->display->display_options['row_options']['colors']['legend'] = 'type';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'not found';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
   /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
@@ -124,23 +131,6 @@ function events_event_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
     'field_data_field_event_date.field_event_date_value' => 'field_data_field_event_date.field_event_date_value',
   );
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['field_country_target_id']['id'] = 'field_country_target_id';
-  $handler->display->display_options['arguments']['field_country_target_id']['table'] = 'field_data_field_country';
-  $handler->display->display_options['arguments']['field_country_target_id']['field'] = 'field_country_target_id';
-  $handler->display->display_options['arguments']['field_country_target_id']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['field_country_target_id']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['field_country_target_id']['default_argument_options']['code'] = '$context = og_context();
-if (isset($context[\'gid\'])) {
-  $group = node_load($context[\'gid\']);
-  if ($group->type == \'hr_operation\' && !empty($group->field_country)) {
-    return $group->field_country[LANGUAGE_NONE][0][\'target_id\'];
-  }
-}
-return 0;';
-  $handler->display->display_options['arguments']['field_country_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_country_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_country_target_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['path'] = 'events';
   $handler->display->display_options['menu']['title'] = 'Month';
   $handler->display->display_options['menu']['weight'] = '0';
@@ -170,15 +160,6 @@ return 0;';
   $handler->display->display_options['row_options']['colors']['legend'] = 'type';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'not found';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
   /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['table'] = 'node';
@@ -386,7 +367,7 @@ return 0;';
   $handler->display->display_options['filters']['date_filter']['date_fields'] = array(
     'field_data_field_event_date.field_event_date_value' => 'field_data_field_event_date.field_event_date_value',
   );
-  $handler->display->display_options['path'] = 'node/%/events/ical/%/calendar.ics';
+  $handler->display->display_options['path'] = 'events/ical/calendar.ics';
   $handler->display->display_options['displays'] = array(
     'master' => 'master',
     'month' => 'month',
@@ -440,6 +421,7 @@ return 0;';
     t('Sort by'),
     t('Asc'),
     t('Desc'),
+    t('Organization'),
     t('All'),
     t('Month'),
     t('Week'),
