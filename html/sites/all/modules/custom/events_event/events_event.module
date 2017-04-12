@@ -5,3 +5,23 @@
  */
 
 include_once 'events_event.features.inc';
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function events_event_form_ev_event_node_form_alter(&$form, &$form_state, $form_id) {
+  // Get organisations from the current user.
+  $organisations = events_config_get_user_organizations();
+  if ($organisations) {
+    // Make sure already stored organisation is part of the options.
+    if (isset($form['field_event_organization']['und']['#default_value']) && !empty($form['field_event_organization']['und']['#default_value'])) {
+      if (!array_key_exists($form['field_event_organization']['und']['#default_value'][0], $organisations)) {
+        $organisations[$form['field_event_organization']['und']['#default_value'][0]] = $form['field_event_organization']['und']['#default_value'][0];
+      }
+    }
+
+    // Keep organisations defined in both.
+    $intersect = array_intersect_key($form['field_event_organization']['und']['#options'], $organisations);
+    $form['field_event_organization']['und']['#options'] = $intersect;
+  }
+}
