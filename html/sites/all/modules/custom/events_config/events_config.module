@@ -7,6 +7,24 @@
 include_once 'events_config.features.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function events_config_menu() {
+  $items['login'] = array(
+    'title' => 'Log in',
+    'page callback' => 'events_config_login_redirect',
+    'access callback' => 'user_is_anonymous',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function events_config_login_redirect() {
+  drupal_goto('hybridauth/window/HumanitarianId?destination=events&destination_error=events');
+}
+
+/**
  * Implements hook_hybridauth_user_login().
  */
 function events_config_hybridauth_user_login($account, $data) {
