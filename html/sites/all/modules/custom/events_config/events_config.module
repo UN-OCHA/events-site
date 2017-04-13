@@ -12,6 +12,76 @@ include_once 'events_config.features.inc';
 function events_config_hybridauth_user_login($account, $data) {
   watchdog('hid account', print_r($account, TRUE));
   watchdog('hid data', print_r($data, TRUE));
+
+  $needs_update = FALSE;
+  $user_data = array();
+
+  if (isset($data->locale)) {
+    if (in_array($data->locale, array('en', 'fr'))) {
+      if ($account->locale != $data->locale) {
+        $account->locale = $data->locale;
+        $needs_update = TRUE;
+      }
+    }
+  }
+
+  if (isset($data->zoneinfo)) {
+    if ($account->timezone != $data->zoneinfo) {
+      $account->timezone = $data->zoneinfo;
+      $needs_update = TRUE;
+    }
+  }
+
+  if (isset($data->organizations) && is_array($data->organizations)) {
+    $existing_term_ids = array();
+    if (isset($account->data['organisations'])) {
+      $existing_term_ids = $account->data['organisations'];
+    }
+    else {
+      $account->data['organisations'] = array();
+    }
+
+    $new_term_ids = array();
+    foreach ($data->organizations as $organization) {
+      $term = events_config_get_organisation_term($organization->name);
+      if ($term) {
+        $new_term_ids[] = $term->tid;
+      }
+    }
+
+    if ($existing_term_ids != $new_term_ids) {
+      $user_data['organisations'] = $new_term_ids;
+      $needs_update = TRUE;
+    }
+  }
+
+  if ($needs_update) {
+    user_save($account, $user_data);
+  }
+}
+
+/**
+ * Fetch organisation term.
+ */
+function events_config_get_organisation_term($name) {
+  $term = FALSE;
+
+  // Make sure term exists.
+  $terms = taxonomy_get_term_by_name($name, 'ev_organization');
+  if (!$terms) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    $term = (object) array(
+      'vid' => $vocabularies['ev_organization']->vid,
+      'name' => $name,
+      'vocabulary_machine_name' => 'ev_organization',
+    );
+    taxonomy_term_save($term);
+  }
+  else {
+    $term = array_shift($terms);
+  }
+
+  return $term;
 }
 
 /**
@@ -49,21 +119,7 @@ function events_config_get_user_data($account = NULL) {
   if ($response->data) {
     $data = json_decode($response->data);
     foreach ($data->organizations as $organization) {
-      // Make sure term exists.
-      $terms = taxonomy_get_term_by_name($organization->name, 'ev_organization');
-      if (!$terms) {
-        $vocabularies = taxonomy_vocabulary_get_names();
-        $term = (object) array(
-          'vid' => $vocabularies['ev_organization']->vid,
-          'name' => $organization->name,
-          'vocabulary_machine_name' => 'ev_organization',
-        );
-        taxonomy_term_save($term);
-      }
-      else {
-        $term = array_shift($terms);
-      }
-
+      $term = events_config_get_organisation_term($organization->name);
       $organisations[$term->tid] = $term->name;
     }
   }
