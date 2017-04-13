@@ -59,7 +59,6 @@ function events_config_get_user_data($account = NULL) {
           'vocabulary_machine_name' => 'ev_organization',
         );
         taxonomy_term_save($term);
-        // Race condition, since it will not be part of the already loaded options.
       }
       else {
         $term = array_shift($terms);
