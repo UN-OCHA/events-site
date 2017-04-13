@@ -16,23 +16,23 @@ function events_config_hybridauth_user_login($account, $data) {
   $needs_update = FALSE;
   $user_data = array();
 
-  if (isset($data->locale)) {
-    if (in_array($data->locale, array('en', 'fr'))) {
-      if ($account->locale != $data->locale) {
-        $account->locale = $data->locale;
+  if (isset($data['locale'])) {
+    if (in_array($data['locale'], array('en', 'fr'))) {
+      if ($account->locale != $data['locale']) {
+        $account->locale = $data['locale'];
         $needs_update = TRUE;
       }
     }
   }
 
-  if (isset($data->zoneinfo)) {
-    if ($account->timezone != $data->zoneinfo) {
-      $account->timezone = $data->zoneinfo;
+  if (isset($data['zoneinfo'])) {
+    if ($account->timezone != $data['zoneinfo']) {
+      $account->timezone = $data['zoneinfo'];
       $needs_update = TRUE;
     }
   }
 
-  if (isset($data->organizations) && is_array($data->organizations)) {
+  if (isset($data['organizations']) && is_array($data['organizations'])) {
     $existing_term_ids = array();
     if (isset($account->data['organisations'])) {
       $existing_term_ids = $account->data['organisations'];
@@ -42,7 +42,7 @@ function events_config_hybridauth_user_login($account, $data) {
     }
 
     $new_term_ids = array();
-    foreach ($data->organizations as $organization) {
+    foreach ($data['organizations'] as $organization) {
       $term = events_config_get_organisation_term($organization->name);
       if ($term) {
         $new_term_ids[] = $term->tid;
@@ -51,6 +51,7 @@ function events_config_hybridauth_user_login($account, $data) {
 
     if ($existing_term_ids != $new_term_ids) {
       $user_data['organisations'] = $new_term_ids;
+      $account->data['organisations'] = $user_data['organisations'];
       $needs_update = TRUE;
     }
   }
