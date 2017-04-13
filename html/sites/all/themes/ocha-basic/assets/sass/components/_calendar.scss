@@ -1,0 +1,53 @@
+.view-calendar {
+	margin-top: $base-unit*2;
+
+	.date-nav-wrapper {
+
+		.pager {
+			position: absolute;
+			top: $base-unit/2;
+			right: 0;
+		}
+
+		.date-prev, .date-next {
+			border-radius: 0;	
+			background: none;
+			margin: 0 0 0 $base-unit*2;
+			position: relative;
+			right: auto;
+			text-align: center;
+
+			a {
+				background-position: left center;
+				background-repeat: no-repeat;
+				background-size: $base-unit*2;
+				text-transform: uppercase;
+				margin: 0;
+				display: inline-block;
+				line-height: 1;
+				@include font-size($base-font-size);
+
+				&:hover, &:focus {
+					color: $primary-color;
+				}
+			}
+		}
+
+		.date-prev {
+			a {
+				background-image: url('../images/arrow-left.svg');
+				padding-left: $base-unit*2;
+			}
+		}
+
+		.date-next {
+			a {
+				background-image: url('../images/arrow-right.svg');
+				background-position: right center;
+				padding-right: $base-unit*2;
+			}
+		}
+
+
+	}
+}
