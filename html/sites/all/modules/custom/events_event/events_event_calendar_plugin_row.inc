@@ -4,6 +4,8 @@
  * Contains the Calendar row style plugin.
  */
 
+// @codingStandardsIgnoreFile
+
 /**
  * Plugin which creates a view on the resulting object
  * and formats it as a Calendar node.
