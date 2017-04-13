@@ -1,0 +1,46 @@
+.site-header {
+	padding-bottom: $base-unit*2;
+}
+
+.site-header__logo {
+	display: block;
+	width: 154px;
+	height: 38px;
+}
+
+.site-header-top {
+	background: $primary-color;
+	height: $base-unit*5;
+	margin-bottom: $base-unit*2;
+}
+
+.site-header-top__nav {
+	list-style: none;
+	margin: 0;
+	text-align: right;
+	
+	li {
+		display: inline-block
+	}
+
+	a {
+		color: $light-text-color;
+		text-decoration: none;
+		padding: $base-unit;	
+    margin-left: $base-unit;
+    height: 100%;
+    display: block;
+
+		&:hover, &:focus {
+			text-decoration: underline;
+		}
+	}
+}
+
+@include media-query(md) {
+
+	.site-header {
+		padding-bottom: $base-unit*5;
+	}
+
+}
