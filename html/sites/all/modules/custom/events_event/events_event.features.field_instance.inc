@@ -237,12 +237,45 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'taxonomy_term-ev_organization-field_ev_legend_color'.
+  $field_instances['taxonomy_term-ev_organization-field_ev_legend_color'] = array(
+    'bundle' => 'ev_organization',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'color_field',
+        'settings' => array(),
+        'type' => 'color_field_default_formatter',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_ev_legend_color',
+    'label' => 'Legend color',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'color_field',
+      'settings' => array(),
+      'type' => 'color_field_simple_widget',
+      'weight' => 1,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Date');
   t('Document_type');
   t('Documents');
   t('File');
+  t('Legend color');
   t('Organization');
 
   return $field_instances;

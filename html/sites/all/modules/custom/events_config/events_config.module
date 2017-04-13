@@ -78,6 +78,7 @@ function events_config_get_organisation_term($name) {
       'name' => $name,
       'vocabulary_machine_name' => 'ev_organization',
     );
+    $term->field_ev_legend_color['und'][0]['rgb'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
     taxonomy_term_save($term);
   }
   else {

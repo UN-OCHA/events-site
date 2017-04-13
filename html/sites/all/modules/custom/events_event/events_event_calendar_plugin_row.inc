@@ -27,7 +27,7 @@ class events_event_calendar_plugin_row extends calendar_plugin_row {
           $result->stripe[] = $term_for_entity->field_ev_legend_color['und'][0]['rgb'];
         }
         else {
-          $result->stripe[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // $colors[$term_for_entity->tid];
+          $result->stripe[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
         }
         $result->stripe_label[] = $term_for_entity->name;
       }
