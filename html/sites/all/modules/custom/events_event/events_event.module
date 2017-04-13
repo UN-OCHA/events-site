@@ -25,3 +25,10 @@ function events_event_form_ev_event_node_form_alter(&$form, &$form_state, $form_
     $form['field_event_organization']['und']['#options'] = $intersect;
   }
 }
+
+/**
+ * Implementation of hook_views_plugins_alter
+ */
+function events_event_views_plugins_alter(&$plugins) {
+  $plugins['row']['calendar_entity']['handler'] = 'events_event_calendar_plugin_row';
+}
