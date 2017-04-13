@@ -90,7 +90,7 @@ function events_event_field_default_field_instances() {
     'entity_type' => 'multifield',
     'field_name' => 'field_document_type',
     'label' => 'Document_type',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
