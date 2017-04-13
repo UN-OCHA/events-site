@@ -7,6 +7,14 @@
 include_once 'events_config.features.inc';
 
 /**
+ * Implements hook_hybridauth_user_login().
+ */
+function events_config_hybridauth_user_login($account, $data) {
+  watchdog('hid account', print_r($account, TRUE));
+  watchdog('hid data', print_r($data, TRUE));
+}
+
+/**
  * Fetch user data from HID.
  */
 function events_config_get_user_data($account = NULL) {
@@ -51,6 +59,7 @@ function events_config_get_user_data($account = NULL) {
           'vocabulary_machine_name' => 'ev_organization',
         );
         taxonomy_term_save($term);
+        // Race condition, since it will not be part of the already loaded options.
       }
       else {
         $term = array_shift($terms);
