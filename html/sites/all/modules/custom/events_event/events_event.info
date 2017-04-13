@@ -3,6 +3,7 @@ description = Event
 core = 7.x
 package = Events
 version = 7.x-1.0
+dependencies[] = better_exposed_filters
 dependencies[] = calendar
 dependencies[] = date
 dependencies[] = date_all_day
