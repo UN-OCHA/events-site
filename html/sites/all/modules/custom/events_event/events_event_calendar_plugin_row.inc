@@ -25,13 +25,15 @@ class events_event_calendar_plugin_row extends calendar_plugin_row {
     if ($terms_for_entity = field_get_items($this->view->base_table, $entity, $term_field_name)) {
       foreach ($terms_for_entity as $delta => $item) {
         $term_for_entity = taxonomy_term_load($item['tid']);
-        if (isset($term_for_entity->field_ev_legend_color['und'][0]['rgb'])) {
-          $result->stripe[] = $term_for_entity->field_ev_legend_color['und'][0]['rgb'];
+        if ($term_for_entity) {
+          if (isset($term_for_entity->field_ev_legend_color['und'][0]['rgb'])) {
+            $result->stripe[] = $term_for_entity->field_ev_legend_color['und'][0]['rgb'];
+          }
+          else {
+            $result->stripe[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+          }
+          $result->stripe_label[] = $term_for_entity->name;
         }
-        else {
-          $result->stripe[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
-        }
-        $result->stripe_label[] = $term_for_entity->name;
       }
     }
   }
