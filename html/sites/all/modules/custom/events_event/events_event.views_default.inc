@@ -102,6 +102,12 @@ function events_event_views_default_views() {
   );
   $handler->display->display_options['fields']['field_event_date']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_event_date']['delta_offset'] = '0';
+  /* Field: Content: Organization */
+  $handler->display->display_options['fields']['field_event_organization']['id'] = 'field_event_organization';
+  $handler->display->display_options['fields']['field_event_organization']['table'] = 'field_data_field_event_organization';
+  $handler->display->display_options['fields']['field_event_organization']['field'] = 'field_event_organization';
+  $handler->display->display_options['fields']['field_event_organization']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_event_organization']['type'] = 'taxonomy_term_reference_plain';
   /* Sort criterion: Content: Date -  start date (field_event_date) */
   $handler->display->display_options['sorts']['field_event_date_value']['id'] = 'field_event_date_value';
   $handler->display->display_options['sorts']['field_event_date_value']['table'] = 'field_data_field_event_date';
@@ -112,6 +118,7 @@ function events_event_views_default_views() {
   $handler->display->display_options['arguments']['date_argument']['field'] = 'date_argument';
   $handler->display->display_options['arguments']['date_argument']['default_action'] = 'default';
   $handler->display->display_options['arguments']['date_argument']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['date_argument']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['date_argument']['year_range'] = '-30:+1';
   $handler->display->display_options['arguments']['date_argument']['granularity_reset'] = 0;
   $handler->display->display_options['arguments']['date_argument']['date_fields'] = array(
@@ -176,7 +183,12 @@ function events_event_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
-  $handler->display->display_options['row_options']['colors']['legend'] = 'type';
+  $handler->display->display_options['row_options']['calendar_date_link'] = 'ev_event';
+  $handler->display->display_options['row_options']['colors']['legend'] = 'taxonomy';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'ev_event' => '#ffffff',
+  );
+  $handler->display->display_options['row_options']['colors']['taxonomy_field'] = 'field_event_organization';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Date: Date (node) */
@@ -225,7 +237,12 @@ function events_event_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
-  $handler->display->display_options['row_options']['colors']['legend'] = 'type';
+  $handler->display->display_options['row_options']['calendar_date_link'] = 'ev_event';
+  $handler->display->display_options['row_options']['colors']['legend'] = 'taxonomy';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'ev_event' => '#ffffff',
+  );
+  $handler->display->display_options['row_options']['colors']['taxonomy_field'] = 'field_event_organization';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['path'] = 'events/month';
   $handler->display->display_options['menu']['type'] = 'default tab';
@@ -253,6 +270,12 @@ function events_event_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
+  $handler->display->display_options['row_options']['calendar_date_link'] = 'ev_event';
+  $handler->display->display_options['row_options']['colors']['legend'] = 'taxonomy';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'ev_event' => '#ffffff',
+  );
+  $handler->display->display_options['row_options']['colors']['taxonomy_field'] = 'field_event_organization';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Date: Date (node) */
@@ -300,6 +323,12 @@ function events_event_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
+  $handler->display->display_options['row_options']['calendar_date_link'] = 'ev_event';
+  $handler->display->display_options['row_options']['colors']['legend'] = 'taxonomy';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'ev_event' => '#ffffff',
+  );
+  $handler->display->display_options['row_options']['colors']['taxonomy_field'] = 'field_event_organization';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Date: Date (node) */
@@ -346,6 +375,12 @@ function events_event_views_default_views() {
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
+  $handler->display->display_options['row_options']['calendar_date_link'] = 'ev_event';
+  $handler->display->display_options['row_options']['colors']['legend'] = 'taxonomy';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'ev_event' => '#ffffff',
+  );
+  $handler->display->display_options['row_options']['colors']['taxonomy_field'] = 'field_event_organization';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Content: Title */
@@ -374,6 +409,12 @@ function events_event_views_default_views() {
   );
   $handler->display->display_options['fields']['field_event_date']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_event_date']['delta_offset'] = '0';
+  /* Field: Content: Organization */
+  $handler->display->display_options['fields']['field_event_organization']['id'] = 'field_event_organization';
+  $handler->display->display_options['fields']['field_event_organization']['table'] = 'field_data_field_event_organization';
+  $handler->display->display_options['fields']['field_event_organization']['field'] = 'field_event_organization';
+  $handler->display->display_options['fields']['field_event_organization']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_event_organization']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Date: Date (node) */
   $handler->display->display_options['arguments']['date_argument']['id'] = 'date_argument';
@@ -489,8 +530,8 @@ function events_event_views_default_views() {
     t('Select any filter and click on Apply to see results'),
     t('Advanced options'),
     t('term from field_event_organization'),
-    t('All'),
     t('Organization'),
+    t('All'),
     t('Month'),
     t('Week'),
     t('Day'),
