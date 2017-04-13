@@ -55,3 +55,5 @@ features[views_view][] = hr_events_calendar
 features_exclude[dependencies][ctools] = ctools
 features_exclude[dependencies][multifield] = multifield
 features_exclude[dependencies][options] = options
+
+files[] = events_event_calendar_plugin_row.inc
