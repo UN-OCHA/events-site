@@ -29,6 +29,15 @@ endif; ?>
       <a href="<?php print $front_page; ?>" class="site-header__logo">
         <img src="<?php print $base_path . $directory . '/assets/images/ocha-logo.svg'; ?>" alt="UN-OCHA">
       </a>
+
+      <?php if($is_front): ?>
+        <h1 class="site-header__heading"><?php print $site_name; ?></h1>
+      <?php
+else: ?>
+        <p class="site-header__heading"><?php print $site_name; ?></p>
+      <?php
+endif;
+      ?>
     </div>
   </div>
 </header>
