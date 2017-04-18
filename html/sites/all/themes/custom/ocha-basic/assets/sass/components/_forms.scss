@@ -1,0 +1,51 @@
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"] {
+	@include font-size($base-font-size);
+	padding: $base-unit;
+	border: 1px solid #ccc;
+}
+
+form {
+	.field-multiple-table {
+		width: 100%;
+
+		td {
+			padding: $base-unit/2 0;
+		}
+	}
+}
+
+.dragdropfile-processed {
+	outline: dotted 1px #ccc;
+	padding: $base-unit/2;
+	margin-right: $base-unit/2;
+
+	&.over {
+		background: $light-bg;
+	}
+
+	&:before {
+		content: "Drag and drop files here";
+		display: block;
+		text-align: center;
+    text-transform: uppercase;
+    padding: 8px;
+    font-weight: bold;
+    border: none;
+		background: $light-bg;
+		@include font-size($base-font-size);
+	}
+}
+
+.form-submit {
+	text-transform: uppercase;
+	padding: $base-unit;
+	border: 1px solid $primary-color;
+	background: none;
+}

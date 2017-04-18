@@ -1,0 +1,58 @@
+.node-ev-event {
+
+	.field {
+		margin-bottom: $base-unit*2;
+	}
+
+	.field-name-field-event-date {
+		font-weight: bold;
+	}
+
+	table {
+		table-layout: fixed;
+		width: 100%;
+		border-top: 1px solid #ccc;
+		margin-top: $base-unit;
+	}
+
+	tr.even, tr.odd {
+		background: none;
+		padding: 0;
+	}
+
+	td {
+		width: 100%;
+		display: block;
+		word-wrap: break-word;
+		padding: $base-unit/2 0;
+
+		img {
+			float: left;
+			margin-right: $base-unit/2;
+		}
+	}
+}
+
+@include media-query(sm) {
+
+	.node-ev-event {
+
+		table {
+			width: auto;
+			border: none;
+		}
+
+		tr.even, tr.odd {
+			border-bottom: none;
+		}
+
+		td {
+			display: table-cell;
+			width: auto;
+			padding: $base-unit;
+			border: 1px solid #ccc;
+		}
+
+	}
+
+}

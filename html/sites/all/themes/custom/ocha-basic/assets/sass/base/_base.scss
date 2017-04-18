@@ -32,7 +32,6 @@ h1, h2 ,h3 ,h4 ,h5 {
 }
 
 h1 {
-  color: $heading-text-color;
   @include font-size($medium-font-size);
   text-transform: uppercase;
 }
@@ -68,10 +67,11 @@ img {
   height: auto;
 }
 
+tr.odd, tr.even {
+  background: none;
+}
+
 @include media-query(md) {
-  h1 {
-    @include font-size($large-font-size);
-  }
 
   h2 {
     @include font-size($medium-font-size);
