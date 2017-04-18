@@ -1,4 +1,10 @@
-<?php include('header.inc'); ?>
+<?php
+/**
+ * @file
+ * Theme implementation to display a single Drupal page.
+ */
+?>
+<?php include 'header.inc'; ?>
 
 <?php if($messages): ?>
   <div id="messages" class="container">
@@ -20,4 +26,4 @@
 	<?php print render($page['content']); ?>
 </div>
 
-<?php include('footer.inc'); ?>
+<?php include 'footer.inc'; ?>
