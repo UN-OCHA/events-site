@@ -7,4 +7,3 @@ stylesheets[all][] = assets/css/styles.css
 regions[page_top] = Page Top
 regions[content] = Content
 regions[page_bottom] = Page Bottom
-

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @file
+ * Theme implementation to display the basic html structure of a single
+ * Drupal page.
+ */
+?>
 <!DOCTYPE html>
 <html lang="<?php print $language->language; ?>">
 <head>

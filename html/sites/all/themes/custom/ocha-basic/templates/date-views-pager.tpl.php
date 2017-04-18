@@ -4,7 +4,7 @@
  * Template file for the example display.
  *
  * Variables available:
- * 
+ *
  * $plugin: The pager plugin object. This contains the view.
  *
  * $plugin->view
@@ -38,10 +38,7 @@
     <ul class="pager">
     <?php if (!empty($prev_url)) : ?>
       <li class="date-prev">
-        <?php
-        $text = $mini ? '' : ' ' . t('Prev', array(), array('context' => 'date_nav'));
-        print l(t($text), $prev_url, $prev_options);
-        ?>
+        <?php print l(($mini ? '' : t('Prev', array(), array('context' => 'date_nav')) . ' '), $prev_url, $prev_options); ?>
       </li>
     <?php endif; ?>
     <?php if (!empty($next_url)) : ?>
