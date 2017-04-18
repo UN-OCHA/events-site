@@ -104,6 +104,7 @@ function _hybridauth_window_close($redirect = TRUE) {
     $destination = token_replace($destination, array('user' => $user), array('clear' => TRUE));
   }
   $destination_error = !empty($_GET['destination_error']) ? $_GET['destination_error'] : variable_get('hybridauth_destination_error', '');
+  $destination = !empty($_GET['destination']) ? $_GET['destination'] : variable_get('hybridauth_destination', '');
 
   $base_options = array(
     'absolute' => TRUE,
