@@ -43,3 +43,9 @@ form {
 	}
 }
 
+.form-submit {
+	text-transform: uppercase;
+	padding: $base-unit;
+	border: 1px solid $primary-color;
+	background: none;
+}
