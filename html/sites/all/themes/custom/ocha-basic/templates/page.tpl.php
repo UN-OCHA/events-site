@@ -1,16 +1,19 @@
 <?php include('header.inc'); ?>
 
 <?php if($messages): ?>
-  <div id="messages">
-    <div class="section clearfix">
-      <?php print $messages; ?>
-    </div>
+  <div id="messages" class="container">
+    <?php print $messages; ?>
   </div>
 <?php endif; ?>
 
 <div id="main" class="container">
 
-  <h1><?php print $site_name; ?></h1>
+	 <h1><?php print $site_name; ?></h1>
+  <?php if ($title): ?>
+    <h2>
+      <?php print $title; ?>
+    </h2>
+   <?php endif; ?>
 
   <?php if ($tabs): ?><div class="tabs"><?php print render($tabs); ?></div><?php endif; ?>
 
