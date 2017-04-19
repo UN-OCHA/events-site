@@ -107,6 +107,9 @@ class views_plugin_row extends views_plugin {
   function options_submit(&$form, &$form_state) { }
 
   function query() {
+    dpm($this->base_table, 'table');
+    dpm($this->base_field, 'field');
+    return;
     if (isset($this->base_table)) {
       if (isset($this->options['relationship']) && isset($this->view->relationship[$this->options['relationship']])) {
         $relationship = $this->view->relationship[$this->options['relationship']];

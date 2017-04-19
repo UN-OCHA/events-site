@@ -16,6 +16,7 @@ function calendar_views_plugins() {
 
   // Limit these plugins to base tables that represent entities.
   $base = array_keys(date_views_base_tables());
+  $base[] = 'search_api_index_un_events';
 
   $data = array(
     'module' => 'calendar', // This just tells our themes are elsewhere.

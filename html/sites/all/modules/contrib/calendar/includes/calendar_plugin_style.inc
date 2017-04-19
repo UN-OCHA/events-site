@@ -234,13 +234,16 @@ class calendar_plugin_style extends views_plugin_style {
       debug('calendar_plugin_style: The calendar row plugin is required when using the calendar style, but it is missing.');
       return;
     }
+
     if (!$argument = $this->date_argument_handler()) {
-      debug('calendar_plugin_style: A date argument is required when using the calendar style, but it is missing or is not using the default date.');
-      return;
+//      debug('calendar_plugin_style: A date argument is required when using the calendar style, but it is missing or is not using the default date.');
+//      return;
     }
 
     // There are date arguments that have not been added by Date Views.
     // They will be missing the information we would need to render the field.
+    $argument->min_date = new DateTime('2000-01-01');
+    $argument->max_date = new DateTime('2020-01-01');
     if (empty($argument->min_date)) {
       return;
     }
@@ -294,8 +297,9 @@ class calendar_plugin_style extends views_plugin_style {
     $this->date_info->max_zone_string = date_format($date, DATE_FORMAT_DATE);
 
     // Let views render fields the way it thinks they should look before we start massaging them.
+dpm('Let views render fields the way it thinks they should look before we start massaging them.');
     $this->render_fields($this->view->result);
-
+dpm($this->view->result, 'view result');
     // Invoke the row plugin to massage each result row into calendar items.
     // Gather the row items into an array grouped by date and time.
     $items = array();
@@ -314,7 +318,7 @@ class calendar_plugin_style extends views_plugin_style {
     }
 
     ksort($items);
-
+dpm($items, 'items');
     $rows = array();
     $this->curday = clone($this->date_info->min_date);
     $this->items = $items;

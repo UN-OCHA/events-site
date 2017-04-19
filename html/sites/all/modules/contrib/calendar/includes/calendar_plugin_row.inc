@@ -289,7 +289,9 @@ class calendar_plugin_row extends views_plugin_row_fields {
     foreach ($values as $row) {
       // Use the $id as the key so we don't create more than one value per entity.
       // This alias will automatically adjust to be the id of related entity, if applicable.
-      $id = $row->{$this->field_alias};
+      dpm($row);
+      //$id = $row->{$this->field_alias};
+      $id = $row->entity;
 
       // Node revisions need special loading.
       if ($this->view->base_table == 'node_revision') {
@@ -303,18 +305,21 @@ class calendar_plugin_row extends views_plugin_row_fields {
     }
 
     $base_tables = date_views_base_tables();
-    $this->entity_type = $base_tables[$this->view->base_table];
+    $this->entity_type = 'node'; // $base_tables[$this->view->base_table];
     if (!empty($ids)) {
       $this->entities = entity_load($this->entity_type, $ids);
     }
-
+dpm($this->entities, 'entities');
     // Let the style know if a link to create a new date is required.
     $this->view->date_info->calendar_date_link = $this->options['calendar_date_link'];
 
     // Identify the date argument and fields that apply to this view.
     // Preload the Date Views field info for each field, keyed by the
     // field name, so we know how to retrieve field values from the cached node.
+    dpm($this->view->base_table, 'base_table');
     $data = date_views_fields($this->view->base_table);
+    $data = date_views_fields();
+    dpm($data, 'data');
     $data = $data['name'];
     $date_fields = array();
     foreach ($this->view->argument as $handler) {
@@ -360,11 +365,16 @@ class calendar_plugin_row extends views_plugin_row_fields {
   }
 
   function render($row) {
+    dpm($row, 'render row');
     global $base_url;
     $rows = array();
     $date_info = $this->date_argument->view->date_info;
-    $id = $row->{$this->field_alias};
-
+    $id = $row->entity;
+dpm($row, 'row');
+dpm($this->date_fields);
+$this->date_fields = array(
+  'field_event_date' => field_info_field('field_event_date')
+);
     if (!is_numeric($id)) {
       return $rows;
     }
@@ -379,6 +389,7 @@ class calendar_plugin_row extends views_plugin_row_fields {
       // like an Upcoming block on the same page as a calendar view,
       // will end up acquiring the values we set here.
       $entity = clone($this->entities[$id]);
+      dpm($entity, 'cloned entity');
 
       if (empty($entity)) {
         return $rows;
@@ -392,11 +403,11 @@ class calendar_plugin_row extends views_plugin_row_fields {
       $is_field    = $info['is_field'];
 
       $info = entity_get_info($this->entity_type);
-      $this->id_field = $info['entity keys']['id'];
-      $this->id = $entity->{$this->id_field};
-      $this->type = !empty($info['entity keys']['bundle']) ? $info['entity keys']['bundle'] : $this->entity_type;
-      $this->title = entity_label($this->entity_type, $entity);
-      $uri = entity_uri($this->entity_type, $entity);
+      $this->id_field = 'nid';
+      $this->id = $entity->nid;
+      $this->type = $this->type;
+      $this->title = entity_label($this->type, $entity);
+      $uri = entity_uri($this->type, $entity);
       $uri['options']['absolute'] = TRUE;
       $this->url = url($uri['path'], $uri['options']);
 
@@ -408,6 +419,7 @@ class calendar_plugin_row extends views_plugin_row_fields {
       $item_end_date   = NULL;
       $granularity = 'second';
       $increment = 1;
+      $is_field = TRUE;
       if ($is_field) {
 
         // Set the date_id for the node, used to identify which field value to display for
@@ -447,7 +459,8 @@ class calendar_plugin_row extends views_plugin_row_fields {
         $item_end_date   = $item_start_date;
         $entity->date_id = array('calendar.' . $id . '.' . $field_name . '.0');
       }
-
+dpm($entity, 'row 461');
+dpm($item_start_date, 'item_start_date');
       // If we don't have a date value, go no further.
       if (empty($item_start_date)) {
         continue;
