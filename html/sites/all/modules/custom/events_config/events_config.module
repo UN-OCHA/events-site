@@ -110,6 +110,31 @@ function events_config_get_organisation_term($name) {
 }
 
 /**
+ * Fetch list term.
+ */
+function events_config_get_list_term($name) {
+  $term = FALSE;
+
+  // Make sure term exists.
+  $terms = taxonomy_get_term_by_name($name, 'ev_list');
+  if (!$terms) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    $term = (object) array(
+      'vid' => $vocabularies['ev_list']->vid,
+      'name' => $name,
+      'vocabulary_machine_name' => 'ev_list',
+    );
+    $term->field_ev_legend_color['und'][0]['rgb'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+    taxonomy_term_save($term);
+  }
+  else {
+    $term = array_shift($terms);
+  }
+
+  return $term;
+}
+
+/**
  * Fetch user data from HID.
  */
 function events_config_get_user_data($account = NULL) {
@@ -188,4 +213,86 @@ function events_config_get_user_organizations($account = NULL) {
 
   $data = events_config_get_user_data($account);
   return $data['organisations'];
+}
+
+/**
+ * Fetch and sync organisations from HID.
+ */
+function events_config_fetch_and_sync_organisations() {
+  $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
+
+  $offset = 0;
+  $base_endpoint = 'https://api.humanitarian.id/api/v2/';
+
+  $headers = array(
+    'Accept' => 'application/json',
+    'Authorization' => 'Bearer ' . $secret,
+    'Content-Type' => 'application/json',
+  );
+
+  while (TRUE) {
+    $endpoint = $base_endpoint . 'list?sort=name&limit=200&type=organization&offset=' . $offset;
+    $response = drupal_http_request($endpoint, array(
+      'headers' => $headers,
+      'method' => 'GET',
+    ));
+
+    if ($response->data) {
+      $data = json_decode($response->data);
+      if (empty($data)) {
+        break;
+      }
+      foreach ($data as $organization) {
+        if ($organization->name) {
+          $term = events_config_get_organisation_term($organization->name);
+        }
+      }
+    }
+    else {
+      break;
+    }
+
+    $offset += 200;
+  }
+}
+
+/**
+ * Fetch and sync lists from HID.
+ */
+function events_config_fetch_and_sync_lists() {
+  $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
+
+  $offset = 0;
+  $base_endpoint = 'https://api.humanitarian.id/api/v2/';
+
+  $headers = array(
+    'Accept' => 'application/json',
+    'Authorization' => 'Bearer ' . $secret,
+    'Content-Type' => 'application/json',
+  );
+
+  while (TRUE) {
+    $endpoint = $base_endpoint . 'list?sort=name&limit=200&type=list&offset=' . $offset;
+    $response = drupal_http_request($endpoint, array(
+      'headers' => $headers,
+      'method' => 'GET',
+    ));
+
+    if ($response->data) {
+      $data = json_decode($response->data);
+      if (empty($data)) {
+        break;
+      }
+      foreach ($data as $list) {
+        if (isset($list->name)) {
+          $term = events_config_get_list_term($list->name);
+        }
+      }
+    }
+    else {
+      break;
+    }
+
+    $offset += 200;
+  }
 }
