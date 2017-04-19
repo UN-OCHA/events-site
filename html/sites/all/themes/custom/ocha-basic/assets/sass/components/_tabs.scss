@@ -3,6 +3,7 @@
 	background: $light-bg;
 	margin: $base-unit 0;
 	padding: 0;
+	display: flex;
 
 	li {
 		display: inline-block;
@@ -18,8 +19,9 @@
 		font-weight: bold;
 
 		&:hover, &:focus {
-			background: $primary-color;
+			background: $dark-blue;
 			color: $light-text-color;
+			opacity: 0.8;
 		}
 
 		&.active {

@@ -165,7 +165,7 @@
 						padding: $base-unit/2;
 
 						.date-display-range {
-							display: none;
+							color: $body-text-color;
 						}
 					}
 				}
@@ -251,10 +251,28 @@
 		}
 	}
 
+	.continues {
+		display: none;
+	}
+
+	.past {
+		opacity: 0.6;
+	}
+
 }
 
 .calendar-day-holder.margin-right:empty {
 	display: none;
+}
+
+span.date-display-single {
+	color: $body-text-color;
+}
+
+.date-heading {
+	h3 {
+		color: $primary-color;
+	}
 }
 
 @include media-query(sm) {
@@ -293,6 +311,10 @@
 						padding-top: 4px!important;
 						padding-bottom: 4px!important;
 					}
+				}
+
+				.views-field-field-event-date {
+					display: block;
 				}
 			}
 		}
