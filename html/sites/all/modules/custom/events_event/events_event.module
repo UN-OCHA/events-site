@@ -96,8 +96,10 @@ function events_event_fetch_events() {
         'end' => $date['value2'],
         'allDay' => $date['value'] == $date['value2'],
         'url' => url('node/' . $node->nid),
-        'className' => 'org-' . $node->field_event_organization['und'][0]['tid'],
         'backgroundColor' => events_event_get_event_color($node),
+        'field_event_organization' => isset($node->field_event_organization['und'][0]['tid']) ? $node->field_event_organization['und'][0]['tid'] : '',
+        'field_event_cluster' => isset($node->field_event_cluster['und'][0]['tid']) ? $node->field_event_cluster['und'][0]['tid'] : '',
+
       );
     }
   }
