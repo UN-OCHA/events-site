@@ -11,6 +11,71 @@ function events_event_views_default_views() {
   $export = array();
 
   $view = new view();
+  $view->name = 'ev_event_filters';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'search_api_index_un_events';
+  $view->human_name = 'Event filters';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    1 => '1',
+    2 => '2',
+  );
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Indexed Node: Node ID */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_un_events';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+
+  /* Display: Facets block */
+  $handler = $view->new_display('search_api_views_facets_block', 'Facets block', 'search_api_views_facets_block_1');
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['block_description'] = 'Organisations';
+  $handler->display->display_options['facet_field'] = 'field_event_organization';
+
+  /* Display: Facets block 2 */
+  $handler = $view->new_display('search_api_views_facets_block', 'Facets block 2', 'search_api_views_facets_block_2');
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['block_description'] = 'Clusters';
+  $handler->display->display_options['facet_field'] = 'field_event_cluster';
+  $translatables['ev_event_filters'] = array(
+    t('Master'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« first'),
+    t('‹ previous'),
+    t('next ›'),
+    t('last »'),
+    t('Node ID'),
+    t('.'),
+    t(','),
+    t('Facets block'),
+    t('Organisations'),
+    t('Facets block 2'),
+    t('Clusters'),
+  );
+  $export['ev_event_filters'] = $view;
+
+  $view = new view();
   $view->name = 'hr_events_calendar';
   $view->description = '';
   $view->tag = 'events';
@@ -62,6 +127,26 @@ function events_event_views_default_views() {
         ),
       ),
     ),
+    'field_event_cluster_tid' => array(
+      'bef_format' => 'bef_links',
+      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+            1 => 'vocabulary',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
   );
   $handler->display->display_options['pager']['type'] = 'date_views_pager';
   $handler->display->display_options['pager']['options']['date_id'] = 'month';
@@ -76,6 +161,10 @@ function events_event_views_default_views() {
   $handler->display->display_options['relationships']['field_event_organization_tid']['id'] = 'field_event_organization_tid';
   $handler->display->display_options['relationships']['field_event_organization_tid']['table'] = 'field_data_field_event_organization';
   $handler->display->display_options['relationships']['field_event_organization_tid']['field'] = 'field_event_organization_tid';
+  /* Relationship: Content: Cluster (field_event_cluster) */
+  $handler->display->display_options['relationships']['field_event_cluster_tid']['id'] = 'field_event_cluster_tid';
+  $handler->display->display_options['relationships']['field_event_cluster_tid']['table'] = 'field_data_field_event_cluster';
+  $handler->display->display_options['relationships']['field_event_cluster_tid']['field'] = 'field_event_cluster_tid';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -133,6 +222,15 @@ function events_event_views_default_views() {
   $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: Taxonomy term: Term ID */
+  $handler->display->display_options['arguments']['tid_1']['id'] = 'tid_1';
+  $handler->display->display_options['arguments']['tid_1']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['arguments']['tid_1']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid_1']['relationship'] = 'field_event_cluster_tid';
+  $handler->display->display_options['arguments']['tid_1']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['tid_1']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid_1']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid_1']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -165,6 +263,22 @@ function events_event_views_default_views() {
   );
   $handler->display->display_options['filters']['field_event_organization_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_event_organization_tid']['vocabulary'] = 'ev_organization';
+  /* Filter criterion: Content: Cluster (field_event_cluster) */
+  $handler->display->display_options['filters']['field_event_cluster_tid']['id'] = 'field_event_cluster_tid';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['table'] = 'field_data_field_event_cluster';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['field'] = 'field_event_cluster_tid';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_event_cluster_tid']['expose']['operator_id'] = 'field_event_cluster_tid_op';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['expose']['label'] = 'Cluster';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['expose']['operator'] = 'field_event_cluster_tid_op';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['expose']['identifier'] = 'cluster';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['filters']['field_event_cluster_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_event_cluster_tid']['vocabulary'] = 'ev_list';
 
   /* Display: Master */
   $handler = $view->new_display('page', 'Master', 'master');
@@ -211,6 +325,15 @@ function events_event_views_default_views() {
   $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: Taxonomy term: Term ID */
+  $handler->display->display_options['arguments']['tid_1']['id'] = 'tid_1';
+  $handler->display->display_options['arguments']['tid_1']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['arguments']['tid_1']['field'] = 'tid';
+  $handler->display->display_options['arguments']['tid_1']['relationship'] = 'field_event_cluster_tid';
+  $handler->display->display_options['arguments']['tid_1']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['tid_1']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['tid_1']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['tid_1']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['path'] = 'events';
   $handler->display->display_options['menu']['title'] = 'Month';
   $handler->display->display_options['menu']['weight'] = '0';
@@ -530,8 +653,10 @@ function events_event_views_default_views() {
     t('Select any filter and click on Apply to see results'),
     t('Advanced options'),
     t('term from field_event_organization'),
+    t('term from field_event_cluster'),
     t('Organization'),
     t('All'),
+    t('Cluster'),
     t('Month'),
     t('Week'),
     t('Day'),
