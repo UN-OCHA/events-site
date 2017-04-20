@@ -40,6 +40,8 @@ function events_event_calendar() {
       'editable' => FALSE,
       'eventLimit' => TRUE,
       'events' => 'fetch-events',
+      'firstDay' => 1,
+      'weekends' => FALSE,
       'data' => array(
         'org' => 'something',
         'list' => 'somethingelse',
