@@ -272,7 +272,7 @@ function events_config_fetch_and_sync_lists() {
   );
 
   while (TRUE) {
-    $endpoint = $base_endpoint . 'list?sort=name&limit=200&type=list&offset=' . $offset;
+    $endpoint = $base_endpoint . 'list?sort=name&limit=200&type=bundle&offset=' . $offset;
     $response = drupal_http_request($endpoint, array(
       'headers' => $headers,
       'method' => 'GET',
