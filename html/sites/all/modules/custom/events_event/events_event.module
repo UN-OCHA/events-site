@@ -50,6 +50,7 @@ function events_event_calendar() {
     ),
   );
 
+  drupal_add_library('chosen', 'drupal.chosen');
   drupal_add_js(drupal_get_path('module', 'events_event') . '/events_event.js');
 
   return theme('fullcalendar_calendar', array(
