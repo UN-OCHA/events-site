@@ -30,23 +30,22 @@ function events_event_menu() {
  * Page callback for calendar.
  */
 function events_event_calendar() {
-
   $settings = array(
-      'header' => array(
-        'left' => 'prev,next today',
-        'center' => 'title',
-        'right' => 'month,agendaWeek,agendaDay,listYear',
-      ),
-      'editable' => FALSE,
-      'eventLimit' => TRUE,
-      'events' => 'fetch-events',
-      'firstDay' => 1,
-      'weekends' => FALSE,
-      'data' => array(
-        'org' => 'something',
-        'list' => 'somethingelse',
-      ),
-    );
+    'header' => array(
+      'left' => 'prev,next today',
+      'center' => 'title',
+      'right' => 'month,agendaWeek,agendaDay,listYear',
+    ),
+    'editable' => FALSE,
+    'eventLimit' => TRUE,
+    'events' => 'fetch-events',
+    'firstDay' => 1,
+    'weekends' => FALSE,
+    'data' => array(
+      'org' => 'something',
+      'list' => 'somethingelse',
+    ),
+  );
 
   return theme('fullcalendar_calendar', array(
     'calendar_id' => 'fullcalendar',
@@ -91,24 +90,24 @@ function events_event_fetch_events() {
 }
 
 /**
-* Create a stripe based on a taxonomy term.
-*/
+ * Create a stripe based on a taxonomy term.
+ */
 function events_event_get_event_color($node) {
- $entity = $result->entity;
- $term_field_name = 'field_event_organization';
- if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
-   foreach ($terms_for_entity as $delta => $item) {
-     $term_for_entity = taxonomy_term_load($item['tid']);
-     if ($term_for_entity) {
-       if (isset($term_for_entity->field_ev_legend_color['und'][0]['rgb'])) {
-         return $term_for_entity->field_ev_legend_color['und'][0]['rgb'];
-       }
-       else {
-         return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
-       }
-     }
-   }
- }
+  $entity = $result->entity;
+  $term_field_name = 'field_event_organization';
+  if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
+    foreach ($terms_for_entity as $delta => $item) {
+      $term_for_entity = taxonomy_term_load($item['tid']);
+      if ($term_for_entity) {
+        if (isset($term_for_entity->field_ev_legend_color['und'][0]['rgb'])) {
+          return $term_for_entity->field_ev_legend_color['und'][0]['rgb'];
+        }
+        else {
+          return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+        }
+      }
+    }
+  }
 }
 
 /**
