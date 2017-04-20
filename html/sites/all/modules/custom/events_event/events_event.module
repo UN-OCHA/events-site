@@ -47,8 +47,6 @@ function events_event_calendar() {
     ),
   );
 
-  drupal_add_library('system', 'jquery');
-
   return theme('fullcalendar_calendar', array(
     'calendar_id' => 'fullcalendar',
     'calendar_settings' => $settings,
