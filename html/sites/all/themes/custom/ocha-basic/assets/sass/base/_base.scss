@@ -71,6 +71,21 @@ tr.odd, tr.even {
   background: none;
 }
 
+.page-wrapper {
+  min-height: 100%;
+  margin-bottom: -$footer-height;
+
+  &:after {
+    content: "";
+    display: block;
+    height: $footer-height;
+  }
+}
+
+.invisible {
+   @extend .sr-only;
+ }
+
 @include media-query(md) {
 
   h2 {
