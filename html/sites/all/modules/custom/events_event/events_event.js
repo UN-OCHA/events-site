@@ -52,7 +52,7 @@
             var newOption = document.createElement('option');
             data = options[0].href.split("%3A").shift();
             newOption.value = data;
-            newOption.text = newLabel.innerText;
+            newOption.text = Drupal.t('- Any -');
             newSelect.appendChild(newOption);
 
             // Add options.
