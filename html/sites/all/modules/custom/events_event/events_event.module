@@ -7,6 +7,109 @@
 include_once 'events_event.features.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function events_event_menu() {
+  $items['calendar'] = array(
+    'title' => 'Calendar',
+    'page callback' => 'events_event_calendar',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['fetch-events'] = array(
+    'title' => 'Fetch events',
+    'page callback' => 'events_event_fetch_events',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for calendar.
+ */
+function events_event_calendar() {
+
+  $settings = array(
+      'header' => array(
+        'left' => 'prev,next today',
+        'center' => 'title',
+        'right' => 'month,agendaWeek,agendaDay,listYear',
+      ),
+      'editable' => FALSE,
+      'eventLimit' => TRUE,
+      'events' => 'fetch-events',
+      'data' => array(
+        'org' => 'something',
+        'list' => 'somethingelse',
+      ),
+    );
+
+  return theme('fullcalendar_calendar', array(
+    'calendar_id' => 'fullcalendar',
+    'calendar_settings' => $settings,
+  ));
+}
+
+/**
+ * Page callback for /fullcalendar/calendar.
+ */
+function events_event_fetch_events() {
+  $start = $_GET['start'];
+  $end = $_GET['end'];
+
+  $index = search_api_index_load("un_events");
+  $query = new SearchApiQuery($index);
+
+  $filter = $query->createFilter('AND');
+  $filter->condition('field_event_date:value', strtotime($start), '>=');
+  $filter->condition('field_event_date:value', strtotime($end), '<=');
+  $query->filter($filter);
+  // Fetch results.
+  $results = $query->execute()['results'];
+  $nids = array_keys($results);
+  $nodes = node_load_multiple($nids);
+  $events = array();
+  foreach ($nodes as $node) {
+    foreach ($node->field_event_date['und'] as $date) {
+      $events[] = array(
+        'id' => $node->nid,
+        'title' => $node->title,
+        'start' => $date['value'],
+        'end' => $date['value2'],
+        'allDay' => $date['value'] == $date['value2'],
+        'url' => url('node/' . $node->nid),
+        'className' => 'org-' . $node->field_event_organization['und'][0]['tid'],
+        'backgroundColor' => events_event_get_event_color($node),
+      );
+    }
+  }
+  drupal_json_output($events);
+}
+
+/**
+* Create a stripe based on a taxonomy term.
+*/
+function events_event_get_event_color($node) {
+ $entity = $result->entity;
+ $term_field_name = 'field_event_organization';
+ if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
+   foreach ($terms_for_entity as $delta => $item) {
+     $term_for_entity = taxonomy_term_load($item['tid']);
+     if ($term_for_entity) {
+       if (isset($term_for_entity->field_ev_legend_color['und'][0]['rgb'])) {
+         return $term_for_entity->field_ev_legend_color['und'][0]['rgb'];
+       }
+       else {
+         return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+       }
+     }
+   }
+ }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function events_event_form_ev_event_node_form_alter(&$form, &$form_state, $form_id) {
