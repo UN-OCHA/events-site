@@ -38,12 +38,15 @@ function events_event_calendar() {
     ),
     'editable' => FALSE,
     'eventLimit' => TRUE,
-    'events' => 'fetch-events',
     'firstDay' => 1,
     'weekends' => TRUE,
-    'data' => array(
-      'org' => 'something',
-      'list' => 'somethingelse',
+    'events' => array(
+      'url' => 'fetch-events',
+      'type' => 'GET',
+      'data' => array(
+        'org' => '',
+        'list' => '',
+      ),
     ),
   );
 
