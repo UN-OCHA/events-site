@@ -47,6 +47,8 @@ function events_event_calendar() {
     ),
   );
 
+  libraries_load('jquery');
+
   return theme('fullcalendar_calendar', array(
     'calendar_id' => 'fullcalendar',
     'calendar_settings' => $settings,
