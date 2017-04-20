@@ -44,11 +44,13 @@ function events_event_calendar() {
       'url' => 'fetch-events',
       'type' => 'GET',
       'data' => array(
-        'org' => '',
-        'list' => '',
+        'field_event_organization' => '',
+        'field_event_cluster' => '',
       ),
     ),
   );
+
+  drupal_add_js(drupal_get_path('module', 'events_event') . '/events_event.js');
 
   return theme('fullcalendar_calendar', array(
     'calendar_id' => 'fullcalendar',
@@ -62,6 +64,8 @@ function events_event_calendar() {
 function events_event_fetch_events() {
   $start = $_GET['start'];
   $end = $_GET['end'];
+  $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
+  $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
 
   $index = search_api_index_load("un_events");
   $query = new SearchApiQuery($index);
@@ -69,6 +73,13 @@ function events_event_fetch_events() {
   $filter = $query->createFilter('AND');
   $filter->condition('field_event_date:value', strtotime($start), '>=');
   $filter->condition('field_event_date:value', strtotime($end), '<=');
+  if ($organisation) {
+    $filter->condition('field_event_organization', $organisation);
+  }
+  if ($cluster) {
+    $filter->condition('field_event_cluster', $cluster);
+  }
+
   $query->filter($filter);
   // Fetch results.
   $results = $query->execute()['results'];
