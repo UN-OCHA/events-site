@@ -9,11 +9,29 @@
       if (!settings.fullcalendar_api.calendarSettings) {
         return;
       }
-      var $calendarId = settings.fullcalendar_api.calendarId;
-      var $calendar = $('#' + $calendarId, context);
+      var $calendarId = Drupal.settings.fullcalendar_api.calendarId;
+      var $calendar = $('#' + $calendarId);
       if (!$calendar.length) {
         return;
       }
+
+      var eventFilters = {
+        'field_event_organization': undefined,
+        'field_event_cluster': undefined,
+      };
+
+      var $settings = settings.fullcalendar_api.calendarSettings;
+      $.extend($settings, {
+        'eventRender': function(event, element, view) {
+          for (f in eventFilters) {
+            if (eventFilters.hasOwnProperty(f) && event.hasOwnProperty(f) && typeof eventFilters[f] != 'undefined' && eventFilters[f] != event[f]) {
+              return false;
+            }
+          }
+          return true;
+        }
+      });
+      $calendar.fullCalendar($settings);
 
       // Redirect to selected option.
       var handleSelect = function (e) {
@@ -23,9 +41,13 @@
           data = data.replace('f[0]=', '');
           parts = data.split('%3A');
 
-          var $cal = jQuery('#fullcalendar');
-          $cal.fullCalendar('getEventSources')[0].data[parts[0]] = parts[1];
-          $cal.fullCalendar('refetchEvents');
+          eventFilters[parts[0]] = parts[1];
+
+          // Don't change the source.
+          // $calendar.fullCalendar('getEventSources')[0].data[parts[0]] = parts[1];
+
+          // Trigger rerender.
+          $calendar.fullCalendar('rerenderEvents');
         }
       };
 
@@ -60,7 +82,7 @@
               var option = options[j];
               var newOption = document.createElement('option');
               newOption.value = option.href;
-              newOption.text = option.innerText;
+              newOption.text = option.innerHTML.replace(/<span.*/g, '');
               newSelect.appendChild(newOption);
             }
 
