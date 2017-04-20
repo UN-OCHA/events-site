@@ -346,3 +346,13 @@ span.date-display-single {
 	}
 
 }
+
+.block-views.processed {
+  .content ul {
+    display: none;
+  }
+}
+
+.invisible {
+  display: none;
+}
