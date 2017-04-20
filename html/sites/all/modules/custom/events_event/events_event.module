@@ -40,7 +40,7 @@ function events_event_calendar() {
     'eventLimit' => TRUE,
     'events' => 'fetch-events',
     'firstDay' => 1,
-    'weekends' => FALSE,
+    'weekends' => TRUE,
     'data' => array(
       'org' => 'something',
       'list' => 'somethingelse',
