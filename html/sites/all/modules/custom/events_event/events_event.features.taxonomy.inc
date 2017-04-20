@@ -17,6 +17,14 @@ function events_event_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
+    'ev_list' => array(
+      'name' => 'List',
+      'machine_name' => 'ev_list',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'ev_organization' => array(
       'name' => 'Organization',
       'machine_name' => 'ev_organization',
