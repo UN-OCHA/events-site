@@ -93,7 +93,6 @@ function events_event_fetch_events() {
  * Create a stripe based on a taxonomy term.
  */
 function events_event_get_event_color($node) {
-  $entity = $result->entity;
   $term_field_name = 'field_event_organization';
   if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
     foreach ($terms_for_entity as $delta => $item) {
