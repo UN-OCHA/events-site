@@ -82,6 +82,10 @@ tr.odd, tr.even {
   }
 }
 
+.invisible {
+   @extend .sr-only;
+ }
+
 @include media-query(md) {
 
   h2 {
