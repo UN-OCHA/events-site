@@ -296,3 +296,10 @@ function events_config_fetch_and_sync_lists() {
     $offset += 200;
   }
 }
+
+/**
+ * Implements hook_libraries_info_alter().
+ */
+function events_config_libraries_info_alter(&$libraries) {
+  unset($libraries['fullcalendar']['files']['css']);
+}
