@@ -60,7 +60,6 @@ features[variable][] = node_options_ev_event
 features[variable][] = node_preview_ev_event
 features[variable][] = node_submitted_ev_event
 features[views_view][] = ev_event_filters
-features[views_view][] = hr_events_calendar
 features_exclude[dependencies][ctools] = ctools
 features_exclude[dependencies][multifield] = multifield
 features_exclude[dependencies][options] = options
