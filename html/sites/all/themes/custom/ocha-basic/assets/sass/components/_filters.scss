@@ -1,7 +1,8 @@
 .block-views {
-	display: inline-block;
-	width: 25%;
-	margin-bottom: $base-unit*3;
+	display: block;
+	float: left;
+	width: 50%;
+	margin-bottom: $base-unit*2;
 	padding-right: $base-unit;
 
   h2 {
@@ -17,5 +18,16 @@
   }
 }
 
+.block-system {
+	clear: both;
+	padding-top: $base-unit;
+}
 
 
+@include media-query(sm) {
+
+	.block-views {
+		width: 25%;
+	}
+
+}
