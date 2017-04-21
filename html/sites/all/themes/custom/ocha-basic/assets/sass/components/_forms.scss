@@ -34,10 +34,36 @@ form {
 		margin: 0 0 $base-unit 0;
 		background: none;
 	}
+
+	.description {
+		white-space: normal;
+	}
 }
 
 .form-actions {
 	margin: 0;
+}
+
+.form-managed-file {
+	position: relative;
+
+	.form-file {
+		width: 210px;
+		padding: 0 $base-unit/2;
+		margin: $base-unit*1.5 0 $base-unit*2;
+		position: relative;
+		z-index: 1;
+	}
+
+	&:before {
+		content: "";
+		width: 210px;
+		height: 40px;
+		border: 1px solid #ccc;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 }
 
 .field-widget-multifield-table {
@@ -48,7 +74,7 @@ form {
 	}
 
 	tr {
-		border-top: 1px solid #ddd;
+		border-top: 4px solid $light-bg;
 
 		&:first-child {
 			border: none;
@@ -101,6 +127,12 @@ form .field-multiple-table {
 
 }
 
+.form-type-managed-file {
+	label {
+		margin-bottom: $base-unit/2;
+	}
+}
+
 .i-am-dragdropfile.form-submit {
 	display: block;
 	margin: $base-unit/2 0;
@@ -140,15 +172,7 @@ label {
 	}
 
 	&:before {
-		content: "Drag and drop files here";
-		display: block;
-		text-align: center;
-    text-transform: uppercase;
-    padding: 8px;
-    font-weight: bold;
-    border: none;
-		background: $light-bg;
-		@include font-size($base-font-size);
+		content: none;
 	}
 }
 
@@ -173,6 +197,17 @@ div.vertical-tabs {
 }
 
 @include media-query(md) {
+
+	.form-managed-file {
+		.form-file {
+			width: 280px;
+			margin: 0 $base-unit $base-unit*2 0;
+		}
+
+		&:before {
+			width: 280px;
+		}
+	}
 
 	.field-widget-multifield-table {
 		.form-item {
@@ -219,5 +254,18 @@ div.vertical-tabs {
 		}
 	}
 
+	.dragdropfile-processed {
+		&:before {
+			content: "Drag and drop files here";
+			display: block;
+			text-align: center;
+	    text-transform: uppercase;
+	    padding: 8px;
+	    font-weight: bold;
+	    border: none;
+			background: $light-bg;
+			@include font-size($base-font-size);
+		}
+	}
 
 }
