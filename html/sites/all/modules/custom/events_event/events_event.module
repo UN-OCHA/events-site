@@ -125,3 +125,13 @@ function events_event_get_event_color($node) {
     }
   }
 }
+
+/**
+ * Implements hook_js_alter().
+ */
+function events_event_js_alter(&$javascript) {
+  // Remove fullcalendar javascript.
+  if (isset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js'])) {
+    unset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js']);
+  }
+}
