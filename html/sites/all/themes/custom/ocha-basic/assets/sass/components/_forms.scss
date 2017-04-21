@@ -5,20 +5,129 @@ input[type="email"],
 input[type="search"],
 input[type="tel"],
 input[type="url"],
-input[type="date"] {
+input[type="date"],
+textarea {
 	@include font-size($base-font-size);
 	padding: $base-unit;
 	border: 1px solid #ccc;
+	max-width: 100%;
 }
 
 form {
 	.field-multiple-table {
 		width: 100%;
+		background: white;
 
 		td {
 			padding: $base-unit/2 0;
 		}
 	}
+}
+
+.form-item {
+	background: $light-bg;
+	padding: $base-unit*2;
+	margin: 0 0 1px 0;
+
+	.form-item, .vertical-tabs & {
+		padding: 0;
+		margin: 0 0 $base-unit 0;
+		background: none;
+	}
+}
+
+.form-actions {
+	margin: 0;
+}
+
+.field-widget-multifield-table {
+	position: relative;
+
+	tr.odd, tr.even {
+		border-bottom: 0;
+	}
+
+	tr {
+		border-top: 1px solid #ddd;
+
+		&:first-child {
+			border: none;
+		}
+	}
+
+	.form-item {
+		padding-bottom: $base-unit*4;
+
+		.form-item {
+			padding-bottom: 0;
+		}
+	}
+}
+
+form .field-multiple-table {
+
+	th {
+		border-bottom: 1px solid #ddd;
+		display: none;
+	}
+
+	th.field-label, td {
+		padding: $base-unit;
+	}
+
+	td {
+		vertical-align: top;
+		display: block;
+	}
+
+	td.field-multiple-drag {
+		position: absolute;
+		right: $base-unit*2;
+
+		a.tabledrag-handle {
+			float: none;
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	&.tabledrag-processed {
+		th:first-child {
+			label {
+				display: none;
+			}
+		}
+	}
+
+}
+
+.i-am-dragdropfile.form-submit {
+	display: block;
+	margin: $base-unit/2 0;
+}
+
+a.tabledrag-handle .handle {
+	background-position: 0 0;
+	width: 14px;
+	height: 14px;
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+.tabledrag-toggle-weight-wrapper {
+	position: absolute;
+	left: $base-unit*2;
+	bottom: $base-unit;
+}
+
+label {
+	font-weight: bold;
+}
+
+.date-form-element-content-multiline {
+	border: none;
+	padding: 0;
 }
 
 .dragdropfile-processed {
@@ -43,3 +152,72 @@ form {
 	}
 }
 
+div.vertical-tabs {
+	margin: $base-unit*2 0;
+
+	ul.vertical-tabs-list {
+		float: none;
+		width: 100%;
+		margin: 0;
+		border-top: 0;
+
+		li {
+			border-left: 0;
+			border-right: 0;
+		}
+	}
+
+	fieldset.vertical-tabs-pane {
+		padding: $base-unit;
+	}
+}
+
+@include media-query(md) {
+
+	.field-widget-multifield-table {
+		.form-item {
+			padding-bottom: $base-unit*2;
+		}
+	}
+
+	form .field-multiple-table {
+		th, td {
+			display: table-cell;
+		}
+
+		td.field-multiple-drag {
+			position: relative;
+			right: auto;
+			padding-top: 10px;
+		}
+	}
+
+	.tabledrag-toggle-weight-wrapper {
+		bottom: $base-unit*5;
+		right: $base-unit*2;
+		left: auto;
+	}
+
+	.i-am-dragdropfile.form-submit {
+		display: inline-block;
+		margin: 0;
+	}
+
+	div.vertical-tabs {
+		margin: 1em 0 1em 15em;
+
+		ul.vertical-tabs-list {
+			width: 15em;
+			margin: -1px 0 -1px -15em;
+			float: left;
+			border-top: 1px solid #ccc;
+
+			li {
+				border: 1px solid #ccc;
+				border-top: 0;
+			}
+		}
+	}
+
+
+}
