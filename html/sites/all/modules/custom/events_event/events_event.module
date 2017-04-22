@@ -63,17 +63,38 @@ function events_event_calendar() {
  * Page callback for /fullcalendar/calendar.
  */
 function events_event_fetch_events() {
-  $start = $_GET['start'];
-  $end = $_GET['end'];
+  $start = isset($_GET['start']) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
+  $end = isset($_GET['end']) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
+  if ($start > $end) {
+    header("HTTP/1.1 500 Start date has to be smaller than end date.", true, 500);
+    module_invoke_all('exit');
+    exit();
+  }
+
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
+  if (!empty($organisation)) {
+    if (!is_int($organisation)) {
+      header("HTTP/1.1 500 field_event_organization is an integer.", true, 500);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
+  if (!empty($cluster)) {
+    if (!is_int($cluster)) {
+      header("HTTP/1.1 500 field_event_cluster is an integer.", true, 500);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
 
   $index = search_api_index_load("un_events");
   $query = new SearchApiQuery($index);
 
   $filter = $query->createFilter('AND');
-  $filter->condition('field_event_date:value', strtotime($start), '>=');
-  $filter->condition('field_event_date:value', strtotime($end), '<=');
+  $filter->condition('field_event_date:value', $start, '>=');
+  $filter->condition('field_event_date:value', $end, '<=');
   if ($organisation) {
     $filter->condition('field_event_organization', $organisation);
   }
