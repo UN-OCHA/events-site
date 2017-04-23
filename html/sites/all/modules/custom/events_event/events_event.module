@@ -159,7 +159,7 @@ function events_event_fetch_organisations() {
     ->entityCondition('bundle', 'ev_organization')
     ->execute();
 
-  if (isset($result['taxonomy_term']))  {
+  if (isset($result['taxonomy_term'])) {
     $tids = array_keys($result['taxonomy_term']);
     $terms = taxonomy_term_load_multiple($tids);
     foreach ($terms as $term) {
@@ -193,7 +193,7 @@ function events_event_fetch_clusters() {
     ->entityCondition('bundle', 'ev_list')
     ->execute();
 
-  if (isset($result['taxonomy_term']))  {
+  if (isset($result['taxonomy_term'])) {
     $tids = array_keys($result['taxonomy_term']);
     $terms = taxonomy_term_load_multiple($tids);
     foreach ($terms as $term) {
