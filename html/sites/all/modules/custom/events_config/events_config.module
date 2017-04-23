@@ -216,6 +216,14 @@ function events_config_get_user_organizations($account = NULL) {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function events_config_cron() {
+  events_config_fetch_and_sync_organisations();
+  events_config_fetch_and_sync_lists();
+}
+
+/**
  * Fetch and sync organisations from HID.
  */
 function events_config_fetch_and_sync_organisations() {
@@ -254,6 +262,8 @@ function events_config_fetch_and_sync_organisations() {
 
     $offset += 200;
   }
+
+  cache_clear_all('events_event:organisations', 'bin');
 }
 
 /**
@@ -295,6 +305,8 @@ function events_config_fetch_and_sync_lists() {
 
     $offset += 200;
   }
+
+  cache_clear_all('events_event:clusters', 'bin');
 }
 
 /**

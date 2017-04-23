@@ -212,14 +212,19 @@ function events_event_fetch_clusters() {
  * Implements hook_taxonomy_term_update().
  */
 function events_event_taxonomy_term_update($term) {
+  // Do not clear the cache during cron.
+  if (variable_get('cron_semaphore', FALSE)) {
+    return;
+  }
+
   if (isset($term->vocabulary_machine_name)) {
     switch ($term->vocabulary_machine_name) {
       case 'ev_organization':
-        cache_clear_all('events_event:organisations');
+        cache_clear_all('events_event:organisations', 'bin');
         break;
 
       case 'ev_list':
-        cache_clear_all('events_event:clusters');
+        cache_clear_all('events_event:clusters', 'bin');
         break;
 
     }
