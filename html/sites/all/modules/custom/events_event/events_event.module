@@ -16,9 +16,21 @@ function events_event_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['fetch-events'] = array(
+  $items['api/v0/fetch-events'] = array(
     'title' => 'Fetch events',
     'page callback' => 'events_event_fetch_events',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['api/v0/organisations'] = array(
+    'title' => 'Fetch organisations',
+    'page callback' => 'events_event_fetch_organisations',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['api/v0/clusters'] = array(
+    'title' => 'Fetch clusters',
+    'page callback' => 'events_event_fetch_clusters',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -41,7 +53,7 @@ function events_event_calendar() {
     'firstDay' => 1,
     'weekends' => TRUE,
     'events' => array(
-      'url' => 'fetch-events',
+      'url' => 'api/v0/fetch-events',
       'type' => 'GET',
       'data' => array(
         'field_event_organization' => '',
@@ -60,20 +72,41 @@ function events_event_calendar() {
 }
 
 /**
- * Page callback for /fullcalendar/calendar.
+ * Page callback for events.
  */
 function events_event_fetch_events() {
-  $start = $_GET['start'];
-  $end = $_GET['end'];
+  $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
+  $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
+  if ($start > $end) {
+    header("HTTP/1.1 400 Start date has to be smaller than end date.", TRUE, 400);
+    module_invoke_all('exit');
+    exit();
+  }
+
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
+  if (!empty($organisation)) {
+    if (!is_int($organisation)) {
+      header("HTTP/1.1 400 field_event_organization is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
+  if (!empty($cluster)) {
+    if (!is_int($cluster)) {
+      header("HTTP/1.1 400 field_event_cluster is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
 
   $index = search_api_index_load("un_events");
   $query = new SearchApiQuery($index);
 
   $filter = $query->createFilter('AND');
-  $filter->condition('field_event_date:value', strtotime($start), '>=');
-  $filter->condition('field_event_date:value', strtotime($end), '<=');
+  $filter->condition('field_event_date:value', $start, '>=');
+  $filter->condition('field_event_date:value', $end, '<=');
   if ($organisation) {
     $filter->condition('field_event_organization', $organisation);
   }
@@ -103,7 +136,106 @@ function events_event_fetch_events() {
       );
     }
   }
+
   drupal_json_output($events);
+}
+
+/**
+ * Page callback for organisations.
+ */
+function events_event_fetch_organisations() {
+  $cache_key = 'events_event:organisations';
+
+  $cache = cache_get($cache_id);
+  if ($cache && !empty($cache->data)) {
+    drupal_json_output($cache->data);
+  }
+
+  $organisations = array();
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'ev_organization')
+    ->execute();
+
+  if (isset($result['taxonomy_term'])) {
+    $tids = array_keys($result['taxonomy_term']);
+    $terms = taxonomy_term_load_multiple($tids);
+    foreach ($terms as $term) {
+      $organisations[] = array(
+        'tid' => $term->tid,
+        'name' => $term->name,
+      );
+    }
+  }
+
+  cache_set($cache_key, $organisations);
+  drupal_json_output($organisations);
+}
+
+/**
+ * Page callback for clusters.
+ */
+function events_event_fetch_clusters() {
+  $cache_key = 'events_event:clusters';
+
+  $cache = cache_get($cache_id);
+  if ($cache && !empty($cache->data)) {
+    drupal_json_output($cache->data);
+  }
+
+  $clusters = array();
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'ev_list')
+    ->execute();
+
+  if (isset($result['taxonomy_term'])) {
+    $tids = array_keys($result['taxonomy_term']);
+    $terms = taxonomy_term_load_multiple($tids);
+    foreach ($terms as $term) {
+      $clusters[] = array(
+        'tid' => $term->tid,
+        'name' => $term->name,
+      );
+    }
+  }
+
+  cache_set($cache_key, $clusters);
+  drupal_json_output($clusters);
+}
+
+/**
+ * Implements hook_taxonomy_term_update().
+ */
+function events_event_taxonomy_term_update($term) {
+  // Do not clear the cache during cron.
+  if (variable_get('cron_semaphore', FALSE)) {
+    return;
+  }
+
+  if (isset($term->vocabulary_machine_name)) {
+    switch ($term->vocabulary_machine_name) {
+      case 'ev_organization':
+        cache_clear_all('events_event:organisations', 'bin');
+        break;
+
+      case 'ev_list':
+        cache_clear_all('events_event:clusters', 'bin');
+        break;
+
+    }
+  }
+}
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function events_event_taxonomy_term_insert($term) {
+  events_event_hook_taxonomy_term_update($term);
 }
 
 /**
