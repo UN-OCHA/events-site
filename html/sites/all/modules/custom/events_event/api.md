@@ -2,17 +2,20 @@
 
 UN Events API.
 
-Run with `silk -silk.url="https://events.staging.humanitarianresponse.info" api.md`  
-Info on https://github.com/matryer/silk
+Run with `silk -silk.url="https://events.staging.humanitarianresponse.info/api/v0" api.md`
+
+Silk can be installed from https://github.com/matryer/silk
+
+Debugging tip: `silk -silk.url="https://events.staging.humanitarianresponse.info/api/v0" -test.v api.md`
 
 ## `GET /fetch-events`
 
-Gets a list of events.
+Gets a list of events, all parameters are optional.
 
-  * `?start=2017-03-27` // Start date of the range of events
-  * `?end=2017-05-08` // End date of the range of events
-  * `?field_event_organization=` // Filter by a certain organization
-  * `?field_event_cluster=` // Filter by a certain cluster
+  * `?start=` // Start date of the range of events, default first of the month, example `2017-03-01`
+  * `?end=` // End date of the range of events, default last of the month, example `2017-03-31`
+  * `?field_event_organization=` // Filter by a certain organization, default all, example `123`
+  * `?field_event_cluster=` // Filter by a certain cluster, default all, example `123`
 
 Example output.
 
@@ -61,7 +64,7 @@ Start date has to be smaller than end date.
 
 ### Response
 
-* Status: `500`
+* Status: `400`
 
 ## `GET /fetch-events`
 
@@ -76,7 +79,7 @@ field_event_organization is an integer.
 
 ### Response
 
-* Status: `500`
+* Status: `400`
 
 ## `GET /fetch-events`
 
@@ -91,4 +94,53 @@ field_event_cluster is an integer.
 
 ### Response
 
-* Status: `500`
+* Status: `400`
+
+
+## `GET /organisations`
+
+Gets a list of organisations.
+
+Example output.
+
+```json
+[
+  {
+    "tid": "7",
+    "name": "OCHA",
+  }
+]
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"
+* Data[0].tid: /^[0-9]+$/
+* Data[0].name: /./
+
+## `GET /clusters`
+
+Gets a list of clusters.
+
+Example output.
+
+```json
+[
+  {
+    "tid": "5577",
+    "name": "Afganistan: Aviation",
+  }
+]
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"
+* Data[0].tid: /^[0-9]+$/
+* Data[0].name: /./
