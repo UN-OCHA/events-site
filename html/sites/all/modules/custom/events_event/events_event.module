@@ -211,7 +211,7 @@ function events_event_fetch_clusters() {
 /**
  * Implements hook_taxonomy_term_update().
  */
-function events_event_hook_taxonomy_term_update($term) {
+function events_event_taxonomy_term_update($term) {
   if (isset($term->vocabulary_machine_name)) {
     switch ($term->vocabulary_machine_name) {
       case 'ev_organization':
@@ -229,7 +229,7 @@ function events_event_hook_taxonomy_term_update($term) {
 /**
  * Implements hook_taxonomy_term_insert().
  */
-function events_event_hook_taxonomy_term_insert($term) {
+function events_event_taxonomy_term_insert($term) {
   events_event_hook_taxonomy_term_update($term);
 }
 
