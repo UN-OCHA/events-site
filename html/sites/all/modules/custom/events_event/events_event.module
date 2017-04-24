@@ -291,26 +291,26 @@ function events_event_to_ical() {
           $addition_array = $add->toArray();
 
           $rdate = array(
-            'year' =>  $addition_array['year'],
+            'year' => $addition_array['year'],
             'month' => $addition_array['month'],
-            'day' =>   $addition_array['day'],
-            'hour' =>   !empty($addition_array['hour']) ? $addition_array['hour'] : $date_start->format('H'),
-            'min' =>    !empty($addition_array['minute']) ? $addition_array['minute'] : $date_start->format('i'),
+            'day' => $addition_array['day'],
+            'hour' => !empty($addition_array['hour']) ? $addition_array['hour'] : $date_start->format('H'),
+            'min' => !empty($addition_array['minute']) ? $addition_array['minute'] : $date_start->format('i'),
             'second' => !empty($addition_array['second']) ? $addition_array['second'] : $date_start->format('s'),
-            'tz' =>     'UTC',
+            'tz' => 'UTC',
           );
 
           // If an end date was was calculated above, use that too.
           if (!empty($date['value2'])) {
             $rdate_with_end = array($rdate);
             $rdate_with_end[] = array(
-              'year' =>  $addition_array['year'],
+              'year' => $addition_array['year'],
               'month' => $addition_array['month'],
-              'day' =>   $addition_array['day'],
-              'hour' =>   !empty($addition_array['hour']) ? $addition_array['hour'] : $date_end->format('H'),
-              'min' =>    !empty($addition_array['minute']) ? $addition_array['minute'] : $date_end->format('i'),
+              'day' => $addition_array['day'],
+              'hour' => !empty($addition_array['hour']) ? $addition_array['hour'] : $date_end->format('H'),
+              'min' => !empty($addition_array['minute']) ? $addition_array['minute'] : $date_end->format('i'),
               'second' => !empty($addition_array['second']) ? $addition_array['second'] : $date_end->format('s'),
-              'tz' =>     'UTC',
+              'tz' => 'UTC',
             );
             $rdate = $rdate_with_end;
           }
