@@ -73,13 +73,8 @@ function events_event_calendar() {
       'listYear' => array(
         'buttonText' => 'Year',
       ),
-      'upcoming' => array(
-        'type' => 'list',
-        'duration' => array('days' => 90),
-        'buttonText' => 'Upcoming',
-      ),
-      'past' => array(
-      ),
+      'upcoming' => array(),
+      'past' => array(),
     ),
     'events' => array(
       'url' => 'api/v0/fetch-events',
