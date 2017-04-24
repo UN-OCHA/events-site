@@ -42,6 +42,12 @@
         }
       };
 
+      var handleICal = function (e) {
+        var url = '/ical?';
+        url += $.param(eventFilters);
+        window.location = url;
+      };
+
       // Redirect to selected option.
       var handleSelect = function (e) {
         if (e.target.value) {
@@ -148,6 +154,21 @@
             });
           }
         });
+
+        // Add ical button.
+        var icalDiv = document.createElement('div');
+        icalDiv.classList.add('block-views');
+
+        var icalTitle = document.createElement('h2');
+        icalTitle.innerHTML = Drupal.t('Export');
+        icalDiv.appendChild(icalTitle);
+
+        var icalButton = document.createElement('button');
+        icalButton.innerHTML = Drupal.t('ICAL');
+        icalButton.addEventListener('click', handleICal);
+        icalDiv.appendChild(icalButton);
+
+        document.querySelector('.region-content').insertBefore(icalDiv, document.querySelector('#block-system-main'));
       }
     }
   }

@@ -43,8 +43,8 @@ Example output.
 * Content-Type: "application/json"
 * Data[0].id: /^[0-9]+$/
 * Data[0].title: /./
-* Data[0].start: /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$/
-* Data[0].end: /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$/
+* Data[0].start: /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
+* Data[0].end: /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
 * Data[0].allDay: /true|false/
 * Data[0].url: /^\/node\/[0-9]+$/
 * Data[0].field_event_organization: /^[0-9]+|$/
@@ -144,3 +144,23 @@ Example output.
 * Content-Type: "application/json"
 * Data[0].tid: /^[0-9]+$/
 * Data[0].name: /./
+
+## `GET /timezones`
+
+Gets a list of time zones.
+
+Example output.
+
+```json
+{
+  "Africa\/Abidjan": "Africa\/Abidjan: Monday, 24 April, 2017 - 10:54 +0000",
+  "Africa\/Accra":"Africa\/Accra: Monday, 24 April, 2017 - 10:54 +0000"
+}
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"

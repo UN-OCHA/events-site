@@ -132,7 +132,7 @@ function events_event_fetch_events() {
 
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
   if (!empty($organisation)) {
-    if (!is_int($organisation)) {
+    if (!is_numeric($organisation)) {
       header("HTTP/1.1 400 field_event_organization is an integer.", TRUE, 400);
       module_invoke_all('exit');
       exit();
@@ -141,7 +141,7 @@ function events_event_fetch_events() {
 
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
   if (!empty($cluster)) {
-    if (!is_int($cluster)) {
+    if (!is_numeric($cluster)) {
       header("HTTP/1.1 400 field_event_cluster is an integer.", TRUE, 400);
       module_invoke_all('exit');
       exit();
@@ -162,7 +162,6 @@ function events_event_fetch_events() {
 
       $events[] = array(
         'id' => $node->nid,
-        'xxx' => $timezone,
         'title' => $node->title,
         'start' => $date_start->format(DATE_FORMAT_DATETIME),
         'end' => $date_end->format(DATE_FORMAT_DATETIME),
@@ -184,8 +183,8 @@ function events_event_fetch_events() {
 function events_event_to_ical() {
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
   if (!empty($organisation)) {
-    if (!is_int($organisation)) {
-      header("HTTP/1.1 422 field_event_organization is an integer.", TRUE, 422);
+    if (!is_numeric($organisation)) {
+      header("HTTP/1.1 422 field_event_organization is an integer." . $_GET['field_event_organization'], TRUE, 422);
       module_invoke_all('exit');
       exit();
     }
@@ -193,7 +192,7 @@ function events_event_to_ical() {
 
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
   if (!empty($cluster)) {
-    if (!is_int($cluster)) {
+    if (!is_numeric($cluster)) {
       header("HTTP/1.1 422 field_event_cluster is an integer.", TRUE, 422);
       module_invoke_all('exit');
       exit();
