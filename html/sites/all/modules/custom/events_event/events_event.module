@@ -470,7 +470,16 @@ function events_event_fetch_clusters() {
  * Page callback for time zones.
  */
 function events_event_fetch_timezones() {
-  $timezones = system_time_zones();
+  $zonelist = timezone_identifiers_list();
+  $timezones = array();
+  foreach ($zonelist as $zone) {
+    if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
+      $timezones[$zone] = t('@zone: @date', array('@zone' => t(str_replace(array('_', '/'), array(' ', ' - '), $zone)), '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone)));
+    }
+  }
+  // Sort the translated time zones alphabetically.
+  asort($timezones);
+
   drupal_json_output($timezones);
 }
 
