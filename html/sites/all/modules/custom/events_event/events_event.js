@@ -30,6 +30,21 @@
             }
           }
           return true;
+        },
+        viewRender: function(view) {
+          if (view.name === 'upcoming') {
+            if ($calendar.fullCalendar('getDate').unix() < moment().unix()) {
+              $calendar.fullCalendar('gotoDate', moment());
+            }
+          }
+          else if (view.name === 'past') {
+            if ($calendar.fullCalendar('getDate').toISOString() >= moment().format('Y-MM-DD')) {
+              $calendar.fullCalendar('gotoDate', moment().add(-1, 'days'));
+              window.setTimeout(function () {
+                $calendar.fullCalendar('prev');
+              }, 250);
+            }
+          }
         }
       });
 
@@ -66,7 +81,7 @@
           },
           'validRange': function(currentDate) {
             return {
-              end: currentDate.clone().add(1, 'days')
+              end: currentDate.clone().add(-1, 'days')
             };
           }
         }
