@@ -67,6 +67,7 @@ function events_event_calendar() {
     'eventLimit' => TRUE,
     'firstDay' => 1,
     'weekends' => TRUE,
+    'timeFormat' => 'H(:mm)',
     'timezone' => isset($user->timezone) ? $user->timezone : 'local',
     'events' => array(
       'url' => 'api/v0/fetch-events',
