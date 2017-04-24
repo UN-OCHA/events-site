@@ -268,13 +268,13 @@ function events_event_to_ical() {
           $except->setTimezone('UTC');
           $exception_array = $except->toArray();
           $exdates[] = array(
-            'year' =>  $exception_array['year'],
+            'year' => $exception_array['year'],
             'month' => $exception_array['month'],
-            'day' =>   $exception_array['day'],
-            'hour' =>   $date_start->format('H'),
-            'min' =>    $date_start->format('i'),
+            'day' => $exception_array['day'],
+            'hour' => $date_start->format('H'),
+            'min' => $date_start->format('i'),
             'second' => $date_start->format('s'),
-            'tz' =>     'UTC',
+            'tz' => 'UTC',
           );
         }
         foreach ($exdates as $exdate) {
