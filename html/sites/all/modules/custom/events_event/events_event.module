@@ -59,9 +59,9 @@ function events_event_calendar() {
 
   $settings = array(
     'header' => array(
-      'left' => 'prev,next today',
+      'left' => 'prev,next,today',
       'center' => 'title',
-      'right' => 'month,agendaWeek,agendaDay,listYear',
+      'right' => 'month,agendaWeek,agendaDay,listYear,upcoming',
     ),
     'editable' => FALSE,
     'eventLimit' => TRUE,
@@ -69,6 +69,16 @@ function events_event_calendar() {
     'weekends' => TRUE,
     'timeFormat' => 'H(:mm)',
     'timezone' => isset($user->timezone) ? $user->timezone : 'local',
+    'views' => array(
+      'listYear' => array(
+        'buttonText' => 'Year',
+      ),
+      'upcoming' => array(
+        'type' => 'list',
+        'duration' => array('days' => 90),
+        'buttonText' => 'Upcoming',
+      ),
+    ),
     'events' => array(
       'url' => 'api/v0/fetch-events',
       'type' => 'GET',
