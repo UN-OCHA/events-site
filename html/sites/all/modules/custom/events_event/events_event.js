@@ -18,6 +18,7 @@
       var eventFilters = {
         'field_event_organization': undefined,
         'field_event_cluster': undefined,
+        'timezone': 'UTC'
       };
 
       var $settings = settings.fullcalendar_api.calendarSettings;
@@ -32,6 +33,14 @@
         }
       });
       $calendar.fullCalendar($settings);
+
+      var handleTimezone = function (e) {
+        if (e.target.value) {
+          data = e.target.value;
+          eventFilters['timezone'] = data;
+          $calendar.fullCalendar('option', 'timezone', data);
+        }
+      };
 
       // Redirect to selected option.
       var handleSelect = function (e) {
@@ -100,8 +109,45 @@
           }
         }
 
-        // Listen for change events.
-        var details = document.querySelector('.region-content').addEventListener("change", handleSelect);
+        // Add timezone selector.
+        var tzDiv = document.createElement('div');
+        tzDiv.classList.add('block-views');
+
+        var tzTitle = document.createElement('h2');
+        tzTitle.innerHTML = Drupal.t('Time zone');
+        tzDiv.appendChild(tzTitle);
+
+        var tzSelect = document.createElement('select');
+        tzSelect.id = 'timezone-selector';
+
+        tzDiv.appendChild(tzSelect);
+        document.querySelector('.region-content').insertBefore(tzDiv, document.querySelector('.region-content').firstChild);
+
+        $.getJSON('api/v0/timezones', function(timezones) {
+          var $tz = $('#timezone-selector');
+          var $newtz;
+          $tz.append(
+            $("<option/>").text('local').attr('value', '')
+          );
+          for (var tz in timezones) {
+            if (Drupal.settings.fullcalendar_api.calendarSettings.timezone = tz) {
+              $newtz = $("<option selected/>").text(timezones[tz]).attr('value', tz);
+            }
+            else {
+              $newtz = $("<option/>").text(timezones[tz]).attr('value', tz);
+            }
+            $tz.append($newtz);
+          }
+
+          if (Drupal.behaviors && Drupal.behaviors.chosen) {
+            $tz.chosen("destroy");
+            $tz.addClass('chosen-enable');
+            Drupal.behaviors.chosen.attach($tz, Drupal.settings);
+            $tz.chosen().change(function(e) {
+              handleTimezone(e);
+            });
+          }
+        });
       }
     }
   }

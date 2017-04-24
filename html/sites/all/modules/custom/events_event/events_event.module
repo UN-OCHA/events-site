@@ -34,6 +34,13 @@ function events_event_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['api/v0/timezones'] = array(
+    'title' => 'Fetch time zones',
+    'page callback' => 'events_event_fetch_timezones',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['ical'] = array(
     'title' => 'Ical',
     'page callback' => 'events_event_to_ical',
@@ -48,6 +55,8 @@ function events_event_menu() {
  * Page callback for calendar.
  */
 function events_event_calendar() {
+  global $user;
+
   $settings = array(
     'header' => array(
       'left' => 'prev,next today',
@@ -58,6 +67,7 @@ function events_event_calendar() {
     'eventLimit' => TRUE,
     'firstDay' => 1,
     'weekends' => TRUE,
+    'timezone' => isset($user->timezone) ? $user->timezone : 'local',
     'events' => array(
       'url' => 'api/v0/fetch-events',
       'type' => 'GET',
@@ -110,6 +120,8 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
  * Page callback for events.
  */
 function events_event_fetch_events() {
+  global $user;
+
   $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
   $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
@@ -136,16 +148,24 @@ function events_event_fetch_events() {
     }
   }
 
+  $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : (isset($user->timezone) ? $user->timezone : 'UTC');
+
   $nodes = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster);
 
   $events = array();
   foreach ($nodes as $node) {
     foreach ($node->field_event_date['und'] as $date) {
+      $date_start = new DateTime($date['value'], timezone_open('UTC'));
+      $date_start->setTimezone(timezone_open($timezone));
+      $date_end = new DateTime($date['value2'], timezone_open('UTC'));
+      $date_end->setTimezone(timezone_open($timezone));
+
       $events[] = array(
         'id' => $node->nid,
+        'xxx' => $timezone,
         'title' => $node->title,
-        'start' => $date['value'],
-        'end' => $date['value2'],
+        'start' => $date_start->format(DATE_FORMAT_DATETIME),
+        'end' => $date_end->format(DATE_FORMAT_DATETIME),
         'allDay' => $date['value'] == $date['value2'],
         'url' => url('node/' . $node->nid),
         'backgroundColor' => events_event_get_event_color($node),
@@ -437,6 +457,14 @@ function events_event_fetch_clusters() {
 
   cache_set($cache_key, $clusters);
   drupal_json_output($clusters);
+}
+
+/**
+ * Page callback for time zones.
+ */
+function events_event_fetch_timezones() {
+  $timezones = system_time_zones();
+  drupal_json_output($timezones);
 }
 
 /**
