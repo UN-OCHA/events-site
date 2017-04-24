@@ -59,9 +59,9 @@ function events_event_calendar() {
 
   $settings = array(
     'header' => array(
-      'left' => 'prev,next,today',
+      'left' => 'prev,next today',
       'center' => 'title',
-      'right' => 'month,agendaWeek,agendaDay,listYear,upcoming',
+      'right' => 'month,agendaWeek,agendaDay,listYear,upcoming,past',
     ),
     'editable' => FALSE,
     'eventLimit' => TRUE,
@@ -77,6 +77,8 @@ function events_event_calendar() {
         'type' => 'list',
         'duration' => array('days' => 90),
         'buttonText' => 'Upcoming',
+      ),
+      'past' => array(
       ),
     ),
     'events' => array(
