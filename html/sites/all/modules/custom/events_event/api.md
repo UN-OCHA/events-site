@@ -24,8 +24,8 @@ Example output.
   {
     "id": "11",
     "title": "Two documents",
-    "start": "2017-04-20T00:00:00",
-    "end": "2017-04-20T00:00:00",
+    "start": "2017-04-20 00:00:00",
+    "end": "2017-04-20 00:00:00",
     "allDay": true,
     "url": "\/node\/11",
     "backgroundColor": "#ffeecc",
