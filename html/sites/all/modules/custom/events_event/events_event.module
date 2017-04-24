@@ -187,7 +187,7 @@ function events_event_to_ical() {
   $vcalendar = new vcalendar($config);
   $vcalendar->setMethod('PUBLISH');
   $vcalendar->setProperty('X-WR-CALNAME', 'UN Events', array('VALUE' => 'TEXT'));
-  $vcalendar->setProperty( "X-WR-TIMEZONE", 'UTC');
+  $vcalendar->setProperty('X-WR-TIMEZONE', 'UTC');
 
   foreach ($nodes as $node) {
     $date = $node->field_event_date['und'][0];
