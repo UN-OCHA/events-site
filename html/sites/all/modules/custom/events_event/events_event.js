@@ -32,6 +32,46 @@
           return true;
         }
       });
+
+      $.extend($settings['views'], {
+        'upcoming': {
+          'type': 'list',
+          'buttonText': 'Upcoming',
+          'duration': {
+            'days': 90
+          },
+          'visibleRange': function(currentDate) {
+            return {
+              start: currentDate.clone(),
+              end: currentDate.clone().add(90, 'days')
+            };
+          },
+          'validRange': function(currentDate) {
+            return {
+              start: currentDate.clone()
+            };
+          }
+        },
+        'past': {
+          'type': 'list',
+          'buttonText': 'Past events',
+          'duration': {
+            'days': 90
+          },
+          'visibleRange': function(currentDate) {
+            return {
+              start: currentDate.clone().add(-90, 'days'),
+              end: currentDate.clone().add(1, 'days')
+            };
+          },
+          'validRange': function(currentDate) {
+            return {
+              end: currentDate.clone().add(1, 'days')
+            };
+          }
+        }
+      });
+
       $calendar.fullCalendar($settings);
 
       var handleTimezone = function (e) {
