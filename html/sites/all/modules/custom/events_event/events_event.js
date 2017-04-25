@@ -131,11 +131,13 @@
           // Construct label.
           var newLabel = document.createElement('label');
           newLabel.innerText = filter.querySelector('h2').innerText;
-          newLabel.classList.add('invisible');
+          newLabel.setAttribute('for', 'filter-' + i);
+          filter.querySelector('h2').remove();
 
           // Construct select.
           var newSelect = document.createElement('select');
           newSelect.classList.add('chosen-enable');
+          newSelect.id = 'filter-' + i;
           var options = filter.querySelectorAll('.block-views .content li a');
 
           if (options.length === 0) {
@@ -174,27 +176,45 @@
 
         // Add timezone selector.
         var tzDiv = document.createElement('div');
-        tzDiv.classList.add('block-views');
+        tzDiv.className += 'calendar-settings';
 
         var tzTitle = document.createElement('h2');
-        tzTitle.innerHTML = Drupal.t('Time zone');
+        tzTitle.innerHTML = Drupal.t('Calendar settings');
         tzDiv.appendChild(tzTitle);
+
+        var tzSubTitle = document.createElement('h3');
+        tzSubTitle.innerHTML = Drupal.t('Time zone');
+        tzDiv.appendChild(tzSubTitle);
+
+        var tzCurrent = document.createElement('p');
+        tzCurrent.innerHTML = Drupal.t('Current time zone: ');
+
+        tzDiv.appendChild(tzCurrent);
+
+        var tzLabel = document.createElement('label');
+        tzLabel.setAttribute('for', 'timezone-selector');
+        tzLabel.innerHTML = Drupal.t('Display times from the following time zone');
+        tzDiv.appendChild(tzLabel);
+
 
         var tzSelect = document.createElement('select');
         tzSelect.id = 'timezone-selector';
 
         tzDiv.appendChild(tzSelect);
-        document.querySelector('.region-content').insertBefore(tzDiv, document.querySelector('.region-content').firstChild);
+        document.querySelector('#fullcalendar').insertBefore(tzDiv, null);
 
         $.getJSON('api/v0/timezones', function(timezones) {
           var $tz = $('#timezone-selector');
           var $newtz;
+          var currentTz;
+
           $tz.append(
             $("<option/>").text('local').attr('value', '')
           );
           for (var tz in timezones) {
-            if (Drupal.settings.fullcalendar_api.calendarSettings.timezone = tz) {
+            if (Drupal.settings.fullcalendar_api.calendarSettings.timezone === tz) {
               $newtz = $("<option selected/>").text(timezones[tz]).attr('value', tz);
+              currentTz = timezones[tz];
             }
             else {
               $newtz = $("<option/>").text(timezones[tz]).attr('value', tz);
@@ -202,8 +222,10 @@
             $tz.append($newtz);
           }
 
+          tzCurrent.innerHTML += currentTz;
+
           if (Drupal.behaviors && Drupal.behaviors.chosen) {
-            $tz.chosen("destroy");
+            $tz.chosen('destroy');
             $tz.addClass('chosen-enable');
             Drupal.behaviors.chosen.attach($tz, Drupal.settings);
             $tz.chosen().change(function(e) {
