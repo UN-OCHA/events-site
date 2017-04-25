@@ -187,6 +187,45 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-ev_event-field_event_coordination_hub'.
+  $field_instances['node-ev_event-field_event_coordination_hub'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_event_coordination_hub',
+    'label' => 'Coordination Hub',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'node-ev_event-field_event_date'.
   $field_instances['node-ev_event-field_event_date'] = array(
     'bundle' => 'ev_event',
@@ -206,7 +245,7 @@ function events_event_field_default_field_instances() {
           'show_repeat_rule' => 'show',
         ),
         'type' => 'date_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -241,7 +280,7 @@ function events_event_field_default_field_instances() {
         'year_range' => '-1:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -260,7 +299,7 @@ function events_event_field_default_field_instances() {
           'view_mode' => 'default',
         ),
         'type' => 'multifield_table',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -281,7 +320,7 @@ function events_event_field_default_field_instances() {
       'module' => 'multifield_table',
       'settings' => array(),
       'type' => 'multifield_table',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -390,6 +429,7 @@ function events_event_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Category');
   t('Cluster');
+  t('Coordination Hub');
   t('Date');
   t('Document_type');
   t('Documents');

@@ -89,6 +89,7 @@ function events_event_calendar() {
         'field_event_organization' => '',
         'field_event_cluster' => '',
         'field_event_category' => '',
+        'field_event_coordination_hub' => '',
       ),
     ),
   );
@@ -105,7 +106,7 @@ function events_event_calendar() {
 /**
  * Fetch events from search api.
  */
-function events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category) {
+function events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub) {
   $index = search_api_index_load("un_events");
   $query = new SearchApiQuery($index);
 
@@ -124,6 +125,9 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
   }
   if ($category) {
     $filter->condition('field_event_category', $category);
+  }
+  if ($coordination_hub) {
+    $filter->condition('field_event_coordination_hub', $coordination_hub);
   }
 
   $query->filter($filter);
@@ -169,7 +173,16 @@ function events_event_fetch_events() {
   $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
   if (!empty($category)) {
     if (!is_numeric($category)) {
-      header("HTTP/1.1 400 field_event_cluster is an integer.", TRUE, 400);
+      header("HTTP/1.1 400 field_event_category is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
+  if (!empty($coordination_hub)) {
+    if (!is_numeric($coordination_hub)) {
+      header("HTTP/1.1 400 field_event_coordination_hub is an integer.", TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -177,7 +190,7 @@ function events_event_fetch_events() {
 
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : (isset($user->timezone) ? $user->timezone : 'UTC');
 
-  $nodes = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category);
+  $nodes = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
 
   $events = array();
   foreach ($nodes as $node) {
@@ -198,6 +211,7 @@ function events_event_fetch_events() {
         'field_event_organization' => isset($node->field_event_organization['und'][0]['tid']) ? $node->field_event_organization['und'][0]['tid'] : '',
         'field_event_cluster' => isset($node->field_event_cluster['und'][0]['tid']) ? $node->field_event_cluster['und'][0]['tid'] : '',
         'field_event_category' => isset($node->field_event_category['und'][0]['tid']) ? $node->field_event_category['und'][0]['tid'] : '',
+        'field_event_coordination_hub' => isset($node->field_event_coordination_hub['und'][0]['tid']) ? $node->field_event_coordination_hub['und'][0]['tid'] : '',
       );
     }
   }
@@ -230,13 +244,22 @@ function events_event_to_ical() {
   $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
   if (!empty($category)) {
     if (!is_numeric($category)) {
-      header("HTTP/1.1 422 field_event_cluster is an integer.", TRUE, 422);
+      header("HTTP/1.1 422 field_event_category is an integer.", TRUE, 422);
       module_invoke_all('exit');
       exit();
     }
   }
 
-  $nodes = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category);
+  $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
+  if (!empty($coordination_hub)) {
+    if (!is_numeric($coordination_hub)) {
+      header("HTTP/1.1 422 field_event_coordination_hub is an integer.", TRUE, 422);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $nodes = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category, $coordination_hub);
 
   $library = libraries_load('iCalcreator');
   $config = array('unique_id' => 'Date iCal');

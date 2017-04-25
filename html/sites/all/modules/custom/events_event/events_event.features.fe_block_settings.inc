@@ -31,7 +31,7 @@ function events_event_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'ochabasic',
-        'weight' => -15,
+        'weight' => -16,
       ),
       'seven' => array(
         'region' => '',
@@ -63,7 +63,7 @@ function events_event_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'ochabasic',
-        'weight' => -14,
+        'weight' => -15,
       ),
       'seven' => array(
         'region' => '',
@@ -73,6 +73,38 @@ function events_event_default_fe_block_settings() {
       ),
     ),
     'title' => 'Organizations',
+    'visibility' => 1,
+  );
+
+  $export['views-b69b2e1349dc7f44eba4e7063279de36'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'b69b2e1349dc7f44eba4e7063279de36',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => '<front>',
+    'roles' => array(),
+    'themes' => array(
+      'bartik' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bartik',
+        'weight' => 0,
+      ),
+      'ochabasic' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'ochabasic',
+        'weight' => -13,
+      ),
+      'seven' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'seven',
+        'weight' => 0,
+      ),
+    ),
+    'title' => 'Coordination Hubs',
     'visibility' => 1,
   );
 
@@ -95,7 +127,7 @@ function events_event_default_fe_block_settings() {
         'region' => 'content',
         'status' => 1,
         'theme' => 'ochabasic',
-        'weight' => -13,
+        'weight' => -14,
       ),
       'seven' => array(
         'region' => '',

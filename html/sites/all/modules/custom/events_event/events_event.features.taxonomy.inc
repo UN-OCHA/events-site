@@ -17,6 +17,14 @@ function events_event_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
+    'ev_coordination_hub' => array(
+      'name' => 'Coordination Hub',
+      'machine_name' => 'ev_coordination_hub',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'ev_document_type' => array(
       'name' => 'Document type',
       'machine_name' => 'ev_document_type',

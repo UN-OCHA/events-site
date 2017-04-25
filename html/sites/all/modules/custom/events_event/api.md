@@ -17,6 +17,8 @@ Gets a list of events, all parameters are optional.
   * `?field_event_organization=` // Filter by a certain organization, default all, example `123`
   * `?field_event_cluster=` // Filter by a certain cluster, default all, example `123`
   * `?field_event_category=` // Filter by a certain category, default all, example `123`
+  * `?field_event_coordination_hub=` // Filter by a certain coordination hub, default all, example `123`
+
 
 Example output.
 
@@ -32,7 +34,8 @@ Example output.
     "backgroundColor": "#ffeecc",
     "field_event_organization": "123",
     "field_event_cluster": "123",
-    "field_event_category": "123"
+    "field_event_category": "123",
+    "field_event_coordination_hub": "123"
   }
 ]
 ```
@@ -52,6 +55,7 @@ Example output.
 * Data[0].field_event_organization: /^[0-9]+|$/
 * Data[0].field_event_cluster: /^[0-9]+|$/
 * Data[0].field_event_category: /^[0-9]+|$/
+* Data[0].field_event_coordination_hub: /^[0-9]+|$/
 
 
 ## `GET /fetch-events`
@@ -63,6 +67,7 @@ Start date has to be smaller than end date.
   * `?field_event_organization=`
   * `?field_event_cluster=`
   * `?field_event_category=`
+  * `?field_event_coordination_hub=`
 
 ===
 
@@ -79,6 +84,7 @@ field_event_organization is an integer.
   * `?field_event_organization=xyzzy`
   * `?field_event_cluster=`
   * `?field_event_category=`
+  * `?field_event_coordination_hub=`
 
 ===
 
@@ -95,6 +101,7 @@ field_event_cluster is an integer.
   * `?field_event_organization=`
   * `?field_event_cluster=xyzzy`
   * `?field_event_category=`
+  * `?field_event_coordination_hub=`
 
 ===
 
@@ -111,6 +118,24 @@ field_event_category is an integer.
   * `?field_event_organization=`
   * `?field_event_cluster=`
   * `?field_event_category=xyzzy`
+  * `?field_event_coordination_hub=`
+
+===
+
+### Response
+
+* Status: `400`
+
+## `GET /fetch-events`
+
+field_event_coordination_hub is an integer.
+
+  * `?start=2017-03-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=`
+  * `?field_event_cluster=`
+  * `?field_event_category=`
+  * `?field_event_coordination_hub=xyzzy`
 
 ===
 
