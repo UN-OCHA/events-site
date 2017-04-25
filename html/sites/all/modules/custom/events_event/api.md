@@ -16,6 +16,7 @@ Gets a list of events, all parameters are optional.
   * `?end=` // End date of the range of events, default last of the month, example `2017-03-31`
   * `?field_event_organization=` // Filter by a certain organization, default all, example `123`
   * `?field_event_cluster=` // Filter by a certain cluster, default all, example `123`
+  * `?field_event_category=` // Filter by a certain category, default all, example `123`
 
 Example output.
 
@@ -29,8 +30,9 @@ Example output.
     "allDay": true,
     "url": "\/node\/11",
     "backgroundColor": "#ffeecc",
-    "field_event_organization": "",
-    "field_event_cluster": "4500"
+    "field_event_organization": "123",
+    "field_event_cluster": "123",
+    "field_event_category": "123"
   }
 ]
 ```
@@ -49,6 +51,7 @@ Example output.
 * Data[0].url: /^\/node\/[0-9]+$/
 * Data[0].field_event_organization: /^[0-9]+|$/
 * Data[0].field_event_cluster: /^[0-9]+|$/
+* Data[0].field_event_category: /^[0-9]+|$/
 
 
 ## `GET /fetch-events`
@@ -59,6 +62,7 @@ Start date has to be smaller than end date.
   * `?end=2017-05-08`
   * `?field_event_organization=`
   * `?field_event_cluster=`
+  * `?field_event_category=`
 
 ===
 
@@ -74,6 +78,7 @@ field_event_organization is an integer.
   * `?end=2017-05-08`
   * `?field_event_organization=xyzzy`
   * `?field_event_cluster=`
+  * `?field_event_category=`
 
 ===
 
@@ -89,6 +94,23 @@ field_event_cluster is an integer.
   * `?end=2017-05-08`
   * `?field_event_organization=`
   * `?field_event_cluster=xyzzy`
+  * `?field_event_category=`
+
+===
+
+### Response
+
+* Status: `400`
+
+## `GET /fetch-events`
+
+field_event_category is an integer.
+
+  * `?start=2017-03-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=`
+  * `?field_event_cluster=`
+  * `?field_event_category=xyzzy`
 
 ===
 
