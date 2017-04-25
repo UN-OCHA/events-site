@@ -5,11 +5,10 @@
 	margin-bottom: $base-unit*2;
 	padding-right: $base-unit;
 
-  h2 {
+	h2 {
 		@include font-size($base-font-size);
 		margin-bottom: $base-unit/2;
 	}
-
 }
 
 .block-views.processed {
@@ -23,6 +22,23 @@
 	padding-top: $base-unit;
 }
 
+.block-views, .calendar-settings {
+
+	label {
+		margin-bottom: $base-unit/2;
+	}
+}
+
+.calendar-settings {
+	background: $light-bg;
+	padding: $base-unit;
+	margin: $base-unit*2 0;
+
+	 h3, p {
+		margin-bottom: $base-unit;
+	}
+
+}
 
 @include media-query(sm) {
 
