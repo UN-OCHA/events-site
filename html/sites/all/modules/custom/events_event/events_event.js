@@ -123,8 +123,55 @@
         }
       };
 
+      var buildIcalButton = function () {
+        var button = document.createElement('button');
+        button.innerHTML = Drupal.t('ICAL');
+        button.addEventListener('click', handleICal);
+        return button;
+      }
+
+      var buildExportOptions = function () {
+        var container = document.createElement('div');
+        container.className += ' calendar-export';
+
+        var exportButton = document.createElement('button');
+        exportButton.className = 'btn-primary calendar-export__button';
+        exportButton.innerHTML = Drupal.t('Export');
+        exportButton.id = 'export-dropdown';
+        exportButton.setAttribute('data-toggle', 'dropdown');
+        exportButton.setAttribute('aria-haspopup', 'true');
+        exportButton.setAttribute('aria-expanded', 'false');
+
+        container.appendChild(exportButton);
+
+        var exportOptionsList = document.createElement('ul');
+        exportOptionsList.className = 'dropdown-menu';
+        exportOptionsList.setAttribute('aria-labelledby', 'export-dropdown');
+
+        var icalButton = buildIcalButton();
+
+        var exportListItem = document.createElement('li');
+        exportListItem.appendChild(icalButton);
+        exportOptionsList.appendChild(exportListItem);
+        container.appendChild(exportOptionsList);
+        return container;
+      }
+
+      var wrapFilters = function (filters) {
+        var content = document.querySelector('.region-content');
+        var filtersWrapper = document.createElement('div');
+        filtersWrapper.className = 'calendar-filters';
+        for (var i = 0; i < filters.length; i++) {
+          filtersWrapper.appendChild(filters[i]);
+        }
+        content.insertBefore(filtersWrapper, document.querySelector('#block-system-main'));
+      }
+
       var filters = document.querySelectorAll('.block-views');
       if (filters) {
+
+        wrapFilters(filters);
+
         for (var i = 0; i < filters.length; i++) {
           var filter = filters[i];
 
@@ -132,16 +179,17 @@
           var newLabel = document.createElement('label');
           newLabel.innerText = filter.querySelector('h2').innerText;
           newLabel.setAttribute('for', 'filter-' + i);
-          filter.querySelector('h2').remove();
+          var heading = filter.querySelector('h2');
+          heading.className = 'hidden';
 
           // Construct select.
           var newSelect = document.createElement('select');
-          newSelect.classList.add('chosen-enable');
+          newSelect.className += ' chosen-enable';
           newSelect.id = 'filter-' + i;
           var options = filter.querySelectorAll('.block-views .content li a');
 
           if (options.length === 0) {
-            filter.classList.add('invisible');
+            filter.className += ' invisible';
           }
           else {
             // Add empty option.
@@ -161,7 +209,7 @@
             }
 
             // Hide filters.
-            filter.classList.add('processed');
+            filter.className += ' processed';
             filter.appendChild(newLabel);
             filter.appendChild(newSelect);
 
@@ -234,20 +282,8 @@
           }
         });
 
-        // Add ical button.
-        var icalDiv = document.createElement('div');
-        icalDiv.classList.add('block-views');
-
-        var icalTitle = document.createElement('h2');
-        icalTitle.innerHTML = Drupal.t('Export');
-        icalDiv.appendChild(icalTitle);
-
-        var icalButton = document.createElement('button');
-        icalButton.innerHTML = Drupal.t('ICAL');
-        icalButton.addEventListener('click', handleICal);
-        icalDiv.appendChild(icalButton);
-
-        document.querySelector('.region-content').insertBefore(icalDiv, document.querySelector('#block-system-main'));
+        var exportDiv = buildExportOptions();
+        document.querySelector('.region-content').insertBefore(exportDiv, document.querySelector('.calendar-filters'));
       }
     }
   }
