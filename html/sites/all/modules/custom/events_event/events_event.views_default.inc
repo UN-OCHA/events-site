@@ -40,19 +40,19 @@ function events_event_views_default_views() {
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
 
   /* Display: Filter by organisation */
-  $handler = $view->new_display('search_api_views_facets_block', 'Filter by organisation', 'search_api_views_facets_block_1');
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by organisation', 'search_api_organisations');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['block_description'] = 'Organisations';
   $handler->display->display_options['facet_field'] = 'field_event_organization';
 
   /* Display: Filter by cluster */
-  $handler = $view->new_display('search_api_views_facets_block', 'Filter by cluster', 'search_api_views_facets_block_2');
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by cluster', 'search_api_clusters');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['block_description'] = 'Clusters';
   $handler->display->display_options['facet_field'] = 'field_event_cluster';
 
   /* Display: Filter by category */
-  $handler = $view->new_display('search_api_views_facets_block', 'Filter by category', 'search_api_views_facets_block_3');
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by category', 'search_api_categories');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['block_description'] = 'Categories';
   $handler->display->display_options['facet_field'] = 'field_event_category';
