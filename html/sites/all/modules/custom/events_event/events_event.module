@@ -639,3 +639,57 @@ function events_event_js_alter(&$javascript) {
     unset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js']);
   }
 }
+
+/**
+ * Implements hook_date_popup_process_alter().
+ */
+function events_event_date_popup_process_alter(&$element, $form_state, $context) {
+  if (isset($element['#name']) && strpos($element['#name'], '[value]') !== FALSE) {
+    // @codingStandardsIgnoreStart
+    $zonelist = timezone_identifiers_list();
+    $timezones = array();
+    foreach ($zonelist as $zone) {
+      if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
+        $timezones[$zone] = t('@zone: @date', array(
+          '@zone' => t(str_replace(array('_', '/'), array(' ', ' - '), $zone)),
+          '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone),
+        ));
+      }
+    }
+    // Sort the translated time zones alphabetically.
+    asort($timezones);
+    // @codingStandardsIgnoreEnd
+
+    $element['timezone'] = array(
+      '#type' => 'select',
+      '#title' => t('Time zone'),
+      '#default_value' => drupal_get_user_timezone(),
+      '#options' => $timezones,
+    );
+  }
+
+}
+
+/**
+ * Implements hook_date_popup_pre_validate_alter().
+ */
+function events_event_date_popup_pre_validate_alter(&$element, $form_state, &$input) {
+  if (isset($input['timezone']) && !empty($input['timezone'])) {
+    dpm(drupal_get_user_timezone());
+    dpm($input, 'input');
+    if ($input['timezone'] != drupal_get_user_timezone()) {
+      $granularity = date_format_order($element['#date_format']);
+      $has_time = date_has_time($granularity);
+
+      $format = date_popup_date_format($element);
+      $format .= $has_time ? ' ' . date_popup_time_format($element) : '';
+
+      $date = new DateTime($input['date'] . ' ' . $input['time'], new DateTimeZone(drupal_get_user_timezone()));
+      dpm($date, 'before');
+      $date->setTimezone(new DateTimeZone($input['timezone']));
+      dpm($date, 'after');
+
+      // Overwrite input var.
+    }
+  }
+}
