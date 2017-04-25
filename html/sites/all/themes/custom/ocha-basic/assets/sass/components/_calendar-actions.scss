@@ -60,6 +60,10 @@
 		right: 0;
 		top: -$base-unit*6.25;
 
+		&.open {
+			position: absolute;
+		}
+
 		.dropdown-menu {
 			left: auto;
 			right: 0;
