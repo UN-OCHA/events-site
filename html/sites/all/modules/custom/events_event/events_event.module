@@ -67,7 +67,7 @@ function events_event_calendar() {
     'eventLimit' => TRUE,
     'firstDay' => 1,
     'weekends' => TRUE,
-    'timeFormat' => 'H(:mm)',
+    'timeFormat' => 'H:mm',
     'timezone' => isset($user->timezone) ? $user->timezone : 'local',
     'views' => array(
       'listYear' => array(
