@@ -15026,6 +15026,24 @@ var ListView = View.extend({
 });
 
 /*
+Reversed ListView
+*/
+var ListViewReversed = ListView.extend({
+
+	grid: null,
+	scroller: null,
+
+	initialize: function() {
+		this.grid = new ListViewReversedGrid(this);
+		this.scroller = new Scroller({
+			overflowX: 'hidden',
+			overflowY: 'auto'
+		});
+	}
+
+});
+
+/*
 Responsible for event rendering and user-interaction.
 Its "el" is the inner-content of the above view's scroller.
 */
@@ -15240,7 +15258,48 @@ var ListViewGrid = Grid.extend({
 
 });
 
+var ListViewReversedGrid = ListViewGrid.extend({
+	// render the event segments in the view
+	renderSegList: function(allSegs) {
+		var segsByDay = this.groupSegsByDay(allSegs); // sparse array
+		var dayIndex;
+		var daySegs;
+		var i;
+		var tableEl = $('<table class="fc-list-table"><tbody/></table>');
+		var tbodyEl = tableEl.find('tbody');
+
+		for (dayIndex = segsByDay.length; dayIndex > 0; dayIndex--) {
+			daySegs = segsByDay[dayIndex];
+			if (daySegs) { // sparse array, so might be undefined
+
+				// append a day header
+				tbodyEl.append(this.dayHeaderHtml(
+					this.view.renderRange.start.clone().add(dayIndex, 'days')
+				));
+
+				this.sortEventSegs(daySegs);
+
+				for (i = 0; i < daySegs.length; i++) {
+					tbodyEl.append(daySegs[i].el); // append event row
+				}
+			}
+		}
+
+		this.el.empty().append(tableEl);
+	}
+});
+
 ;;
+
+fcViews.listrev = {
+	'class': ListViewReversed,
+	buttonTextKey: 'past', // what to lookup in locale files
+	defaults: {
+		buttonText: 'past', // text to display for English
+		listDayFormat: 'LL', // like "January 1, 2016"
+		noEventsMessage: 'No events to display'
+	}
+};
 
 fcViews.list = {
 	'class': ListView,

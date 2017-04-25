@@ -102,7 +102,7 @@ function fullcalendar_api_libraries_info() {
     ),
     'files' => array(
       'js' => array(
-        'fullcalendar.min.js' => array(
+        'fullcalendar.js' => array(
           'scope' => 'footer',
         ),
       ),
