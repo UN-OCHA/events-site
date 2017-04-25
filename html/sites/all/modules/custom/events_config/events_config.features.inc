@@ -33,6 +33,7 @@ function events_config_default_search_api_index() {
       "cron_limit" : "50",
       "fields" : {
         "created" : { "type" : "date" },
+        "field_event_category" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "field_event_cluster" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "field_event_date:duration" : { "type" : "list\\u003Cduration\\u003E" },
         "field_event_date:value" : { "type" : "list\\u003Cdate\\u003E" },
@@ -184,6 +185,12 @@ function events_config_default_search_api_server() {
             "table" : "search_api_db_un_events",
             "column" : "created",
             "type" : "date",
+            "boost" : "1.0"
+          },
+          "field_event_category" : {
+            "table" : "search_api_db_un_events",
+            "column" : "field_event_category",
+            "type" : "integer",
             "boost" : "1.0"
           }
         }

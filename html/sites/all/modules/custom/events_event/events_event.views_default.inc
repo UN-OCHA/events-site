@@ -39,17 +39,23 @@ function events_event_views_default_views() {
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_un_events';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
 
-  /* Display: Facets block */
-  $handler = $view->new_display('search_api_views_facets_block', 'Facets block', 'search_api_views_facets_block_1');
+  /* Display: Filter by organisation */
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by organisation', 'search_api_views_facets_block_1');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['block_description'] = 'Organisations';
   $handler->display->display_options['facet_field'] = 'field_event_organization';
 
-  /* Display: Facets block 2 */
-  $handler = $view->new_display('search_api_views_facets_block', 'Facets block 2', 'search_api_views_facets_block_2');
+  /* Display: Filter by cluster */
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by cluster', 'search_api_views_facets_block_2');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['block_description'] = 'Clusters';
   $handler->display->display_options['facet_field'] = 'field_event_cluster';
+
+  /* Display: Filter by category */
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by category', 'search_api_views_facets_block_3');
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['block_description'] = 'Categories';
+  $handler->display->display_options['facet_field'] = 'field_event_category';
   $translatables['ev_event_filters'] = array(
     t('Master'),
     t('more'),
@@ -68,10 +74,12 @@ function events_event_views_default_views() {
     t('Node ID'),
     t('.'),
     t(','),
-    t('Facets block'),
+    t('Filter by organisation'),
     t('Organisations'),
-    t('Facets block 2'),
+    t('Filter by cluster'),
     t('Clusters'),
+    t('Filter by category'),
+    t('Categories'),
   );
   $export['ev_event_filters'] = $view;
 
