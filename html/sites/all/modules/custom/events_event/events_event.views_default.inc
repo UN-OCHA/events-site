@@ -56,6 +56,12 @@ function events_event_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['block_description'] = 'Categories';
   $handler->display->display_options['facet_field'] = 'field_event_category';
+
+  /* Display: Filter by coordination hub */
+  $handler = $view->new_display('search_api_views_facets_block', 'Filter by coordination hub', 'search_api_coordination_hub');
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['block_description'] = 'Coordination Hubs';
+  $handler->display->display_options['facet_field'] = 'field_event_coordination_hub';
   $translatables['ev_event_filters'] = array(
     t('Master'),
     t('more'),
@@ -80,6 +86,8 @@ function events_event_views_default_views() {
     t('Clusters'),
     t('Filter by category'),
     t('Categories'),
+    t('Filter by coordination hub'),
+    t('Coordination Hubs'),
   );
   $export['ev_event_filters'] = $view;
 

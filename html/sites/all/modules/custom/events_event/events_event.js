@@ -19,6 +19,7 @@
         'field_event_organization': undefined,
         'field_event_cluster': undefined,
         'field_event_category': undefined,
+        'field_event_coordination_hub': undefined,
         'timezone': 'UTC'
       };
 
