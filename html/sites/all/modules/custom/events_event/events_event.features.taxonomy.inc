@@ -9,6 +9,14 @@
  */
 function events_event_taxonomy_default_vocabularies() {
   return array(
+    'ev_category' => array(
+      'name' => 'Category',
+      'machine_name' => 'ev_category',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'ev_document_type' => array(
       'name' => 'Document type',
       'machine_name' => 'ev_document_type',
