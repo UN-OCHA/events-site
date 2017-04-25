@@ -40,10 +40,37 @@
 
 }
 
+.calendar-export {
+	order: 1;
+}
+
 @include media-query(sm) {
 
 	.block-views {
 		width: 25%;
+
+		&:last-child {
+			padding: 0;
+		}
+	}
+
+	.calendar-export {
+		order: 0;
+		position: absolute;
+		right: 0;
+		top: -$base-unit*6.25;
+
+		.dropdown-menu {
+			left: auto;
+			right: 0;
+		}
+	}
+}
+
+@include media-query(md) {
+
+	.calendar-export {
+		top: -$base-unit*7.25;
 	}
 
 }

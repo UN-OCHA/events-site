@@ -83,8 +83,14 @@ tr.odd, tr.even {
 }
 
 .invisible {
-   @extend .sr-only;
- }
+  @extend .sr-only;
+}
+
+.region-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 
 @include media-query(md) {
 
