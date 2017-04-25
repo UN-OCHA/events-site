@@ -18,6 +18,7 @@
       var eventFilters = {
         'field_event_organization': undefined,
         'field_event_cluster': undefined,
+        'field_event_category': undefined,
         'timezone': 'UTC'
       };
 
