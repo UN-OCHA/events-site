@@ -145,6 +145,30 @@ Example output.
 * Data[0].tid: /^[0-9]+$/
 * Data[0].name: /./
 
+## `GET /categories`
+
+Gets a list of categories.
+
+Example output.
+
+```json
+[
+  {
+    "tid": "123",
+    "name": "Meeting",
+  }
+]
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"
+* Data[0].tid: /^[0-9]+$/
+* Data[0].name: /./
+
 ## `GET /timezones`
 
 Gets a list of time zones.
