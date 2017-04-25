@@ -68,7 +68,7 @@
           }
         },
         'past': {
-          'type': 'list',
+          'type': 'listrev',
           'buttonText': 'Past events',
           'duration': {
             'days': 90
