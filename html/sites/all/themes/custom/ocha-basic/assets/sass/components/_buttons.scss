@@ -1,13 +1,16 @@
-.btn-primary {
+button {
 	-webkit-appearance: none;
+	@include font-size($base-font-size);
+	border: none;
+	box-shadow: none;
+}
+
+.btn-primary {
 	border-radius: 4px;
 	background: $primary-color;
 	text-transform: uppercase;
 	color: $light-text-color;
-	border: none;
-	box-shadow: none;
 	padding: $base-unit*1.5;
-	@include font-size($base-font-size);
 	transition: background 0.3s ease;
 
 	&:hover, &:focus {

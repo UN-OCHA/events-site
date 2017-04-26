@@ -1416,7 +1416,7 @@ be a descendant of the grid when it is being dragged.
 	}
 }
 
-@include media-query(sm) {
+@include media-query(lg) {
 
 	.fc-toolbar.fc-header-toolbar {
 		border-bottom: 1px solid $dark-blue;

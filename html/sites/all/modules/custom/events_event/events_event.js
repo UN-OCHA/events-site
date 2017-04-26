@@ -123,23 +123,73 @@
         }
       };
 
+      var buildIcalButton = function () {
+        var button = document.createElement('button');
+        button.innerHTML = Drupal.t('ICAL');
+        button.addEventListener('click', handleICal);
+        return button;
+      }
+
+      var buildExportOptions = function () {
+        var container = document.createElement('div');
+        container.className += ' calendar-export';
+
+        var exportButton = document.createElement('button');
+        exportButton.className = 'btn-primary calendar-export__button';
+        exportButton.innerHTML = Drupal.t('Export');
+        exportButton.id = 'export-dropdown';
+        exportButton.setAttribute('data-toggle', 'dropdown');
+        exportButton.setAttribute('aria-haspopup', 'true');
+        exportButton.setAttribute('aria-expanded', 'false');
+
+        container.appendChild(exportButton);
+
+        var exportOptionsList = document.createElement('ul');
+        exportOptionsList.className = 'dropdown-menu';
+        exportOptionsList.setAttribute('aria-labelledby', 'export-dropdown');
+
+        var icalButton = buildIcalButton();
+
+        var exportListItem = document.createElement('li');
+        exportListItem.appendChild(icalButton);
+        exportOptionsList.appendChild(exportListItem);
+        container.appendChild(exportOptionsList);
+        return container;
+      }
+
+      var wrapFilters = function (filters) {
+        var content = document.querySelector('.region-content');
+        var filtersWrapper = document.createElement('div');
+        filtersWrapper.className = 'calendar-filters';
+        for (var i = 0; i < filters.length; i++) {
+          filtersWrapper.appendChild(filters[i]);
+        }
+        content.insertBefore(filtersWrapper, document.querySelector('#block-system-main'));
+      }
+
       var filters = document.querySelectorAll('.block-views');
       if (filters) {
+
+        wrapFilters(filters);
+
         for (var i = 0; i < filters.length; i++) {
           var filter = filters[i];
 
           // Construct label.
           var newLabel = document.createElement('label');
           newLabel.innerText = filter.querySelector('h2').innerText;
-          newLabel.classList.add('invisible');
+          newLabel.setAttribute('for', 'filter-' + i);
+          var heading = filter.querySelector('h2');
+          heading.className = 'hidden';
 
           // Construct select.
           var newSelect = document.createElement('select');
-          newSelect.classList.add('chosen-enable');
+          newSelect.className += ' chosen-enable';
+          newSelect.id = 'filter-' + i;
           var options = filter.querySelectorAll('.block-views .content li a');
 
           if (options.length === 0) {
-            filter.classList.add('invisible');
+            filter.className += ' invisible';
           }
           else {
             // Add empty option.
@@ -159,7 +209,7 @@
             }
 
             // Hide filters.
-            filter.classList.add('processed');
+            filter.className += ' processed';
             filter.appendChild(newLabel);
             filter.appendChild(newSelect);
 
@@ -174,27 +224,45 @@
 
         // Add timezone selector.
         var tzDiv = document.createElement('div');
-        tzDiv.classList.add('block-views');
+        tzDiv.className += 'calendar-settings';
 
         var tzTitle = document.createElement('h2');
-        tzTitle.innerHTML = Drupal.t('Time zone');
+        tzTitle.innerHTML = Drupal.t('Calendar settings');
         tzDiv.appendChild(tzTitle);
+
+        var tzSubTitle = document.createElement('h3');
+        tzSubTitle.innerHTML = Drupal.t('Time zone');
+        tzDiv.appendChild(tzSubTitle);
+
+        var tzCurrent = document.createElement('p');
+        tzCurrent.innerHTML = Drupal.t('Current time zone: ');
+
+        tzDiv.appendChild(tzCurrent);
+
+        var tzLabel = document.createElement('label');
+        tzLabel.setAttribute('for', 'timezone-selector');
+        tzLabel.innerHTML = Drupal.t('Display times from the following time zone');
+        tzDiv.appendChild(tzLabel);
+
 
         var tzSelect = document.createElement('select');
         tzSelect.id = 'timezone-selector';
 
         tzDiv.appendChild(tzSelect);
-        document.querySelector('.region-content').insertBefore(tzDiv, document.querySelector('.region-content').firstChild);
+        document.querySelector('#fullcalendar').insertBefore(tzDiv, null);
 
         $.getJSON('api/v0/timezones', function(timezones) {
           var $tz = $('#timezone-selector');
           var $newtz;
+          var currentTz;
+
           $tz.append(
             $("<option/>").text('local').attr('value', '')
           );
           for (var tz in timezones) {
-            if (Drupal.settings.fullcalendar_api.calendarSettings.timezone = tz) {
+            if (Drupal.settings.fullcalendar_api.calendarSettings.timezone === tz) {
               $newtz = $("<option selected/>").text(timezones[tz]).attr('value', tz);
+              currentTz = timezones[tz];
             }
             else {
               $newtz = $("<option/>").text(timezones[tz]).attr('value', tz);
@@ -202,8 +270,10 @@
             $tz.append($newtz);
           }
 
+          tzCurrent.innerHTML += currentTz;
+
           if (Drupal.behaviors && Drupal.behaviors.chosen) {
-            $tz.chosen("destroy");
+            $tz.chosen('destroy');
             $tz.addClass('chosen-enable');
             Drupal.behaviors.chosen.attach($tz, Drupal.settings);
             $tz.chosen().change(function(e) {
@@ -212,20 +282,8 @@
           }
         });
 
-        // Add ical button.
-        var icalDiv = document.createElement('div');
-        icalDiv.classList.add('block-views');
-
-        var icalTitle = document.createElement('h2');
-        icalTitle.innerHTML = Drupal.t('Export');
-        icalDiv.appendChild(icalTitle);
-
-        var icalButton = document.createElement('button');
-        icalButton.innerHTML = Drupal.t('ICAL');
-        icalButton.addEventListener('click', handleICal);
-        icalDiv.appendChild(icalButton);
-
-        document.querySelector('.region-content').insertBefore(icalDiv, document.querySelector('#block-system-main'));
+        var exportDiv = buildExportOptions();
+        document.querySelector('.region-content').insertBefore(exportDiv, document.querySelector('.calendar-filters'));
       }
     }
   }

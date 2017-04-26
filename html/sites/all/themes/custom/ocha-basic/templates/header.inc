@@ -8,6 +8,7 @@
 <header role="banner" class="site-header">
 	<div class="site-header-top">
 		<div class="container">
+      <a href="#main" class="skip-link">Skip to content</a>
 			<?php if ($secondary_menu): ?>
 				<?php print theme('links__system_secondary_menu',
           array(
@@ -25,7 +26,6 @@ endif; ?>
 
   <div class="container">
     <div class="site-header__inner">
-      <a href="#main" class="skip-link">Skip to content</a>
       <a href="<?php print $front_page; ?>" class="site-header__logo">
         <img src="<?php print $base_path . $directory . '/assets/images/ocha-logo.svg'; ?>" alt="UN-OCHA">
       </a>
