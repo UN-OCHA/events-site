@@ -651,7 +651,7 @@ function events_event_js_alter(&$javascript) {
  * Implements hook_date_timezone_process_alter().
  */
 function events_event_date_timezone_process_alter(&$element, &$form_state, $context) {
-  $element ['timezone']['#options'] = events_event_system_time_zones();
+  $element['timezone']['#options'] = events_event_system_time_zones();
 }
 
 /**
