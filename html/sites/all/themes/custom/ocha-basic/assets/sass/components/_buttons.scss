@@ -1,4 +1,4 @@
-button {
+button, input[type="submit"] {
 	-webkit-appearance: none;
 	@include font-size($base-font-size);
 	border: none;
