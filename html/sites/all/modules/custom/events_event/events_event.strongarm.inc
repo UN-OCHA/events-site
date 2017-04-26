@@ -62,6 +62,20 @@ function events_event_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_ev_local_time';
+  $strongarm->value = 'Y-m-d H:i T (O)';
+  $export['date_format_ev_local_time'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_ev_local_time_extended';
+  $strongarm->value = 'Y-m-d H:i (e)';
+  $export['date_format_ev_local_time_extended'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__ev_event';
   $strongarm->value = array(
     'view_modes' => array(
