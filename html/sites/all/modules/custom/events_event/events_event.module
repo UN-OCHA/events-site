@@ -195,9 +195,9 @@ function events_event_fetch_events() {
   $events = array();
   foreach ($nodes as $node) {
     foreach ($node->field_event_date['und'] as $date) {
-      $date_start = new DateTime($date['value'], timezone_open('UTC'));
+      $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
       $date_start->setTimezone(timezone_open($timezone));
-      $date_end = new DateTime($date['value2'], timezone_open('UTC'));
+      $date_end = new DateTime($date['value2'], timezone_open($date['timezone_db']));
       $date_end->setTimezone(timezone_open($timezone));
 
       $events[] = array(
@@ -637,88 +637,5 @@ function events_event_js_alter(&$javascript) {
   // Remove fullcalendar javascript.
   if (isset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js'])) {
     unset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js']);
-  }
-}
-
-/**
- * Implements hook_date_popup_process_alter().
- */
-function events_event_date_popup_process_alter(&$element, $form_state, $context) {
-  if (isset($element['#name']) && strpos($element['#name'], '[value]') !== FALSE) {
-    // @codingStandardsIgnoreStart
-    $zonelist = timezone_identifiers_list();
-    $timezones = array();
-    foreach ($zonelist as $zone) {
-      if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
-        $timezones[$zone] = t('@zone: @date', array(
-          '@zone' => t(str_replace(array('_', '/'), array(' ', ' - '), $zone)),
-          '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone),
-        ));
-      }
-    }
-    // Sort the translated time zones alphabetically.
-    asort($timezones);
-    // @codingStandardsIgnoreEnd
-
-    $element['timezone'] = array(
-      '#type' => 'select',
-      '#title' => t('Time zone'),
-      '#default_value' => drupal_get_user_timezone(),
-      '#options' => $timezones,
-    );
-  }
-  else {
-    $element['timezone'] = array(
-      '#type' => 'hidden',
-      '#value' => '',
-    );
-  }
-
-}
-
-/**
- * Implements hook_date_popup_pre_validate_alter().
- */
-function events_event_date_popup_pre_validate_alter(&$element, &$form_state, &$input) {
-  static $dates_tz = array();
-  if (!isset($element['#instance']['field_name'])) {
-    return;
-  }
-
-  $field_name = $element['#instance']['field_name'];
-
-  if (isset($input['timezone']) && !empty($input['timezone'])) {
-    if ($input['timezone'] != drupal_get_user_timezone()) {
-      $granularity = date_format_order($element['#date_format']);
-      $has_time = date_has_time($granularity);
-
-      $format = date_popup_date_format($element);
-      $format .= $has_time ? ' ' . date_popup_time_format($element) : '';
-
-      $date = DateTime::createFromFormat($format, $input['date'] . ' ' . $input['time'], new DateTimeZone(drupal_get_user_timezone()));
-      $date->setTimezone(new DateTimeZone($input['timezone']));
-      $dates_tz[$field_name] = $input['timezone'];
-
-      // Overwrite input var.
-      $input['date'] = $date->format('d/m/Y');
-      $input['time'] = $date->format('H:i');
-      $element['#date_timezone'] = $dates_tz[$field_name];
-    }
-  }
-  elseif (isset($dates_tz[$field_name])) {
-    $granularity = date_format_order($element['#date_format']);
-    $has_time = date_has_time($granularity);
-
-    $format = date_popup_date_format($element);
-    $format .= $has_time ? ' ' . date_popup_time_format($element) : '';
-
-    $date = DateTime::createFromFormat($format, $input['date'] . ' ' . $input['time'], new DateTimeZone(drupal_get_user_timezone()));
-    $date->setTimezone(new DateTimeZone($dates_tz[$field_name]));
-
-    // Overwrite input var.
-    $input['date'] = $date->format('d/m/Y');
-    $input['time'] = $date->format('H:i');
-    $input['timezone'] = $dates_tz[$field_name];
-    $element['#date_timezone'] = $dates_tz[$field_name];
   }
 }

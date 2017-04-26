@@ -564,6 +564,7 @@ function date_popup_validate($element, &$form_state) {
   }
 
   drupal_alter('date_popup_pre_validate', $element, $form_state, $input);
+
   $granularity = date_format_order($element['#date_format']);
   $date_granularity = date_popup_date_granularity($element);
   $time_granularity = date_popup_time_granularity($element);
@@ -602,6 +603,7 @@ function date_popup_validate($element, &$form_state) {
       return;
     }
   }
+
   // If the created date is valid, set it.
   $value = !empty($date) ? $date->format(DATE_FORMAT_DATETIME) : NULL;
   form_set_value($element, $value, $form_state);
@@ -630,7 +632,7 @@ function date_popup_input_date($element, $input, $auto_complete = FALSE) {
   //check if date is empty, if yes, then leave it blank.
   $datetime = !empty($input['date']) ? trim($input['date']) : '';
   $datetime .= $has_time ? ' ' . trim($input['time']) : '';
-  $date = new DateObject($datetime, isset($input['timezone']) ? $input['timezone'] : $element['#date_timezone'], $format);
+  $date = new DateObject($datetime, $element['#date_timezone'], $format);
   //if the variable is time only then set TimeOnly to TRUE
   if(empty($input['date']) && !empty($input['time']) ){
     $date->timeOnly = 'TRUE';

@@ -187,7 +187,7 @@ function events_event_field_default_field_bases() {
       'repeat' => 1,
       'timezone_db' => 'UTC',
       'todate' => 'required',
-      'tz_handling' => 'site',
+      'tz_handling' => 'date',
     ),
     'translatable' => 0,
     'type' => 'date',
