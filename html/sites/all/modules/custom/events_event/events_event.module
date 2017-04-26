@@ -74,7 +74,7 @@ function events_event_calendar() {
     'firstDay' => 1,
     'weekends' => TRUE,
     'timeFormat' => 'H:mm',
-    'timezone' => isset($user->timezone) ? $user->timezone : 'local',
+    'timezone' => drupal_get_user_timezone(),
     'views' => array(
       'listYear' => array(
         'buttonText' => 'Year',
@@ -188,7 +188,7 @@ function events_event_fetch_events() {
     }
   }
 
-  $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : (isset($user->timezone) ? $user->timezone : 'UTC');
+  $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
   $nodes = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
 
@@ -652,4 +652,178 @@ function events_event_js_alter(&$javascript) {
  */
 function events_event_date_timezone_process_alter(&$element, &$form_state, $context) {
   $element ['timezone']['#options'] = events_event_system_time_zones();
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function events_event_field_extra_fields() {
+  $extra['node']['ev_event']['display']['ev_local_time'] = array(
+    'label' => t('Display date in local time'),
+    'description' => t('Display date in local time (as entered by the user).'),
+    'weight' => 2,
+  );
+  $extra['node']['ev_event']['display']['ev_user_time'] = array(
+    'label' => t('Display date in user time'),
+    'description' => t('Display date in user time (as defined on profile).'),
+    'weight' => 2,
+  );
+
+  return $extra;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function events_event_node_view($node, $view_mode, $langcode) {
+  $extrafields = field_extra_fields_get_display('node', $node->type, $view_mode);
+
+  $extrafield_name = 'ev_local_time';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_local_time($node, $view_mode, $langcode);
+  }
+
+  $extrafield_name = 'ev_user_time';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_user_time($node, $view_mode, $langcode);
+  }
+}
+
+/**
+ * Display date in local time.
+ */
+function _events_event_ev_local_time($node, $view_mode, $langcode) {
+  $date = $node->field_event_date['und'][0];
+  $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
+  $date_start->setTimezone(timezone_open($date['timezone']));
+  $date_end = new DateTime($date['value2'], timezone_open($date['timezone_db']));
+  $date_end->setTimezone(timezone_open($date['timezone']));
+
+  $dates = array(
+    'show_remaining_days' => FALSE,
+    'value' => array(
+      'formatted' => $date_start->format('d/m/Y H:i'),
+      'formatted_date' => $date_start->format('d/m/Y'),
+      'formatted_time' => $date_start->format('H:i'),
+      'formatted_timezone' => $date['timezone'],
+    ),
+    'value2' => array(
+      'formatted' => $date_end->format('d/m/Y H:i'),
+      'formatted_date' => $date_end->format('d/m/Y'),
+      'formatted_time' => $date_end->format('H:i'),
+      'formatted_timezone' => $date['timezone'],
+    ),
+  );
+
+  $output = _events_event_render_dates_as_string($dates);
+  return array(
+    '#markup' => '<div class="field field-type-date field-type-date-local"><label>Local time: </label>' . $output . '</div>',
+  );
+}
+
+/**
+ * Display date in user time.
+ */
+function _events_event_ev_user_time($node, $view_mode, $langcode) {
+  $date = $node->field_event_date['und'][0];
+  $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
+  $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
+  $date_end = new DateTime($date['value2'], timezone_open($date['timezone_db']));
+  $date_end->setTimezone(timezone_open(drupal_get_user_timezone()));
+
+  $dates = array(
+    'show_remaining_days' => FALSE,
+    'value' => array(
+      'formatted' => $date_start->format('d/m/Y H:i'),
+      'formatted_date' => $date_start->format('d/m/Y'),
+      'formatted_time' => $date_start->format('H:i'),
+      'formatted_timezone' => drupal_get_user_timezone(),
+    ),
+    'value2' => array(
+      'formatted' => $date_end->format('d/m/Y H:i'),
+      'formatted_date' => $date_end->format('d/m/Y'),
+      'formatted_time' => $date_end->format('H:i'),
+      'formatted_timezone' => drupal_get_user_timezone(),
+    ),
+  );
+
+  $output = _events_event_render_dates_as_string($dates);
+  return array(
+    '#markup' => '<div class="field field-type-date field-type-date-user"><label>Your time: </label>' . $output . '</div>',
+  );
+}
+
+/**
+ * Render dates as a string.
+ */
+function _events_event_render_dates_as_string($dates) {
+  $output = '';
+
+  $date1 = $dates['value']['formatted'];
+  $date2 = $dates['value2']['formatted'];
+
+  $timezone = $dates['value']['formatted_timezone'];
+  $date1 = str_replace($timezone, '', $date1);
+  $date2 = str_replace($timezone, '', $date2);
+  $time1 = preg_replace('`^([\(\[])`', '', $dates['value']['formatted_time']);
+  $time1 = preg_replace('([\)\]]$)', '', $time1);
+  $time2 = preg_replace('`^([\(\[])`', '', $dates['value2']['formatted_time']);
+  $time2 = preg_replace('([\)\]]$)', '', $time2);
+
+  if ($date1 == $date2 || empty($date2)) {
+    $output .= theme('date_display_single', array(
+      'date' => $date1,
+      'timezone' => $timezone,
+      'attributes' => array(),
+      'rdf_mapping' => array(),
+      'add_rdf' => FALSE,
+      'microdata' => array(),
+      'add_microdata' => FALSE,
+      'dates' => $dates,
+      'show_remaining_days' => FALSE,
+    ));
+  }
+  elseif ($dates['value']['formatted_date'] == $dates['value2']['formatted_date']) {
+    $time = theme('date_display_range', array(
+      'date1' => $time1,
+      'date2' => $time2,
+      'timezone' => $timezone,
+      'attributes' => array(),
+      'rdf_mapping' => array(),
+      'add_rdf' => FALSE,
+      'microdata' => array(),
+      'add_microdata' => FALSE,
+      'dates' => $dates,
+      'show_remaining_days' => FALSE,
+    ));
+    $replaced = str_replace($time1, $time, $date1);
+    $output .= theme('date_display_single', array(
+      'date' => $replaced,
+      'timezone' => $timezone,
+      'attributes' => array(),
+      'rdf_mapping' => array(),
+      'add_rdf' => FALSE,
+      'dates' => $dates,
+    ));
+  }
+  else {
+    $output .= theme('date_display_range', array(
+      'date1' => $date1,
+      'date2' => $date2,
+      'timezone' => $timezone,
+      'attributes' => array(),
+      'rdf_mapping' => array(),
+      'add_rdf' => FALSE,
+      'microdata' => array(),
+      'add_microdata' => FALSE,
+      'dates' => $dates,
+      'show_remaining_days' => FALSE,
+    ));
+  }
+
+  return $output;
 }
