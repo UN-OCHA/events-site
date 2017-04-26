@@ -705,7 +705,7 @@ function events_event_date_popup_pre_validate_alter(&$element, &$form_state, &$i
       $element['#date_timezone'] = $dates_tz[$field_name];
     }
   }
-  else if (isset($dates_tz[$field_name])) {
+  elseif (isset($dates_tz[$field_name])) {
     $granularity = date_format_order($element['#date_format']);
     $has_time = date_has_time($granularity);
 
