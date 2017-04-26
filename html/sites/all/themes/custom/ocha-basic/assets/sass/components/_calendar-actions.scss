@@ -18,7 +18,6 @@
 }
 
 .block-system {
-	clear: both;
 	padding-top: $base-unit;
 }
 
@@ -74,7 +73,10 @@
 @include media-query(md) {
 
 	.calendar-export {
-		top: -$base-unit*7.25;
+		top: -$base-unit*8.25;
 	}
 
+	.calendar-filters {
+		margin-bottom: $base-unit;
+	}
 }
