@@ -706,14 +706,14 @@ function _events_event_ev_local_time($node, $view_mode, $langcode) {
   $dates = array(
     'show_remaining_days' => FALSE,
     'value' => array(
-      'formatted' => $date_start->format('d/m/Y H:i'),
-      'formatted_date' => $date_start->format('d/m/Y'),
+      'formatted' => $date_start->format('d F Y H:i'),
+      'formatted_date' => $date_start->format('d F Y'),
       'formatted_time' => $date_start->format('H:i'),
       'formatted_timezone' => $date['timezone'],
     ),
     'value2' => array(
-      'formatted' => $date_end->format('d/m/Y H:i'),
-      'formatted_date' => $date_end->format('d/m/Y'),
+      'formatted' => $date_end->format('d F Y H:i'),
+      'formatted_date' => $date_end->format('d F Y'),
       'formatted_time' => $date_end->format('H:i'),
       'formatted_timezone' => $date['timezone'],
     ),
@@ -738,14 +738,14 @@ function _events_event_ev_user_time($node, $view_mode, $langcode) {
   $dates = array(
     'show_remaining_days' => FALSE,
     'value' => array(
-      'formatted' => $date_start->format('d/m/Y H:i'),
-      'formatted_date' => $date_start->format('d/m/Y'),
+      'formatted' => $date_start->format('d F Y H:i'),
+      'formatted_date' => $date_start->format('d F Y'),
       'formatted_time' => $date_start->format('H:i'),
       'formatted_timezone' => drupal_get_user_timezone(),
     ),
     'value2' => array(
-      'formatted' => $date_end->format('d/m/Y H:i'),
-      'formatted_date' => $date_end->format('d/m/Y'),
+      'formatted' => $date_end->format('d F Y H:i'),
+      'formatted_date' => $date_end->format('d F Y'),
       'formatted_time' => $date_end->format('H:i'),
       'formatted_timezone' => drupal_get_user_timezone(),
     ),
