@@ -667,16 +667,27 @@ function events_event_date_popup_process_alter(&$element, $form_state, $context)
       '#options' => $timezones,
     );
   }
+  else {
+    $element['timezone'] = array(
+      '#type' => 'hidden',
+      '#value' => '',
+    );
+  }
 
 }
 
 /**
  * Implements hook_date_popup_pre_validate_alter().
  */
-function events_event_date_popup_pre_validate_alter(&$element, $form_state, &$input) {
+function events_event_date_popup_pre_validate_alter(&$element, &$form_state, &$input) {
+  static $dates_tz = array();
+  if (!isset($element['#instance']['field_name'])) {
+    return;
+  }
+
+  $field_name = $element['#instance']['field_name'];
+
   if (isset($input['timezone']) && !empty($input['timezone'])) {
-    dpm(drupal_get_user_timezone());
-    dpm($input, 'input');
     if ($input['timezone'] != drupal_get_user_timezone()) {
       $granularity = date_format_order($element['#date_format']);
       $has_time = date_has_time($granularity);
@@ -684,12 +695,30 @@ function events_event_date_popup_pre_validate_alter(&$element, $form_state, &$in
       $format = date_popup_date_format($element);
       $format .= $has_time ? ' ' . date_popup_time_format($element) : '';
 
-      $date = new DateTime($input['date'] . ' ' . $input['time'], new DateTimeZone(drupal_get_user_timezone()));
-      dpm($date, 'before');
+      $date = DateTime::createFromFormat($format, $input['date'] . ' ' . $input['time'], new DateTimeZone(drupal_get_user_timezone()));
       $date->setTimezone(new DateTimeZone($input['timezone']));
-      dpm($date, 'after');
+      $dates_tz[$field_name] = $input['timezone'];
 
       // Overwrite input var.
+      $input['date'] = $date->format('d/m/Y');
+      $input['time'] = $date->format('H:i');
+      $element['#date_timezone'] = $dates_tz[$field_name];
     }
+  }
+  else if (isset($dates_tz[$field_name])) {
+    $granularity = date_format_order($element['#date_format']);
+    $has_time = date_has_time($granularity);
+
+    $format = date_popup_date_format($element);
+    $format .= $has_time ? ' ' . date_popup_time_format($element) : '';
+
+    $date = DateTime::createFromFormat($format, $input['date'] . ' ' . $input['time'], new DateTimeZone(drupal_get_user_timezone()));
+    $date->setTimezone(new DateTimeZone($dates_tz[$field_name]));
+
+    // Overwrite input var.
+    $input['date'] = $date->format('d/m/Y');
+    $input['time'] = $date->format('H:i');
+    $input['timezone'] = $dates_tz[$field_name];
+    $element['#date_timezone'] = $dates_tz[$field_name];
   }
 }

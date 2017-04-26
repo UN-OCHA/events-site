@@ -613,13 +613,14 @@ function date_combo_validate($element, &$form_state) {
       if ($timezone != $timezone_db && date_has_time($granularity)) {
         date_timezone_set($from_date, timezone_open($timezone));
         date_timezone_set($to_date, timezone_open($timezone));
-
+/*
         if ($test_from != date_format($from_date, 'r')) {
           $errors[] = t('The Start date is invalid.');
         }
         if ($test_to != date_format($to_date, 'r')) {
           $errors[] = t('The End date is invalid.');
         }
+*/
       }
       if (empty($errors)) {
         form_set_value($element, $item, $form_state);
