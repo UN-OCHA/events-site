@@ -554,10 +554,17 @@ function events_event_fetch_categories() {
 
 /**
  * Page callback for time zones.
+ */
+function events_event_fetch_timezones() {
+  drupal_json_output(events_event_system_time_zones());
+}
+
+/**
+ * Custom implementation of system_time_zones.
  *
  * @see system_time_zones()
  */
-function events_event_fetch_timezones() {
+function events_event_system_time_zones() {
   // @codingStandardsIgnoreStart
   $zonelist = timezone_identifiers_list();
   $timezones = array();
@@ -573,7 +580,7 @@ function events_event_fetch_timezones() {
   asort($timezones);
   // @codingStandardsIgnoreEnd
 
-  drupal_json_output($timezones);
+  return $timezones;
 }
 
 /**
@@ -638,4 +645,11 @@ function events_event_js_alter(&$javascript) {
   if (isset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js'])) {
     unset($javascript['sites/all/modules/contrib/fullcalendar_api/fullcalendar_calendar.js']);
   }
+}
+
+/**
+ * Implements hook_date_timezone_process_alter().
+ */
+function events_event_date_timezone_process_alter(&$element, &$form_state, $context) {
+  $element ['timezone']['#options'] = events_event_system_time_zones();
 }
