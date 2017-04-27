@@ -68,10 +68,10 @@ function events_event_menu() {
  */
 function events_event_exported_term_fields() {
   return array(
-    'field_event_coordination_hub',
-    'field_event_cluster',
-    'field_event_category',
-    'field_event_organization',
+    'field_event_coordination_hub' => t('Coordination Hubs'),
+    'field_event_cluster' => t('Clusters'),
+    'field_event_category' => t('Categories'),
+    'field_event_organization' => t('Organizations'),
   );
 }
 
@@ -104,7 +104,7 @@ function events_event_calendar() {
     ),
   );
 
-  foreach (events_event_exported_term_fields() as $term_field) {
+  foreach (events_event_exported_term_fields() as $term_field => $label) {
     $settings['events']['data'][$term_field] = '';
   }
 
@@ -153,12 +153,16 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
 
   // Process facets.
   $facets = array();
+  $term_fields = events_event_exported_term_fields();
   foreach ($results['search_api_facets'] as $key => $facet_info) {
-    if (!in_array($key, events_event_exported_term_fields())) {
+    if (!array_key_exists($key, $term_fields)) {
       continue;
     }
 
-    $facets[$key] = array();
+    $facets[$key] = array(
+      'label' => $term_fields[$key],
+      'values' => array(),
+    );
     $tids = array();
     foreach ($facet_info as $facet) {
       $tids[] = intval(str_replace('"', '', $facet['filter']));
@@ -166,7 +170,7 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
 
     $terms = taxonomy_term_load_multiple($tids);
     foreach ($terms as $term) {
-      $facets[$key][$term->tid] = $term->name;
+      $facets[$key]['values'][$term->tid] = $term->name;
     }
   }
 
