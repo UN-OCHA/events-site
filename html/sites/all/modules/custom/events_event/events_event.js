@@ -100,7 +100,7 @@
       };
 
       var handleICal = function (e) {
-        var url = '/ical?';
+        var url = $settings.base_url + '/ical?';
         url += $.param(eventFilters);
         window.location = url;
       };
@@ -166,7 +166,7 @@
         return container;
       }
 
-      $.getJSON('api/v0/facets', function(facets) {
+      $.getJSON($settings.base_url + 'api/v0/facets', function(facets) {
         var filtersWrapper = document.createElement('div');
         filtersWrapper.className = 'calendar-filters clearfix';
 
@@ -258,7 +258,7 @@
         tzDiv.appendChild(tzSelect);
         document.querySelector('#fullcalendar').insertBefore(tzDiv, null);
 
-        $.getJSON('api/v0/timezones', function(timezones) {
+        $.getJSON($settings.base_url + 'api/v0/timezones', function(timezones) {
           var $tz = $('#timezone-selector');
           var $newtz;
           var currentTz;
