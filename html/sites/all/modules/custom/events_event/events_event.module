@@ -253,6 +253,8 @@ function events_event_fetch_events() {
     }
   }
 
+  drupal_add_http_header('Access-Control-Allow-Origin', "*");
+  drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
   drupal_json_output($events);
 }
 
