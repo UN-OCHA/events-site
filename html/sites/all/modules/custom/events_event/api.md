@@ -235,3 +235,130 @@ Example output.
 
 * Status: `200`
 * Content-Type: "application/json"
+
+
+## `GET /facets`
+
+Gets a list of events, all parameters are optional.
+
+  * `?start=` // Start date of the range of events, default first of the month, example `2017-03-01`
+  * `?end=` // End date of the range of events, default last of the month, example `2017-03-31`
+  * `?field_event_organization=` // Filter by a certain organization, default all, example `123`
+  * `?field_event_cluster=` // Filter by a certain cluster, default all, example `123`
+  * `?field_event_category=` // Filter by a certain category, default all, example `123`
+  * `?field_event_coordination_hub=` // Filter by a certain coordination hub, default all, example `123`
+
+
+Example output.
+
+```json
+{
+  "field_event_category": {
+    "6670": "Meeting",
+    "6671": "Test"
+  },
+  "field_event_cluster": {
+    "5580": "Afganistan: Education in Emergencies Working Group"
+  },
+  "field_event_coordination_hub": {
+    "6678": "Afganistan: South Eastern Region"
+  },
+  "field_event_organization": {
+    "13": "A Single Drop for Safe Water (ASDSW)",
+    "7": "(at)Fire"
+  }
+}
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"
+
+
+## `GET /facets`
+
+Start date has to be smaller than end date.
+
+  * `?start=2017-08-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=`
+  * `?field_event_cluster=`
+  * `?field_event_category=`
+  * `?field_event_coordination_hub=`
+
+===
+
+### Response
+
+* Status: `400`
+
+## `GET /facets`
+
+field_event_organization is an integer.
+
+  * `?start=2017-03-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=xyzzy`
+  * `?field_event_cluster=`
+  * `?field_event_category=`
+  * `?field_event_coordination_hub=`
+
+===
+
+### Response
+
+* Status: `400`
+
+## `GET /facets`
+
+field_event_cluster is an integer.
+
+  * `?start=2017-03-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=`
+  * `?field_event_cluster=xyzzy`
+  * `?field_event_category=`
+  * `?field_event_coordination_hub=`
+
+===
+
+### Response
+
+* Status: `400`
+
+## `GET /facets`
+
+field_event_category is an integer.
+
+  * `?start=2017-03-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=`
+  * `?field_event_cluster=`
+  * `?field_event_category=xyzzy`
+  * `?field_event_coordination_hub=`
+
+===
+
+### Response
+
+* Status: `400`
+
+## `GET /facets`
+
+field_event_coordination_hub is an integer.
+
+  * `?start=2017-03-27`
+  * `?end=2017-05-08`
+  * `?field_event_organization=`
+  * `?field_event_cluster=`
+  * `?field_event_category=`
+  * `?field_event_coordination_hub=xyzzy`
+
+===
+
+### Response
+
+* Status: `400`
