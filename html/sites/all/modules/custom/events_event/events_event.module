@@ -257,9 +257,7 @@ function events_event_fetch_events() {
     }
   }
 
-  drupal_add_http_header('Access-Control-Allow-Origin', "*");
-  drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
-  drupal_json_output($events);
+  events_event_json_output($events);
 }
 
 /**
@@ -502,7 +500,7 @@ function events_event_fetch_organisations() {
 
   $cache = cache_get($cache_id);
   if ($cache && !empty($cache->data)) {
-    drupal_json_output($cache->data);
+    events_event_json_output($cache->data);
   }
 
   $organisations = array();
@@ -525,7 +523,7 @@ function events_event_fetch_organisations() {
   }
 
   cache_set($cache_key, $organisations);
-  drupal_json_output($organisations);
+  events_event_json_output($organisations);
 }
 
 /**
@@ -536,7 +534,7 @@ function events_event_fetch_clusters() {
 
   $cache = cache_get($cache_id);
   if ($cache && !empty($cache->data)) {
-    drupal_json_output($cache->data);
+    events_event_json_output($cache->data);
   }
 
   $clusters = array();
@@ -559,7 +557,7 @@ function events_event_fetch_clusters() {
   }
 
   cache_set($cache_key, $clusters);
-  drupal_json_output($clusters);
+  events_event_json_output($clusters);
 }
 
 /**
@@ -570,7 +568,7 @@ function events_event_fetch_categories() {
 
   $cache = cache_get($cache_id);
   if ($cache && !empty($cache->data)) {
-    drupal_json_output($cache->data);
+    events_event_json_output($cache->data);
   }
 
   $clusters = array();
@@ -593,7 +591,7 @@ function events_event_fetch_categories() {
   }
 
   cache_set($cache_key, $clusters);
-  drupal_json_output($clusters);
+  events_event_json_output($clusters);
 }
 
 /**
@@ -649,14 +647,14 @@ function events_event_fetch_facets() {
   $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
   $facets = $data['facets'];
 
-  drupal_json_output($facets);
+  events_event_json_output($facets);
 }
 
 /**
  * Page callback for time zones.
  */
 function events_event_fetch_timezones() {
-  drupal_json_output(events_event_system_time_zones());
+  events_event_json_output(events_event_system_time_zones());
 }
 
 /**
@@ -926,4 +924,13 @@ function _events_event_render_dates_as_string($dates) {
   }
 
   return $output;
+}
+
+/**
+ * Output as JSON.
+ */
+function events_event_json_output($data) {
+  drupal_add_http_header('Access-Control-Allow-Origin', "*");
+  drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
+  drupal_json_output($data);
 }
