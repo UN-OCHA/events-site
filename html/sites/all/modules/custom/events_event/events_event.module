@@ -108,6 +108,7 @@ function events_event_calendar() {
   foreach (events_event_exported_term_fields() as $term_field => $label) {
     $settings['events']['data'][$term_field] = '';
   }
+  $settings['events']['data']['timezone'] = drupal_get_user_timezone();
 
   drupal_add_library('chosen', 'drupal.chosen');
   drupal_add_js(drupal_get_path('module', 'events_event') . '/events_event.js');
@@ -122,7 +123,7 @@ function events_event_calendar() {
  * Fetch events from search api.
  */
 function events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub) {
-  $index = search_api_index_load("un_events");
+  $index = search_api_index_load('un_events');
   $query = new SearchApiQuery($index);
 
   $filter = $query->createFilter('AND');
@@ -188,7 +189,7 @@ function events_event_fetch_events() {
   $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
   $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
-    header("HTTP/1.1 400 Start date has to be smaller than end date.", TRUE, 400);
+    header('HTTP/1.1 400 Start date has to be smaller than end date.', TRUE, 400);
     module_invoke_all('exit');
     exit();
   }
@@ -196,7 +197,7 @@ function events_event_fetch_events() {
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
   if (!empty($organisation)) {
     if (!is_numeric($organisation)) {
-      header("HTTP/1.1 400 field_event_organization is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_organization is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -205,7 +206,7 @@ function events_event_fetch_events() {
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
   if (!empty($cluster)) {
     if (!is_numeric($cluster)) {
-      header("HTTP/1.1 400 field_event_cluster is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_cluster is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -214,7 +215,7 @@ function events_event_fetch_events() {
   $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
   if (!empty($category)) {
     if (!is_numeric($category)) {
-      header("HTTP/1.1 400 field_event_category is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_category is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -223,7 +224,7 @@ function events_event_fetch_events() {
   $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
   if (!empty($coordination_hub)) {
     if (!is_numeric($coordination_hub)) {
-      header("HTTP/1.1 400 field_event_coordination_hub is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_coordination_hub is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -268,7 +269,7 @@ function events_event_to_ical() {
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
   if (!empty($organisation)) {
     if (!is_numeric($organisation)) {
-      header("HTTP/1.1 422 field_event_organization is an integer." . $_GET['field_event_organization'], TRUE, 422);
+      header('HTTP/1.1 422 field_event_organization is an integer.' . $_GET['field_event_organization'], TRUE, 422);
       module_invoke_all('exit');
       exit();
     }
@@ -277,7 +278,7 @@ function events_event_to_ical() {
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
   if (!empty($cluster)) {
     if (!is_numeric($cluster)) {
-      header("HTTP/1.1 422 field_event_cluster is an integer.", TRUE, 422);
+      header('HTTP/1.1 422 field_event_cluster is an integer.', TRUE, 422);
       module_invoke_all('exit');
       exit();
     }
@@ -286,7 +287,7 @@ function events_event_to_ical() {
   $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
   if (!empty($category)) {
     if (!is_numeric($category)) {
-      header("HTTP/1.1 422 field_event_category is an integer.", TRUE, 422);
+      header('HTTP/1.1 422 field_event_category is an integer.', TRUE, 422);
       module_invoke_all('exit');
       exit();
     }
@@ -295,7 +296,7 @@ function events_event_to_ical() {
   $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
   if (!empty($coordination_hub)) {
     if (!is_numeric($coordination_hub)) {
-      header("HTTP/1.1 422 field_event_coordination_hub is an integer.", TRUE, 422);
+      header('HTTP/1.1 422 field_event_coordination_hub is an integer.', TRUE, 422);
       module_invoke_all('exit');
       exit();
     }
@@ -602,7 +603,7 @@ function events_event_fetch_facets() {
   $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
   $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
-    header("HTTP/1.1 400 Start date has to be smaller than end date.", TRUE, 400);
+    header('HTTP/1.1 400 Start date has to be smaller than end date.', TRUE, 400);
     module_invoke_all('exit');
     exit();
   }
@@ -610,7 +611,7 @@ function events_event_fetch_facets() {
   $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
   if (!empty($organisation)) {
     if (!is_numeric($organisation)) {
-      header("HTTP/1.1 400 field_event_organization is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_organization is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -619,7 +620,7 @@ function events_event_fetch_facets() {
   $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
   if (!empty($cluster)) {
     if (!is_numeric($cluster)) {
-      header("HTTP/1.1 400 field_event_cluster is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_cluster is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -628,7 +629,7 @@ function events_event_fetch_facets() {
   $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
   if (!empty($category)) {
     if (!is_numeric($category)) {
-      header("HTTP/1.1 400 field_event_category is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_category is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -637,7 +638,7 @@ function events_event_fetch_facets() {
   $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
   if (!empty($coordination_hub)) {
     if (!is_numeric($coordination_hub)) {
-      header("HTTP/1.1 400 field_event_coordination_hub is an integer.", TRUE, 400);
+      header('HTTP/1.1 400 field_event_coordination_hub is an integer.', TRUE, 400);
       module_invoke_all('exit');
       exit();
     }
@@ -931,7 +932,7 @@ function _events_event_render_dates_as_string($dates) {
  * Output as JSON.
  */
 function events_event_json_output($data) {
-  drupal_add_http_header('Access-Control-Allow-Origin', "*");
+  drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
   drupal_json_output($data);
 }
