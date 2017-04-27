@@ -64,6 +64,18 @@ function events_event_menu() {
 }
 
 /**
+ * List of exported term fields.
+ */
+function events_event_exported_term_fields() {
+  return array(
+    'field_event_coordination_hub',
+    'field_event_cluster',
+    'field_event_category',
+    'field_event_organization',
+  );
+}
+
+/**
  * Page callback for calendar.
  */
 function events_event_calendar() {
@@ -89,14 +101,12 @@ function events_event_calendar() {
     'events' => array(
       'url' => 'api/v0/fetch-events',
       'type' => 'GET',
-      'data' => array(
-        'field_event_organization' => '',
-        'field_event_cluster' => '',
-        'field_event_category' => '',
-        'field_event_coordination_hub' => '',
-      ),
     ),
   );
+
+  foreach (events_event_exported_term_fields() as $term_field) {
+    $settings['events']['data'][$term_field] = '';
+  }
 
   drupal_add_library('chosen', 'drupal.chosen');
   drupal_add_js(drupal_get_path('module', 'events_event') . '/events_event.js');
@@ -144,7 +154,7 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
   // Process facets.
   $facets = array();
   foreach ($results['search_api_facets'] as $key => $facet_info) {
-    if (!in_array($key, array('field_event_coordination_hub', 'field_event_cluster', 'field_event_category', 'field_event_organization'))) {
+    if (!in_array($key, events_event_exported_term_fields())) {
       continue;
     }
 
@@ -227,7 +237,7 @@ function events_event_fetch_events() {
       $date_end = new DateTime($date['value2'], timezone_open($date['timezone_db']));
       $date_end->setTimezone(timezone_open($timezone));
 
-      $events[] = array(
+      $event = array(
         'id' => $node->nid,
         'title' => $node->title,
         'start' => $date_start->format(DATE_FORMAT_DATETIME),
@@ -235,11 +245,11 @@ function events_event_fetch_events() {
         'allDay' => $date['value'] == $date['value2'],
         'url' => url('node/' . $node->nid),
         'backgroundColor' => events_event_get_event_color($node),
-        'field_event_organization' => isset($node->field_event_organization['und'][0]['tid']) ? $node->field_event_organization['und'][0]['tid'] : '',
-        'field_event_cluster' => isset($node->field_event_cluster['und'][0]['tid']) ? $node->field_event_cluster['und'][0]['tid'] : '',
-        'field_event_category' => isset($node->field_event_category['und'][0]['tid']) ? $node->field_event_category['und'][0]['tid'] : '',
-        'field_event_coordination_hub' => isset($node->field_event_coordination_hub['und'][0]['tid']) ? $node->field_event_coordination_hub['und'][0]['tid'] : '',
       );
+      foreach (events_event_exported_term_fields() as $term_field) {
+        $event[$term_field] = isset($node->{$term_field}['und'][0]['tid']) ? $node->{$term_field}['und'][0]['tid'] : '';
+      }
+      $events[] = $event;
     }
   }
 
