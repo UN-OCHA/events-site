@@ -29,7 +29,7 @@ endif; ?>
       <?php if($is_front): ?>
       <h1 class="site-header__logo">
         <a href="<?php print $front_page; ?>">
-          <img src="<?php print $base_path . $directory . '/assets/images/humanitarian-events-logo.png'; ?>" alt="<?php print t('Humanitarian Events') ?>">
+          <img src="<?php print $base_path . $directory . '/assets/images/humanitarian-events-logo.svg'; ?>" alt="<?php print t('Humanitarian Events') ?>">
         </a>
       </h1>
       <?php
