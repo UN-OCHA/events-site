@@ -15,11 +15,8 @@
 	}
 }
 
-
-@include media-query (sm) {
-
+@media print {
 	.footer {
-		// padding: $base-unit*3 0;
+		display: none!important;
 	}
-
 }

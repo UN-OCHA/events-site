@@ -130,6 +130,15 @@
         return button;
       }
 
+      var buildPdfButton = function () {
+        var button = document.createElement('button');
+        button.innerHTML = Drupal.t('PDF');
+        button.addEventListener('click', function () {
+          // pdf magic here
+        });
+        return button;
+      }
+
       var buildExportOptions = function () {
         var container = document.createElement('div');
         container.className += ' calendar-export';
@@ -149,9 +158,11 @@
         exportOptionsList.setAttribute('aria-labelledby', 'export-dropdown');
 
         var icalButton = buildIcalButton();
+        var pdfButton = buildPdfButton();
 
         var exportListItem = document.createElement('li');
         exportListItem.appendChild(icalButton);
+        exportListItem.appendChild(pdfButton);
         exportOptionsList.appendChild(exportListItem);
         container.appendChild(exportOptionsList);
         return container;
