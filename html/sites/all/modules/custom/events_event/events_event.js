@@ -109,9 +109,7 @@
       var handleSelect = function (e) {
         if (e.target.value) {
           data = e.target.value;
-          data = data.split("?").pop();
-          data = data.replace('f[0]=', '');
-          parts = data.split('%3A');
+          parts = data.split(':');
 
           eventFilters[parts[0]] = parts[1];
 
@@ -168,70 +166,65 @@
         return container;
       }
 
-      var wrapFilters = function (filters) {
-        var content = document.querySelector('.region-content');
+      $.getJSON('api/v0/facets', function(facets) {
         var filtersWrapper = document.createElement('div');
-        filtersWrapper.className = 'calendar-filters';
-        for (var i = 0; i < filters.length; i++) {
-          filtersWrapper.appendChild(filters[i]);
-        }
-        content.insertBefore(filtersWrapper, document.querySelector('#block-system-main'));
-      }
+        filtersWrapper.className = 'calendar-filters clearfix';
 
-      var filters = document.querySelectorAll('.block-views');
-      if (filters) {
+        var filterCount = 0;
+        for (var f in facets) {
+          var facet = facets[f];
+          filterCount++;
 
-        wrapFilters(filters);
+          console.log(facet);
+          var filter = document.createElement('div');
 
-        for (var i = 0; i < filters.length; i++) {
-          var filter = filters[i];
+          if (facet.values.length === 0) {
+            continue;
+          }
 
           // Construct label.
           var newLabel = document.createElement('label');
-          newLabel.innerText = filter.querySelector('h2').innerText;
-          newLabel.setAttribute('for', 'filter-' + i);
-          var heading = filter.querySelector('h2');
-          heading.className = 'hidden';
+          newLabel.innerText = facet.label;
+          newLabel.setAttribute('for', 'filter-' + filterCount);
 
           // Construct select.
           var newSelect = document.createElement('select');
           newSelect.className += ' chosen-enable';
-          newSelect.id = 'filter-' + i;
-          var options = filter.querySelectorAll('.block-views .content li a');
+          newSelect.id = 'filter-' + filterCount;
 
-          if (options.length === 0) {
-            filter.className += ' invisible';
-          }
-          else {
-            // Add empty option.
+          // Add empty option.
+          var newOption = document.createElement('option');
+          newOption.value = f;
+          newOption.text = Drupal.t('- Any -');
+          newSelect.appendChild(newOption);
+
+          // Add options.
+          for (var o in facet.values) {
+            var option = facet.values[o];
             var newOption = document.createElement('option');
-            data = options[0].href.split("%3A").shift();
-            newOption.value = data;
-            newOption.text = Drupal.t('- Any -');
+            newOption.value = f + ':' + o;
+            newOption.text = option;
             newSelect.appendChild(newOption);
+          }
 
-            // Add options.
-            for (var j = 0; j < options.length; j++) {
-              var option = options[j];
-              var newOption = document.createElement('option');
-              newOption.value = option.href;
-              newOption.text = option.innerHTML.replace(/<span.*/g, '');
-              newSelect.appendChild(newOption);
-            }
+          // Hide filters.
+          filter.className += ' processed block-views';
+          filter.appendChild(newLabel);
+          filter.appendChild(newSelect);
+          filtersWrapper.appendChild(filter);
 
-            // Hide filters.
-            filter.className += ' processed';
-            filter.appendChild(newLabel);
-            filter.appendChild(newSelect);
-
-            if (Drupal.behaviors && Drupal.behaviors.chosen) {
-              Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
-              jQuery(newSelect).chosen().change(function(e) {
-                handleSelect(e);
-              });
-            }
+          if (Drupal.behaviors && Drupal.behaviors.chosen) {
+            Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
+            jQuery(newSelect).chosen().change(function(e) {
+              handleSelect(e);
+            });
           }
         }
+        document.querySelector('#block-system-main').insertBefore(filtersWrapper, document.querySelector('#block-system-main').firstChild);
+      });
+
+      var filters = document.querySelectorAll('.block-views');
+      if (filters) {
 
         // Add timezone selector.
         var tzDiv = document.createElement('div');
