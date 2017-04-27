@@ -51,13 +51,11 @@
 }
 
 @include media-query(sm) {
-	.site-header {
-		margin-bottom: $base-unit*2;
-	}
 
 	.site-header__inner {
 		padding: $base-unit 0;
 	}
+
 }
 
 @include media-query(md) {
@@ -71,6 +69,23 @@
 	.site-header__heading {
 		margin-top: $base-unit*3;
 		@include font-size($large-font-size);
+	}
+
+}
+
+@media print {
+
+	.site-header {
+		margin-bottom: 0!important;
+	}
+
+	.site-header-top {
+		display: none!important;
+	}
+
+	.site-header__logo {
+		width: 140px!important;
+		height: 38px!important;
 	}
 
 }
