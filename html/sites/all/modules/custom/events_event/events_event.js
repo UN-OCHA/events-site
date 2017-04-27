@@ -122,11 +122,51 @@
         return button;
       }
 
+      renderElements = function (elements, doc, margin_top) {
+        html2canvas(elements.shift(), {
+          onrendered: function(canvas) {
+            var height = canvas.height + 30 > doc.internal.pageSize.height ? doc.internal.pageSize.height - 30 : canvas.height;
+            var ratio = 1;
+            if (height !== canvas.height) {
+              ratio = height / canvas.height;
+            }
+            var width = canvas.width * ratio + 30 > doc.internal.pageSize.width ? doc.internal.pageSize.width - 30 : canvas.width * ratio;
+            var new_ratio = width / canvas.width;
+            if (new_ratio !== ratio) {
+              height = canvas.height * new_ratio;
+            }
+            if (margin_top + 15 + height > doc.internal.pageSize.height) {
+              doc.addPage();
+              margin_top = 15;
+            }
+            doc.addImage(canvas.toDataURL('image/png'), 'PNG', 15, margin_top, width, height);
+            if (!elements.length) {
+              doc.save('export.pdf');
+            }
+            else {
+              renderElements(elements, doc, margin_top + 15 + height);
+            }
+          }
+        });
+      }
+
       var buildPdfButton = function () {
         var button = document.createElement('button');
         button.innerHTML = Drupal.t('PDF');
-        button.addEventListener('click', function () {
-          // pdf magic here
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          var elements = [];
+          elements.push($('.site-header'));
+          elements.push($calendar.find('.fc-view-container'));
+
+          var filtered_elements = [];
+          for (var i = 0; i < elements.length; i++) {
+            if (elements[i]) {
+              filtered_elements.push(elements[i]);
+            }
+          }
+          var doc = new jsPDF('portrait', 'px', 'A4', true);
+          renderElements(filtered_elements, doc, 15);
         });
         return button;
       }
