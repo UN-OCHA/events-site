@@ -1434,3 +1434,11 @@ be a descendant of the grid when it is being dragged.
 	}
 
 }
+
+@media print {
+
+	.fc-left, .fc-right {
+		display: none!important;
+	}
+
+}

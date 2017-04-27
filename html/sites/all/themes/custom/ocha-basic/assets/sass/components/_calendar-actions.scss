@@ -80,3 +80,17 @@
 		margin-bottom: $base-unit;
 	}
 }
+
+@media print {
+
+	.calendar-export, .calendar-filters {
+		display: none!important;
+	}
+
+	.calendar-settings {
+		h2, label, .chosen-container, select {
+			display: none!important;
+		}
+	}
+
+}

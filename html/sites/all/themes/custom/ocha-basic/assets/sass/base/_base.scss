@@ -102,3 +102,9 @@ tr.odd, tr.even {
     margin-bottom: $base-unit*2;
   }
 }
+
+@media print {
+  #toolbar {
+    display: none!important;
+  }
+}
