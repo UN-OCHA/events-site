@@ -250,7 +250,7 @@ function events_event_fetch_events() {
         'url' => url('node/' . $node->nid),
         'backgroundColor' => events_event_get_event_color($node),
       );
-      foreach (events_event_exported_term_fields() as $term_field) {
+      foreach (events_event_exported_term_fields() as $term_field => $label) {
         $event[$term_field] = isset($node->{$term_field}['und'][0]['tid']) ? $node->{$term_field}['und'][0]['tid'] : '';
       }
       $events[] = $event;
