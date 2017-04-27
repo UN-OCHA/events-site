@@ -166,7 +166,7 @@
         return container;
       }
 
-      $.getJSON($settings.base_url + 'api/v0/facets', function(facets) {
+      $.getJSON($settings.base_url + '/api/v0/facets', function(facets) {
         var filtersWrapper = document.createElement('div');
         filtersWrapper.className = 'calendar-filters clearfix';
 
@@ -251,14 +251,13 @@
         tzLabel.innerHTML = Drupal.t('Display times from the following time zone');
         tzDiv.appendChild(tzLabel);
 
-
         var tzSelect = document.createElement('select');
         tzSelect.id = 'timezone-selector';
 
         tzDiv.appendChild(tzSelect);
         document.querySelector('#fullcalendar').insertBefore(tzDiv, null);
 
-        $.getJSON($settings.base_url + 'api/v0/timezones', function(timezones) {
+        $.getJSON($settings.base_url + '/api/v0/timezones', function(timezones) {
           var $tz = $('#timezone-selector');
           var $newtz;
           var currentTz;
