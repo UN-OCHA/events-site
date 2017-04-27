@@ -194,41 +194,11 @@ function events_event_fetch_events() {
     exit();
   }
 
-  $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
-  if (!empty($organisation)) {
-    if (!is_numeric($organisation)) {
-      header('HTTP/1.1 400 field_event_organization is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
-
-  $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
-  if (!empty($cluster)) {
-    if (!is_numeric($cluster)) {
-      header('HTTP/1.1 400 field_event_cluster is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
-
-  $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
-  if (!empty($category)) {
-    if (!is_numeric($category)) {
-      header('HTTP/1.1 400 field_event_category is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
-
-  $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
-  if (!empty($coordination_hub)) {
-    if (!is_numeric($coordination_hub)) {
-      header('HTTP/1.1 400 field_event_coordination_hub is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
+  $query_filters = events_event_get_query_filters();
+  $organisation = $query_filters['field_event_organization'];
+  $cluster = $query_filters['field_event_cluster'];
+  $category = $query_filters['field_event_category'];
+  $coordination_hub = $query_filters['field_event_coordination_hub'];
 
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
@@ -608,41 +578,11 @@ function events_event_fetch_facets() {
     exit();
   }
 
-  $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
-  if (!empty($organisation)) {
-    if (!is_numeric($organisation)) {
-      header('HTTP/1.1 400 field_event_organization is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
-
-  $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
-  if (!empty($cluster)) {
-    if (!is_numeric($cluster)) {
-      header('HTTP/1.1 400 field_event_cluster is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
-
-  $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
-  if (!empty($category)) {
-    if (!is_numeric($category)) {
-      header('HTTP/1.1 400 field_event_category is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
-
-  $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
-  if (!empty($coordination_hub)) {
-    if (!is_numeric($coordination_hub)) {
-      header('HTTP/1.1 400 field_event_coordination_hub is an integer.', TRUE, 400);
-      module_invoke_all('exit');
-      exit();
-    }
-  }
+  $query_filters = events_event_get_query_filters();
+  $organisation = $query_filters['field_event_organization'];
+  $cluster = $query_filters['field_event_cluster'];
+  $category = $query_filters['field_event_category'];
+  $coordination_hub = $query_filters['field_event_coordination_hub'];
 
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
@@ -935,4 +875,24 @@ function events_event_json_output($data) {
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
   drupal_json_output($data);
+}
+
+/**
+ * Get query filters.
+ */
+function events_event_get_query_filters() {
+  $query_filters = array();
+  $term_fields = events_event_exported_term_fields();
+  foreach ($term_fields as $term_field => $label) {
+    $query_filters[$term_field] = isset($_GET[$term_field]) ? $_GET[$term_field] : '';
+    if (!empty($query_filters[$term_field])) {
+      if (!is_numeric($query_filters[$term_field])) {
+        header('HTTP/1.1 400 ' . $query_filters[$term_field] . ' is an integer.', TRUE, 400);
+        module_invoke_all('exit');
+        exit();
+      }
+    }
+  }
+
+  return $query_filters;
 }
