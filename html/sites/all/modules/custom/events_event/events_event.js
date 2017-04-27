@@ -139,7 +139,7 @@
 
       var buildExportOptions = function () {
         var container = document.createElement('div');
-        container.className += ' calendar-export';
+        container.className = 'calendar-export';
 
         var exportButton = document.createElement('button');
         exportButton.className = 'btn-primary calendar-export__button';
@@ -221,6 +221,9 @@
           }
         }
         document.querySelector('#block-system-main').insertBefore(filtersWrapper, document.querySelector('#block-system-main').firstChild);
+
+        var exportDiv = buildExportOptions();
+        document.querySelector('#block-system-main').insertBefore(exportDiv, document.querySelector('#block-system-main').firstChild);
       });
 
       var filters = document.querySelectorAll('.block-views');
@@ -286,8 +289,6 @@
           }
         });
 
-        var exportDiv = buildExportOptions();
-        document.querySelector('.region-content').insertBefore(exportDiv, document.querySelector('.calendar-filters'));
       }
     }
   }
