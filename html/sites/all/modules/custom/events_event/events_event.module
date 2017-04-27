@@ -46,6 +46,12 @@ function events_event_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['api/v0/facets'] = array(
+    'title' => 'Fetch facets',
+    'page callback' => 'events_event_fetch_facets',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
   $items['ical'] = array(
     'title' => 'Ical',
@@ -61,8 +67,6 @@ function events_event_menu() {
  * Page callback for calendar.
  */
 function events_event_calendar() {
-  global $user;
-
   $settings = array(
     'header' => array(
       'left' => 'prev,next today',
@@ -131,19 +135,41 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
   }
 
   $query->filter($filter);
-  // Fetch results.
-  $results = $query->execute()['results'];
-  $nids = array_keys($results);
+  $results = $query->execute();
+
+  // Load events.
+  $nids = array_keys($results['results']);
   $nodes = node_load_multiple($nids);
-  return $nodes;
+
+  // Process facets.
+  $facets = array();
+  foreach ($results['search_api_facets'] as $key => $facet_info) {
+    if (!in_array($key, array('field_event_coordination_hub', 'field_event_cluster', 'field_event_category', 'field_event_organization'))) {
+      continue;
+    }
+
+    $facets[$key] = array();
+    $tids = array();
+    foreach ($facet_info as $facet) {
+      $tids[] = intval(str_replace('"', '', $facet['filter']));
+    }
+
+    $terms = taxonomy_term_load_multiple($tids);
+    foreach ($terms as $term) {
+      $facets[$key][$term->tid] = $term->name;
+    }
+  }
+
+  return array(
+    'events' => $nodes,
+    'facets' => $facets,
+  );
 }
 
 /**
  * Page callback for events.
  */
 function events_event_fetch_events() {
-  global $user;
-
   $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
   $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
@@ -190,7 +216,8 @@ function events_event_fetch_events() {
 
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $nodes = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
+  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
+  $nodes = $data['events'];
 
   $events = array();
   foreach ($nodes as $node) {
@@ -259,7 +286,8 @@ function events_event_to_ical() {
     }
   }
 
-  $nodes = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category, $coordination_hub);
+  $data = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category, $coordination_hub);
+  $nodes = $data['events'];
 
   $library = libraries_load('iCalcreator');
   $config = array('unique_id' => 'Date iCal');
@@ -550,6 +578,62 @@ function events_event_fetch_categories() {
 
   cache_set($cache_key, $clusters);
   drupal_json_output($clusters);
+}
+
+/**
+ * Page callback for facets.
+ */
+function events_event_fetch_facets() {
+  $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
+  $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
+  if ($start > $end) {
+    header("HTTP/1.1 400 Start date has to be smaller than end date.", TRUE, 400);
+    module_invoke_all('exit');
+    exit();
+  }
+
+  $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
+  if (!empty($organisation)) {
+    if (!is_numeric($organisation)) {
+      header("HTTP/1.1 400 field_event_organization is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
+  if (!empty($cluster)) {
+    if (!is_numeric($cluster)) {
+      header("HTTP/1.1 400 field_event_cluster is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
+  if (!empty($category)) {
+    if (!is_numeric($category)) {
+      header("HTTP/1.1 400 field_event_category is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
+  if (!empty($coordination_hub)) {
+    if (!is_numeric($coordination_hub)) {
+      header("HTTP/1.1 400 field_event_coordination_hub is an integer.", TRUE, 400);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
+
+  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
+  $facets = $data['facets'];
+
+  drupal_json_output($facets);
 }
 
 /**
