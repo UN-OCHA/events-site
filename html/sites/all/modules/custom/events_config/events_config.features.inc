@@ -39,6 +39,8 @@ function events_config_default_search_api_index() {
         "field_event_date:duration" : { "type" : "list\\u003Cduration\\u003E" },
         "field_event_date:value" : { "type" : "list\\u003Cdate\\u003E" },
         "field_event_date:value2" : { "type" : "list\\u003Cdate\\u003E" },
+        "field_event_disasters" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_location" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "field_event_organization" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "search_api_language" : { "type" : "string" },
         "title" : { "type" : "text" }
@@ -198,6 +200,18 @@ function events_config_default_search_api_server() {
             "table" : "search_api_db_un_events",
             "column" : "field_event_coordination_hub",
             "type" : "integer",
+            "boost" : "1.0"
+          },
+          "field_event_location" : {
+            "table" : "search_api_db_un_events",
+            "column" : "field_event_location",
+            "type" : "integer",
+            "boost" : "1.0"
+          },
+          "field_event_disasters" : {
+            "table" : "search_api_db_un_events_field_event_disasters",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"
           }
         }
