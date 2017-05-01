@@ -34,19 +34,6 @@ function events_event_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['api/v0/locations'] = array(
-    'title' => 'Fetch locations',
-    'page callback' => 'events_event_fetch_locations',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  $items['api/v0/disasters'] = array(
-    'title' => 'Fetch disasters',
-    'page callback' => 'events_event_fetch_disasters',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
   $items['api/v0/categories'] = array(
     'title' => 'Fetch categories',
     'page callback' => 'events_event_fetch_categories',
@@ -59,7 +46,6 @@ function events_event_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-
   $items['api/v0/facets'] = array(
     'title' => 'Fetch facets',
     'page callback' => 'events_event_fetch_facets',
@@ -86,8 +72,6 @@ function events_event_exported_term_fields() {
     'field_event_cluster' => t('Clusters'),
     'field_event_category' => t('Categories'),
     'field_event_organization' => t('Organizations'),
-    'field_event_location' => t('Location of event'),
-    'field_event_disasters' => t('Disasters'),
   );
 }
 
@@ -141,7 +125,7 @@ function events_event_calendar() {
 /**
  * Fetch events from search api.
  */
-function events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub, $location, $disasters) {
+function events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub) {
   $index = search_api_index_load('un_events');
   $query = new SearchApiQuery($index);
 
@@ -163,12 +147,6 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
   }
   if ($coordination_hub) {
     $filter->condition('field_event_coordination_hub', $coordination_hub);
-  }
-  if ($location) {
-    $filter->condition('field_event_location', $location);
-  }
-  if ($disasters) {
-    $filter->condition('field_event_disasters', $disasters);
   }
 
   $query->filter($filter);
@@ -227,7 +205,7 @@ function events_event_fetch_events() {
 
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub, $location, $disasters);
+  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
   $nodes = $data['events'];
 
   $events = array();
@@ -261,13 +239,43 @@ function events_event_fetch_events() {
  * Page callback for ical.
  */
 function events_event_to_ical() {
-  $query_filters = events_event_get_query_filters();
-  $organisation = $query_filters['field_event_organization'];
-  $cluster = $query_filters['field_event_cluster'];
-  $category = $query_filters['field_event_category'];
-  $coordination_hub = $query_filters['field_event_coordination_hub'];
+  $organisation = isset($_GET['field_event_organization']) ? $_GET['field_event_organization'] : '';
+  if (!empty($organisation)) {
+    if (!is_numeric($organisation)) {
+      header('HTTP/1.1 422 field_event_organization is an integer.' . $_GET['field_event_organization'], TRUE, 422);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
 
-  $data = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category, $coordination_hub, $location, $disasters);
+  $cluster = isset($_GET['field_event_cluster']) ? $_GET['field_event_cluster'] : '';
+  if (!empty($cluster)) {
+    if (!is_numeric($cluster)) {
+      header('HTTP/1.1 422 field_event_cluster is an integer.', TRUE, 422);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $category = isset($_GET['field_event_category']) ? $_GET['field_event_category'] : '';
+  if (!empty($category)) {
+    if (!is_numeric($category)) {
+      header('HTTP/1.1 422 field_event_category is an integer.', TRUE, 422);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $coordination_hub = isset($_GET['field_event_coordination_hub']) ? $_GET['field_event_coordination_hub'] : '';
+  if (!empty($coordination_hub)) {
+    if (!is_numeric($coordination_hub)) {
+      header('HTTP/1.1 422 field_event_coordination_hub is an integer.', TRUE, 422);
+      module_invoke_all('exit');
+      exit();
+    }
+  }
+
+  $data = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category, $coordination_hub);
   $nodes = $data['events'];
 
   $library = libraries_load('iCalcreator');
@@ -528,74 +536,6 @@ function events_event_fetch_clusters() {
 }
 
 /**
- * Page callback for locations.
- */
-function events_event_fetch_locations() {
-  $cache_key = 'events_event:locations';
-
-  $cache = cache_get($cache_id);
-  if ($cache && !empty($cache->data)) {
-    events_event_json_output($cache->data);
-  }
-
-  $locations = array();
-
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'taxonomy_term')
-    ->entityCondition('bundle', 'location')
-    ->execute();
-
-  if (isset($result['taxonomy_term'])) {
-    $tids = array_keys($result['taxonomy_term']);
-    $terms = taxonomy_term_load_multiple($tids);
-    foreach ($terms as $term) {
-      $locations[] = array(
-        'tid' => $term->tid,
-        'name' => $term->name,
-      );
-    }
-  }
-
-  cache_set($cache_key, $locations);
-  events_event_json_output($locations);
-}
-
-/**
- * Page callback for disasters.
- */
-function events_event_fetch_disasters() {
-  $cache_key = 'events_event:disasters';
-
-  $cache = cache_get($cache_id);
-  if ($cache && !empty($cache->data)) {
-    events_event_json_output($cache->data);
-  }
-
-  $disasters = array();
-
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'taxonomy_term')
-    ->entityCondition('bundle', 'disaster')
-    ->execute();
-
-  if (isset($result['taxonomy_term'])) {
-    $tids = array_keys($result['taxonomy_term']);
-    $terms = taxonomy_term_load_multiple($tids);
-    foreach ($terms as $term) {
-      $disasters[] = array(
-        'tid' => $term->tid,
-        'name' => $term->name,
-      );
-    }
-  }
-
-  cache_set($cache_key, $disasters);
-  events_event_json_output($disasters);
-}
-
-/**
  * Page callback for categories.
  */
 function events_event_fetch_categories() {
@@ -633,8 +573,8 @@ function events_event_fetch_categories() {
  * Page callback for facets.
  */
 function events_event_fetch_facets() {
-  $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : '';
-  $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : '';
+  $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
+  $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
     header('HTTP/1.1 400 Start date has to be smaller than end date.', TRUE, 400);
     module_invoke_all('exit');
@@ -649,7 +589,7 @@ function events_event_fetch_facets() {
 
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub, $location, $disasters);
+  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub);
   $facets = $data['facets'];
 
   events_event_json_output($facets);
@@ -707,14 +647,6 @@ function events_event_taxonomy_term_update($term) {
 
       case 'ev_category':
         cache_clear_all('events_event:categories', 'cache');
-        break;
-
-      case 'ev_location':
-        cache_clear_all('events_event:locations', 'cache');
-        break;
-
-      case 'ev_disaster':
-        cache_clear_all('events_event:disasters', 'cache');
         break;
 
     }

@@ -25,14 +25,6 @@ function events_event_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
-    'ev_disaster' => array(
-      'name' => 'Disaster',
-      'machine_name' => 'ev_disaster',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
     'ev_document_type' => array(
       'name' => 'Document type',
       'machine_name' => 'ev_document_type',
@@ -44,14 +36,6 @@ function events_event_taxonomy_default_vocabularies() {
     'ev_list' => array(
       'name' => 'List',
       'machine_name' => 'ev_list',
-      'description' => '',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
-    ),
-    'ev_location' => array(
-      'name' => 'Location',
-      'machine_name' => 'ev_location',
       'description' => '',
       'hierarchy' => 0,
       'module' => 'taxonomy',
