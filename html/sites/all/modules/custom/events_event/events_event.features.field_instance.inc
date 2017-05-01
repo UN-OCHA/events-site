@@ -236,7 +236,7 @@ function events_event_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -271,6 +271,45 @@ function events_event_field_default_field_instances() {
         'year_range' => '-1:+3',
       ),
       'type' => 'date_popup',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_disasters'.
+  $field_instances['node-ev_event-field_event_disasters'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_event_disasters',
+    'label' => 'Disaster(s)',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
       'weight' => 6,
     ),
   );
@@ -290,7 +329,7 @@ function events_event_field_default_field_instances() {
           'view_mode' => 'default',
         ),
         'type' => 'multifield_table',
-        'weight' => 6,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -311,7 +350,7 @@ function events_event_field_default_field_instances() {
       'module' => 'multifield_table',
       'settings' => array(),
       'type' => 'multifield_table',
-      'weight' => 7,
+      'weight' => 9,
     ),
   );
 
@@ -327,7 +366,7 @@ function events_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -351,6 +390,45 @@ function events_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_location'.
+  $field_instances['node-ev_event-field_event_location'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_event_location',
+    'label' => 'Location',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
       'weight' => 5,
     ),
   );
@@ -462,11 +540,13 @@ function events_event_field_default_field_instances() {
   t('Cluster');
   t('Coordination Hub');
   t('Date');
+  t('Disaster(s)');
   t('Document_type');
   t('Documents');
   t('File');
   t('Info');
   t('Legend color');
+  t('Location');
   t('Organization');
 
   return $field_instances;
