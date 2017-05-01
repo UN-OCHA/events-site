@@ -358,7 +358,7 @@ function events_config_fetch_and_sync_lists() {
 function events_config_fetch_and_sync_coordination_hubs() {
   events_config_api_call_list('office', 'events_config_get_coordination_hub_term');
   cache_clear_all('events_event:coordination_hubs', 'cache');
-} 
+}
 
 /**
  * Fetch and sync locations from HID.
@@ -374,10 +374,34 @@ function events_config_fetch_and_sync_locations() {
  * Fetch and sync disasters from RW.
  */
 function events_config_fetch_and_sync_disasters() {
-  // TODO: Sync from RW
-  return;
-  events_config_api_call_list('office', 'events_config_get_disaster_term');
-  cache_clear_all('events_event:disasters', 'cache');
+  $endpoint = 'https://api.reliefweb.int/v1/disasters';
+  $offset = 0;
+
+  while (TRUE) {
+    $params = array(
+      'appname' => 'hrevents',
+      'offset' => $offset,
+      'limit' => 200,
+    );
+
+    $url = $endpoint . '?' . drupal_http_build_query($params);
+    $request = drupal_http_request($url);
+    if (isset($request->data)) {
+      $data = drupal_json_decode($request->data);
+      if (empty($data['data'])) {
+        break;
+      }
+      foreach ($data['data'] as $item) {
+        if ($item['fields']['name']) {
+          events_config_get_disaster_term($item['fields']['name']);
+        }
+      }
+    }
+    else {
+      break;
+    }
+    $offset += 200;
+  }
 }
 
 /**
