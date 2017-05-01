@@ -1,0 +1,34 @@
+<?php
+/**
+ * @file
+ * Update hooks for events_config.
+ */
+
+/**
+ * Enable events.
+ */
+function events_config_update_7001() {
+  module_enable(array('features', 'strongarm'));
+  module_enable(array('events_event'));
+}
+
+/**
+ * Enable hybridauth.
+ */
+function events_config_update_7002() {
+  module_enable(array('hybridauth'));
+}
+
+/**
+ * Add permissions.
+ */
+function events_config_update_7003() {
+  features_revert_module('events_config');
+}
+
+/**
+ * Allow visitor signup.
+ */
+function events_config_update_7004() {
+  features_revert_module('events_config');
+}

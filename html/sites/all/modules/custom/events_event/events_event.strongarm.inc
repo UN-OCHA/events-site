@@ -110,13 +110,13 @@ function events_event_strongarm() {
       'display' => array(
         'ev_local_time' => array(
           'default' => array(
-            'weight' => '6',
+            'weight' => '4',
             'visible' => TRUE,
           ),
         ),
         'ev_user_time' => array(
           'default' => array(
-            'weight' => '7',
+            'weight' => '5',
             'visible' => TRUE,
           ),
         ),
