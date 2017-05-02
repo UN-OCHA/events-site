@@ -145,8 +145,13 @@ function events_event_calendar() {
     ),
   );
 
+  $query_filters = events_event_get_query_filters();
+
   foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
-    $settings['events']['data'][$term_field_info['short_key']] = '';
+    $settings['availableFilters'][$term_field_info['short_key']] = '';
+    if (isset($query_filters[$term_field])) {
+      $settings['defaultFilters'][$term_field_info['short_key']] = $query_filters[$term_field];
+    }
   }
   $settings['events']['data']['timezone'] = drupal_get_user_timezone();
 
