@@ -16,6 +16,16 @@
       }
 
       var eventFilters = Drupal.settings.fullcalendar_api.calendarSettings.events.data;
+      var updateEventFilters = function (filters) {
+        eventFilters = filters;
+        var hash = '#';
+        for (f in eventFilters) {
+          if (eventFilters.hasOwnProperty(f) && typeof eventFilters[f] != 'undefined' && eventFilters[f] != '') {
+            hash += '|' + f + ':' + eventFilters[f];
+          }
+        }
+        location.hash = hash;
+      };
 
       var $settings = settings.fullcalendar_api.calendarSettings;
       $.extend($settings, {
@@ -106,6 +116,7 @@
           parts = data.split(':');
 
           eventFilters[parts[0]] = parts[1];
+          updateEventFilters(eventFilters);
 
           // Don't change the source.
           // $calendar.fullCalendar('getEventSources')[0].data[parts[0]] = parts[1];

@@ -85,26 +85,32 @@ function events_event_exported_term_fields() {
     'field_event_coordination_hub' => array(
       'label' => t('Coordination Hubs'),
       'has_parents' => FALSE,
+      'short_key' => 'hub',
     ),
     'field_event_cluster' => array(
       'label' => t('Clusters'),
       'has_parents' => FALSE,
+      'short_key' => 'clu',
     ),
     'field_event_category' => array(
       'label' => t('Categories'),
       'has_parents' => FALSE,
+      'short_key' => 'cat',
     ),
     'field_event_organization' => array(
       'label' => t('Organizations'),
       'has_parents' => FALSE,
+      'short_key' => 'org',
     ),
     'field_event_location' => array(
       'label' => t('Location of event'),
       'has_parents' => TRUE,
+      'short_key' => 'loc',
     ),
     'field_event_disasters' => array(
       'label' => t('Disasters'),
       'has_parents' => FALSE,
+      'short_key' => 'dis',
     ),
   );
 }
@@ -140,7 +146,7 @@ function events_event_calendar() {
   );
 
   foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
-    $settings['events']['data'][$term_field] = '';
+    $settings['events']['data'][$term_field_info['short_key']] = '';
   }
   $settings['events']['data']['timezone'] = drupal_get_user_timezone();
 
@@ -205,7 +211,7 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
         continue;
       }
 
-      $facets[$key] = array(
+      $facets[$term_fields[$key]['short_key']] = array(
         'label' => $term_fields[$key]['label'],
         'values' => array(),
       );
@@ -216,7 +222,7 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
 
       $terms = taxonomy_term_load_multiple($tids);
       foreach ($terms as $term) {
-        $facets[$key]['values'][$term->tid] = $term->name;
+        $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->name;
         // Add parent.
         if ($term_fields[$key]['has_parents']) {
           $parents = taxonomy_get_parents($term->tid);
@@ -224,7 +230,7 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
             $parent = reset($parents);
             if ($parent->tid) {
               $parent = taxonomy_term_load($parent->tid);
-              $facets[$key]['values'][$term->tid] = $parent->name . ' > ' . $term->name;
+              $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $parent->name . ' > ' . $term->name;
             }
           }
         }
@@ -281,9 +287,9 @@ function events_event_fetch_events() {
         'backgroundColor' => events_event_get_event_color($node),
       );
       foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
-        $event[$term_field] = array();
+        $event[$term_field_info['short_key']] = array();
         if (isset($node->{$term_field}['und'][0]['tid'])) {
-          $event[$term_field][] = $node->{$term_field}['und'][0]['tid'];
+          $event[$term_field_info['short_key']][] = $node->{$term_field}['und'][0]['tid'];
 
           // Add parent tid.
           if ($term_field_info['has_parents']) {
@@ -291,7 +297,7 @@ function events_event_fetch_events() {
             if ($parents) {
               $parent = reset($parents);
               if ($parent->tid) {
-                $event[$term_field][] = $parent->tid;
+                $event[$term_field_info['short_key']][] = $parent->tid;
               }
             }
           }
@@ -1006,7 +1012,7 @@ function events_event_get_query_filters() {
   $query_filters = array();
   $term_fields = events_event_exported_term_fields();
   foreach ($term_fields as $term_field => $term_field_info) {
-    $query_filters[$term_field] = isset($_GET[$term_field]) ? $_GET[$term_field] : '';
+    $query_filters[$term_field] = isset($_GET[$term_field]) ? $_GET[$term_field] : (isset($_GET[$term_field_info['short_key']]) ? $_GET[$term_field_info['short_key']] : '');
     if (!empty($query_filters[$term_field])) {
       if (!is_numeric($query_filters[$term_field])) {
         header('HTTP/1.1 400 ' . $query_filters[$term_field] . ' is an integer.', TRUE, 400);
