@@ -15,16 +15,18 @@
         return;
       }
 
-      var eventFilters = Drupal.settings.fullcalendar_api.calendarSettings.events.data;
+      var defaultFilters = Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters;
+      var eventFilters = Drupal.settings.fullcalendar_api.calendarSettings.availableFilters;
+
       var updateEventFilters = function (filters) {
         eventFilters = filters;
-        var hash = '#';
+        var path = '?';
         for (f in eventFilters) {
           if (eventFilters.hasOwnProperty(f) && typeof eventFilters[f] != 'undefined' && eventFilters[f] != '') {
-            hash += '|' + f + ':' + eventFilters[f];
+            path += f + '=' + eventFilters[f] + '&';
           }
         }
-        location.hash = hash;
+        history.pushState(eventFilters, '', path);
       };
 
       var $settings = settings.fullcalendar_api.calendarSettings;
@@ -248,6 +250,9 @@
             var newOption = document.createElement('option');
             newOption.value = f + ':' + o;
             newOption.text = option;
+            if (defaultFilters[f] && defaultFilters[f] == o) {
+              newOption.selected = 'selected';
+            }
             newSelect.appendChild(newOption);
           }
 
@@ -268,6 +273,10 @@
 
         var exportDiv = buildExportOptions();
         document.querySelector('#block-system-main').insertBefore(exportDiv, document.querySelector('#block-system-main').firstChild);
+
+        eventFilters = $.extend(eventFilters, defaultFilters);
+        // Trigger rerender.
+        $calendar.fullCalendar('rerenderEvents');
       });
 
       var filters = document.querySelectorAll('.block-views');
