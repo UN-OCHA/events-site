@@ -31,7 +31,7 @@
 
       var $settings = settings.fullcalendar_api.calendarSettings;
       $.extend($settings, {
-        'eventRender': function(event, element, view) {
+        eventRender: function(event, element, view) {
           for (f in eventFilters) {
             if (eventFilters.hasOwnProperty(f) && event.hasOwnProperty(f) && typeof eventFilters[f] != 'undefined' && eventFilters[f] != '' && event[f].indexOf(eventFilters[f]) === -1) {
               return false;
@@ -40,6 +40,7 @@
           return true;
         },
         viewRender: function(view) {
+          // Store view.name, view.start and view.end
           if (view.name === 'upcoming') {
             if ($calendar.fullCalendar('getDate').unix() < moment().unix()) {
               $calendar.fullCalendar('gotoDate', moment());
