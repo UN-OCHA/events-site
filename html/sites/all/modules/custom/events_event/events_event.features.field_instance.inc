@@ -471,6 +471,73 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'taxonomy_term-ev_coordination_hub-field_external_id'.
+  $field_instances['taxonomy_term-ev_coordination_hub-field_external_id'] = array(
+    'bundle' => 'ev_coordination_hub',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_external_id',
+    'label' => 'External Id',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-ev_disaster-field_external_id'.
+  $field_instances['taxonomy_term-ev_disaster-field_external_id'] = array(
+    'bundle' => 'ev_disaster',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_external_id',
+    'label' => 'External Id',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-ev_list-field_ev_legend_color'.
   $field_instances['taxonomy_term-ev_list-field_ev_legend_color'] = array(
     'bundle' => 'ev_list',
@@ -479,7 +546,7 @@ function events_event_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'color_field',
         'settings' => array(),
         'type' => 'color_field_default_formatter',
@@ -502,6 +569,73 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-ev_list-field_external_id'.
+  $field_instances['taxonomy_term-ev_list-field_external_id'] = array(
+    'bundle' => 'ev_list',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_external_id',
+    'label' => 'External Id',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-ev_location-field_external_id'.
+  $field_instances['taxonomy_term-ev_location-field_external_id'] = array(
+    'bundle' => 'ev_location',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_external_id',
+    'label' => 'External Id',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance:
   // 'taxonomy_term-ev_organization-field_ev_legend_color'.
   $field_instances['taxonomy_term-ev_organization-field_ev_legend_color'] = array(
@@ -511,11 +645,11 @@ function events_event_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'color_field',
         'settings' => array(),
         'type' => 'color_field_default_formatter',
-        'weight' => 0,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -534,6 +668,39 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-ev_organization-field_external_id'.
+  $field_instances['taxonomy_term-ev_organization-field_external_id'] = array(
+    'bundle' => 'ev_organization',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_external_id',
+    'label' => 'External Id',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Category');
@@ -543,6 +710,7 @@ function events_event_field_default_field_instances() {
   t('Disaster(s)');
   t('Document_type');
   t('Documents');
+  t('External Id');
   t('File');
   t('Info');
   t('Legend color');
