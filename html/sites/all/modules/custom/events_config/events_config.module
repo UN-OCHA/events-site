@@ -97,8 +97,8 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
   if ($external_id) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
-    $query->entityCondition('bundle', $vocabulary ,'=');
-    $query->fieldCondition('field_external_id', 'value', $external_id ,'=');
+    $query->entityCondition('bundle', $vocabulary, '=');
+    $query->fieldCondition('field_external_id', 'value', $external_id, '=');
     $result = $query->execute();
   }
 
@@ -106,8 +106,8 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
   if (!$external_id || !isset($result['taxonomy_term'])) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
-    $query->entityCondition('bundle', $vocabulary ,'=');
-    $query->propertyCondition('name', '%' . $name . '%','LIKE');
+    $query->entityCondition('bundle', $vocabulary, '=');
+    $query->propertyCondition('name', '%' . $name . '%', 'LIKE');
     $result = $query->execute();
   }
 
@@ -411,8 +411,8 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
 
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'taxonomy_term');
-            $query->entityCondition('bundle', 'ev_location' ,'=');
-            $query->fieldCondition('field_external_id', 'value', $item['parent'][0]['id'] ,'=');
+            $query->entityCondition('bundle', 'ev_location', '=');
+            $query->fieldCondition('field_external_id', 'value', $item['parent'][0]['id'], '=');
             $result = $query->execute();
 
             // Parent must exist.
