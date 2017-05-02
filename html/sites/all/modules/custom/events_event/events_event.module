@@ -145,10 +145,17 @@ function events_event_calendar() {
     ),
   );
 
+  // Parse query parameters.
   $query_filters = events_event_get_query_filters();
 
   foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
+    // Hard filter, will be added in all calls.
+    $settings['events']['data'][$term_field_info['short_key']] = '';
+
+    // List of available filters visible to the user.
     $settings['availableFilters'][$term_field_info['short_key']] = '';
+
+    // List of default values for the exposed filters.
     if (isset($query_filters[$term_field])) {
       $settings['defaultFilters'][$term_field_info['short_key']] = $query_filters[$term_field];
     }
