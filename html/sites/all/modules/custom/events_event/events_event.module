@@ -82,12 +82,30 @@ function events_event_menu() {
  */
 function events_event_exported_term_fields() {
   return array(
-    'field_event_coordination_hub' => t('Coordination Hubs'),
-    'field_event_cluster' => t('Clusters'),
-    'field_event_category' => t('Categories'),
-    'field_event_organization' => t('Organizations'),
-    'field_event_location' => t('Location of event'),
-    'field_event_disasters' => t('Disasters'),
+    'field_event_coordination_hub' => array(
+      'label' => t('Coordination Hubs'),
+      'has_parents' => FALSE,
+    ),
+    'field_event_cluster' => array(
+      'label' => t('Clusters'),
+      'has_parents' => FALSE,
+    ),
+    'field_event_category' => array(
+      'label' => t('Categories'),
+      'has_parents' => FALSE,
+    ),
+    'field_event_organization' => array(
+      'label' => t('Organizations'),
+      'has_parents' => FALSE,
+    ),
+    'field_event_location' => array(
+      'label' => t('Location of event'),
+      'has_parents' => TRUE,
+    ),
+    'field_event_disasters' => array(
+      'label' => t('Disasters'),
+      'has_parents' => FALSE,
+    ),
   );
 }
 
@@ -121,7 +139,7 @@ function events_event_calendar() {
     ),
   );
 
-  foreach (events_event_exported_term_fields() as $term_field => $label) {
+  foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
     $settings['events']['data'][$term_field] = '';
   }
   $settings['events']['data']['timezone'] = drupal_get_user_timezone();
@@ -188,7 +206,7 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
       }
 
       $facets[$key] = array(
-        'label' => $term_fields[$key],
+        'label' => $term_fields[$key]['label'],
         'values' => array(),
       );
       $tids = array();
@@ -199,6 +217,17 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
       $terms = taxonomy_term_load_multiple($tids);
       foreach ($terms as $term) {
         $facets[$key]['values'][$term->tid] = $term->name;
+        // Add parent.
+        if ($term_fields[$key]['has_parents']) {
+          $parents = taxonomy_get_parents($term->tid);
+          if ($parents) {
+            $parent = reset($parents);
+            if ($parent->tid) {
+              $parent = taxonomy_term_load($parent->tid);
+              $facets[$key]['values'][$term->tid] = $parent->name . ' > ' . $term->name;
+            }
+          }
+        }
       }
     }
   }
@@ -251,15 +280,19 @@ function events_event_fetch_events() {
         'url' => url('node/' . $node->nid),
         'backgroundColor' => events_event_get_event_color($node),
       );
-      foreach (events_event_exported_term_fields() as $term_field => $label) {
+      foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
         $event[$term_field] = array();
         if (isset($node->{$term_field}['und'][0]['tid'])) {
           $event[$term_field][] = $node->{$term_field}['und'][0]['tid'];
-          $parents = taxonomy_get_parents($node->{$term_field}['und'][0]['tid']);
-          if ($parents) {
-            $parent = reset($parents);
-            if ($parent->tid) {
-              $event[$term_field][] = $parent->tid;
+
+          // Add parent tid.
+          if ($term_field_info['has_parents']) {
+            $parents = taxonomy_get_parents($node->{$term_field}['und'][0]['tid']);
+            if ($parents) {
+              $parent = reset($parents);
+              if ($parent->tid) {
+                $event[$term_field][] = $parent->tid;
+              }
             }
           }
         }
@@ -972,7 +1005,7 @@ function events_event_json_output($data) {
 function events_event_get_query_filters() {
   $query_filters = array();
   $term_fields = events_event_exported_term_fields();
-  foreach ($term_fields as $term_field => $label) {
+  foreach ($term_fields as $term_field => $term_field_info) {
     $query_filters[$term_field] = isset($_GET[$term_field]) ? $_GET[$term_field] : '';
     if (!empty($query_filters[$term_field])) {
       if (!is_numeric($query_filters[$term_field])) {
