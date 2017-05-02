@@ -40,7 +40,7 @@ function events_config_default_search_api_index() {
         "field_event_date:value" : { "type" : "list\\u003Cdate\\u003E" },
         "field_event_date:value2" : { "type" : "list\\u003Cdate\\u003E" },
         "field_event_disasters" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
-        "field_event_location" : { "type" : "integer", "entity_type" : "taxonomy_term" },
+        "field_event_location" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_event_organization" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "search_api_language" : { "type" : "string" },
         "title" : { "type" : "text" }
@@ -53,7 +53,11 @@ function events_config_default_search_api_index() {
         },
         "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
         "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
-        "search_api_alter_add_hierarchy" : { "status" : 0, "weight" : "0", "settings" : { "fields" : [] } },
+        "search_api_alter_add_hierarchy" : {
+          "status" : 1,
+          "weight" : "0",
+          "settings" : { "fields" : { "field_event_location:parent" : "field_event_location:parent" } }
+        },
         "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
         "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
         "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] }
@@ -202,14 +206,14 @@ function events_config_default_search_api_server() {
             "type" : "integer",
             "boost" : "1.0"
           },
-          "field_event_location" : {
-            "table" : "search_api_db_un_events",
-            "column" : "field_event_location",
-            "type" : "integer",
-            "boost" : "1.0"
-          },
           "field_event_disasters" : {
             "table" : "search_api_db_un_events_field_event_disasters",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "field_event_location" : {
+            "table" : "search_api_db_un_events_field_event_location",
             "column" : "value",
             "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"
