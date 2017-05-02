@@ -209,7 +209,6 @@
           var facet = facets[f];
           filterCount++;
 
-          console.log(facet);
           var filter = document.createElement('div');
 
           if (facet.values.length === 0) {
