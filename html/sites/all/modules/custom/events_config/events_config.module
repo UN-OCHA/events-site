@@ -64,7 +64,7 @@ function events_config_hybridauth_user_login($account, $data) {
 
     $new_term_ids = array();
     foreach ($data['organizations'] as $organization) {
-      $term = events_config_get_organisation_term($organization->name);
+      $term = events_config_get_organisation_term($organization->name, $organization->_id);
       if ($term) {
         $new_term_ids[] = $term->tid;
       }
@@ -170,7 +170,7 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
 /**
  * Fetch organisation term.
  */
-function events_config_get_organisation_term($name, $external_id) {
+function events_config_get_organisation_term($name, $external_id = NULL) {
   $output = events_config_get_term($name, 'ev_organization', $external_id);
   $term = $output['term'];
 
@@ -357,6 +357,7 @@ function events_config_cron() {
  */
 function events_config_fetch_and_sync_organisations() {
   events_config_api_call_list('organization', 'events_config_get_organisation_term');
+
   cache_clear_all('events_event:organisations', 'cache');
 }
 
@@ -365,6 +366,7 @@ function events_config_fetch_and_sync_organisations() {
  */
 function events_config_fetch_and_sync_lists() {
   events_config_api_call_list('bundle', 'events_config_get_list_term');
+
   cache_clear_all('events_event:clusters', 'cache');
 }
 
@@ -373,6 +375,7 @@ function events_config_fetch_and_sync_lists() {
  */
 function events_config_fetch_and_sync_coordination_hubs() {
   events_config_api_call_list('office', 'events_config_get_coordination_hub_term');
+
   cache_clear_all('events_event:coordination_hubs', 'cache');
 }
 
