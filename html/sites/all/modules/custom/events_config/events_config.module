@@ -85,125 +85,138 @@ function events_config_hybridauth_user_login($account, $data) {
 }
 
 /**
+ * Load or create a term.
+ */
+function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent_id = NULL) {
+  $output = array(
+    'term' => FALSE,
+    'new' => TRUE,
+  );
+
+  // Query by Id first.
+  if ($external_id) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term');
+    $query->entityCondition('bundle', $vocabulary ,'=');
+    $query->fieldCondition('field_external_id', 'value', $external_id ,'=');
+    $result = $query->execute();
+  }
+
+  // Query by name if not found or not defined.
+  if (!$external_id || !isset($result['taxonomy_term'])) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term');
+    $query->entityCondition('bundle', $vocabulary ,'=');
+    $query->propertyCondition('name', '%' . $name . '%','LIKE');
+    $result = $query->execute();
+  }
+
+  // Make sure term exists.
+  if (!isset($result['taxonomy_term'])) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    $term = (object) array(
+      'vid' => $vocabularies[$vocabulary]->vid,
+      'name' => $name,
+      'vocabulary_machine_name' => $vocabulary,
+    );
+
+    if ($external_id) {
+      $term->field_external_id['und'][0]['value'] = $external_id;
+    }
+
+    if ($parent_id) {
+      $term->parent = $parent_id;
+    }
+
+    taxonomy_term_save($term);
+    $output['new'] = TRUE;
+  }
+  else {
+    $term_tid = reset($result['taxonomy_term']);
+    $term = taxonomy_term_load($term_tid->tid);
+    $needs_update = FALSE;
+
+    if ($external_id) {
+      if (!isset($term->field_external_id['und'][0]['value']) || $term->field_external_id['und'][0]['value'] != $external_id) {
+        $term->field_external_id['und'][0]['value'] = $external_id;
+        $needs_update = TRUE;
+      }
+      if ($term->name != $name) {
+        $term->name = $name;
+        $needs_update = TRUE;
+      }
+    }
+
+    if ($parent_id) {
+      $parents = taxonomy_get_parents($term->tid);
+      if ($parents) {
+        $parent = reset($parents);
+        if ($parent->tid != $parent_id) {
+          $term->parent = $parent_id;
+          $needs_update = TRUE;
+        }
+      }
+    }
+
+    if ($needs_update) {
+      taxonomy_term_save($term);
+    }
+  }
+
+  $output['term'] = $term;
+  return $output;
+}
+
+/**
  * Fetch organisation term.
  */
-function events_config_get_organisation_term($name) {
-  $term = FALSE;
+function events_config_get_organisation_term($name, $external_id) {
+  $output = events_config_get_term($name, 'ev_organization', $external_id);
+  $term = $output['term'];
 
-  // Make sure term exists.
-  $terms = taxonomy_get_term_by_name($name, 'ev_organization');
-  if (!$terms) {
-    $vocabularies = taxonomy_vocabulary_get_names();
-    $term = (object) array(
-      'vid' => $vocabularies['ev_organization']->vid,
-      'name' => $name,
-      'vocabulary_machine_name' => 'ev_organization',
-    );
+  if ($output['new']) {
     $term->field_ev_legend_color['und'][0]['rgb'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
     taxonomy_term_save($term);
   }
-  else {
-    $term = array_shift($terms);
-  }
-
   return $term;
 }
 
 /**
  * Fetch list term.
  */
-function events_config_get_list_term($name) {
-  $term = FALSE;
+function events_config_get_list_term($name, $external_id = NULL) {
+  $output = events_config_get_term($name, 'ev_list', $external_id);
+  $term = $output['term'];
 
-  // Make sure term exists.
-  $terms = taxonomy_get_term_by_name($name, 'ev_list');
-  if (!$terms) {
-    $vocabularies = taxonomy_vocabulary_get_names();
-    $term = (object) array(
-      'vid' => $vocabularies['ev_list']->vid,
-      'name' => $name,
-      'vocabulary_machine_name' => 'ev_list',
-    );
+  if ($output['new']) {
     $term->field_ev_legend_color['und'][0]['rgb'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
     taxonomy_term_save($term);
   }
-  else {
-    $term = array_shift($terms);
-  }
-
   return $term;
 }
 
 /**
  * Fetch list term.
  */
-function events_config_get_coordination_hub_term($name) {
-  $term = FALSE;
-
-  // Make sure term exists.
-  $terms = taxonomy_get_term_by_name($name, 'ev_coordination_hub');
-  if (!$terms) {
-    $vocabularies = taxonomy_vocabulary_get_names();
-    $term = (object) array(
-      'vid' => $vocabularies['ev_coordination_hub']->vid,
-      'name' => $name,
-      'vocabulary_machine_name' => 'ev_coordination_hub',
-    );
-    taxonomy_term_save($term);
-  }
-  else {
-    $term = array_shift($terms);
-  }
-
-  return $term;
+function events_config_get_coordination_hub_term($name, $external_id = NULL) {
+  $output = events_config_get_term($name, 'ev_coordination_hub', $external_id);
+  return $output['term'];
 }
 
 /**
  * Fetch location term.
  */
-function events_config_get_location_term($name) {
-  $term = FALSE;
-
-  // Make sure term exists.
-  $terms = taxonomy_get_term_by_name($name, 'ev_location');
-  if (!$terms) {
-    $vocabularies = taxonomy_vocabulary_get_names();
-    $term = (object) array(
-      'vid' => $vocabularies['ev_location']->vid,
-      'name' => $name,
-      'vocabulary_machine_name' => 'ev_location',
-    );
-    taxonomy_term_save($term);
-  }
-  else {
-    $term = array_shift($terms);
-  }
-
-  return $term;
+function events_config_get_location_term($name, $external_id = NULL, $parent_id = NULL) {
+  $output = events_config_get_term($name, 'ev_location', $external_id, $parent_id);
+  return $output['term'];
 }
 
 /**
  * Fetch disaster term.
  */
-function events_config_get_disaster_term($name) {
-  $term = FALSE;
-
-  // Make sure term exists.
-  $terms = taxonomy_get_term_by_name($name, 'ev_disaster');
-  if (!$terms) {
-    $vocabularies = taxonomy_vocabulary_get_names();
-    $term = (object) array(
-      'vid' => $vocabularies['ev_disaster']->vid,
-      'name' => $name,
-      'vocabulary_machine_name' => 'ev_disaster',
-    );
-    taxonomy_term_save($term);
-  }
-  else {
-    $term = array_shift($terms);
-  }
-
-  return $term;
+function events_config_get_disaster_term($name, $external_id = NULL) {
+  $output = events_config_get_term($name, 'ev_disaster', $external_id);
+  return $output['term'];
 }
 
 /**
@@ -287,6 +300,9 @@ function events_config_get_user_organizations($account = NULL) {
   return $data['organisations'];
 }
 
+/**
+ * Fetch data from HID.
+ */
 function events_config_api_call_list($type, $callback) {
   $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
 
@@ -313,7 +329,7 @@ function events_config_api_call_list($type, $callback) {
       }
       foreach ($data as $item) {
         if ($item->name) {
-          call_user_func($callback, $item->name);
+          call_user_func($callback, $item->name, $item->_id);
         }
       }
     }
@@ -361,13 +377,72 @@ function events_config_fetch_and_sync_coordination_hubs() {
 }
 
 /**
- * Fetch and sync locations from HID.
+ * Fetch and sync locations from HRInfo.
  */
 function events_config_fetch_and_sync_locations() {
-  // TODO: Sync from HID
-  return;
-  events_config_api_call_list('office', 'events_config_get_location_term');
+  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=0');
+  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=1', TRUE);
+
   cache_clear_all('events_event:locations', 'cache');
+}
+
+/**
+ * Fetch and sync locations from HRInfo.
+ */
+function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_needed = FALSE) {
+  $url = $endpoint;
+
+  while (TRUE) {
+    $request = drupal_http_request($url);
+    if (isset($request->data)) {
+      $data = drupal_json_decode($request->data);
+      if (empty($data['data'])) {
+        break;
+      }
+
+      foreach ($data['data'] as $item) {
+        if (isset($item['label']) && $item['label']) {
+          $parent = 0;
+          if (isset($item['parent'][0]['id'])) {
+            // Skip levels that are too deep.
+            if (count($item['parents']) > 2) {
+              continue;
+            }
+
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'taxonomy_term');
+            $query->entityCondition('bundle', 'ev_location' ,'=');
+            $query->fieldCondition('field_external_id', 'value', $item['parent'][0]['id'] ,'=');
+            $result = $query->execute();
+
+            // Parent must exist.
+            if ($parent_needed && !isset($result['taxonomy_term'])) {
+              continue;
+            }
+
+            $parent_term = reset($result['taxonomy_term']);
+            $term = taxonomy_term_load($parent_term->tid);
+            $parent = $parent_term->tid;
+          }
+
+          if ($parent_needed && $parent == 0) {
+            continue;
+          }
+          events_config_get_location_term($item['label'], $item['id'], $parent);
+        }
+      }
+
+      if (isset($data['next']) && isset($data['next']['href'])) {
+        $url = $data['next']['href'];
+      }
+      else {
+        break;
+      }
+    }
+    else {
+      break;
+    }
+  }
 }
 
 /**
@@ -380,6 +455,7 @@ function events_config_fetch_and_sync_disasters() {
   while (TRUE) {
     $params = array(
       'appname' => 'hrevents',
+      'preset' => 'external',
       'offset' => $offset,
       'limit' => 200,
     );
@@ -393,7 +469,7 @@ function events_config_fetch_and_sync_disasters() {
       }
       foreach ($data['data'] as $item) {
         if ($item['fields']['name']) {
-          events_config_get_disaster_term($item['fields']['name']);
+          events_config_get_disaster_term($item['fields']['name'], $item['id']);
         }
       }
     }
