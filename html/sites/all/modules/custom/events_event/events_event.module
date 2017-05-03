@@ -87,7 +87,7 @@ function events_event_exported_term_fields() {
       'has_parents' => FALSE,
       'short_key' => 'hub',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_coordination_hub',
       'exposed' => FALSE,
     ),
     'field_event_cluster' => array(
@@ -95,7 +95,7 @@ function events_event_exported_term_fields() {
       'has_parents' => FALSE,
       'short_key' => 'clu',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_list',
       'exposed' => TRUE,
     ),
     'field_event_category' => array(
@@ -103,7 +103,7 @@ function events_event_exported_term_fields() {
       'has_parents' => FALSE,
       'short_key' => 'cat',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_category',
       'exposed' => TRUE,
     ),
     'field_event_organization' => array(
@@ -111,7 +111,7 @@ function events_event_exported_term_fields() {
       'has_parents' => FALSE,
       'short_key' => 'org',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_organization',
       'exposed' => TRUE,
     ),
     'field_event_location' => array(
@@ -127,7 +127,7 @@ function events_event_exported_term_fields() {
       'has_parents' => FALSE,
       'short_key' => 'dis',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_disaster',
       'exposed' => TRUE,
     ),
   );
