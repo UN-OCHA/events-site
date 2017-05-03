@@ -17,16 +17,25 @@
 
       var defaultFilters = Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters;
       var eventFilters = Drupal.settings.fullcalendar_api.calendarSettings.availableFilters;
+      var state = {
+        'view': 'month',
+        'date': '',
+      };
+
+      var updateState = function () {
+        $.extend(state, eventFilters);
+        var path = '?';
+        for (f in state) {
+          if (state.hasOwnProperty(f) && typeof state[f] != 'undefined' && state[f] != '') {
+            path += f + '=' + state[f] + '&';
+          }
+        }
+        history.replaceState(state, '', path);
+      };
 
       var updateEventFilters = function (filters) {
         eventFilters = filters;
-        var path = '?';
-        for (f in eventFilters) {
-          if (eventFilters.hasOwnProperty(f) && typeof eventFilters[f] != 'undefined' && eventFilters[f] != '') {
-            path += f + '=' + eventFilters[f] + '&';
-          }
-        }
-        history.pushState(eventFilters, '', path);
+        updateState();
       };
 
       var $settings = settings.fullcalendar_api.calendarSettings;
@@ -41,6 +50,10 @@
         },
         viewRender: function(view) {
           // Store view.name, view.start and view.end
+          state.view = view.name;
+          state.date = $calendar.fullCalendar('getDate').toISOString();
+          updateState();
+
           if (view.name === 'upcoming') {
             if ($calendar.fullCalendar('getDate').unix() < moment().unix()) {
               $calendar.fullCalendar('gotoDate', moment());
