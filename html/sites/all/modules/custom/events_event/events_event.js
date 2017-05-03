@@ -132,7 +132,7 @@
           parts = data.split(':');
 
           eventFilters[parts[0]] = parts[1];
-          if (typeof parts[1] != 'undefined') {
+          if (typeof parts[1] == 'undefined') {
             eventFilters[parts[0]] = '';
           }
           updateEventFilters(eventFilters);
