@@ -35,7 +35,7 @@ endif; ?>
       <?php
 else: ?>
         <a href="<?php print $front_page; ?>" class="site-header__logo">
-          <img src="<?php print $base_path . $directory . '/assets/images/humanitarian-events-logo.png'; ?>" alt="<?php print t('Humanitarian Events') ?>">
+          <img src="<?php print $base_path . $directory . '/assets/images/humanitarian-events-logo.svg'; ?>" alt="<?php print t('Humanitarian Events') ?>">
         </a>
       <?php
 endif;
