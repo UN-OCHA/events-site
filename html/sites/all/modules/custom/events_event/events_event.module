@@ -904,7 +904,7 @@ function _events_event_ev_local_time($node, $view_mode, $langcode) {
 
   $output = _events_event_render_dates_as_string($dates);
   return array(
-    '#markup' => '<div class="field field-type-date field-type-date-local"><label>Local time: </label>' . $output . '</div>',
+    '#markup' => '<div class="field field-type-date field-type-date-local"><div class="field-label">Local time: </div>' . $output . '</div>',
   );
 }
 
@@ -936,7 +936,7 @@ function _events_event_ev_user_time($node, $view_mode, $langcode) {
 
   $output = _events_event_render_dates_as_string($dates);
   return array(
-    '#markup' => '<div class="field field-type-date field-type-date-user"><label>Your time: </label>' . $output . '</div>',
+    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">Your time: </div>' . $output . '</div>',
   );
 }
 

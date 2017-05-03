@@ -42,7 +42,7 @@ body .fc { /* extra precedence to overcome jqui */
 .fc-unthemed .fc-divider,
 .fc-unthemed .fc-popover .fc-header,
 .fc-unthemed .fc-list-heading td {
-	background: $light-bg;
+	background: $light-bg-color;
 }
 
 .fc-unthemed .fc-popover .fc-header .fc-close {
@@ -206,11 +206,11 @@ NOTE: use percentage font sizes or else old IE chokes
 	border: none;
 	background: transparent;
 	text-transform: uppercase;
-	color: $dark-blue;
+	color: $link-text-color;
 	font-weight: bold;
 
 	&:hover, &:focus {
-		background: $dark-blue;
+		background: $secondary-bg-color;
 		color: $light-text-color;
 	}
 }
@@ -222,7 +222,7 @@ NOTE: use percentage font sizes or else old IE chokes
 }
 .fc-state-down,
 .fc-state-active {
-	background: $dark-blue;
+	background: $secondary-bg-color;
 	color: $light-text-color;
 }
 
@@ -239,7 +239,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-button-group {
 	display: inline-block;
-	background: $light-bg;
+	background: $light-bg-color;
 }
 
 /*
@@ -358,10 +358,10 @@ hr.fc-divider {
 
 .fc th {
 	text-align: center;
-	background: $light-bg;
+	background: $light-bg-color;
 	text-transform: uppercase;
 	font-weight: bold;
-	color: $dark-blue;
+	color: $secondary-heading-text-color;
 	padding: $base-unit 0;
 }
 
@@ -505,7 +505,7 @@ temporary rendered events).
 	@include font-size($small-font-size);
 	line-height: 1.3;
 	font-weight: normal; /* undo jqui's ui-widget-header bold */
-	color: $dark-blue;
+	color: $link-text-color;
 	text-decoration: none;
 
 	&:hover, &:focus {
@@ -684,8 +684,8 @@ be a descendant of the grid when it is being dragged.
 	padding: 2px 0 0 0;
 
 	.fc-content {
-		background: $light-bg;
-		color: $dark-blue;
+		background: $light-bg-color;
+		color: $link-text-color;
 		padding: $base-unit/2;
 		height: 100%;
 	}
@@ -805,7 +805,7 @@ a.fc-more:hover {
 	margin-bottom: $base-unit*2;
 
 	h2 {
-		color: $primary-color;
+		color: $heading-text-color;
 	}
 }
 
@@ -1129,7 +1129,7 @@ a.fc-more:hover {
 .fc-time-grid .fc-bgevent {
 	position: absolute;
 	z-index: 1; /* scope inner z-index's */
-	border: 1px solid darken($light-bg, 10%);
+	border: 1px solid darken($light-bg-color, 10%);
 }
 
 .fc-time-grid .fc-bgevent {
@@ -1419,7 +1419,7 @@ be a descendant of the grid when it is being dragged.
 @include media-query(lg) {
 
 	.fc-toolbar.fc-header-toolbar {
-		border-bottom: 1px solid $dark-blue;
+		border-bottom: 1px solid $highlight-border-color;
 	}
 
 	.fc-toolbar .fc-left {

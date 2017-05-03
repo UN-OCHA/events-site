@@ -25,7 +25,7 @@ form {
 }
 
 .form-item {
-	background: $light-bg;
+	background: $light-bg-color;
 	padding: $base-unit*2;
 	margin: 0 0 1px 0;
 
@@ -74,7 +74,7 @@ form {
 	}
 
 	tr {
-		border-top: 4px solid $light-bg;
+		border-top: 4px solid $light-bg-color;
 
 		&:first-child {
 			border: none;
@@ -168,7 +168,7 @@ label {
 	margin-right: $base-unit/2;
 
 	&.over {
-		background: $light-bg;
+		background: $light-bg-color;
 	}
 
 	&:before {
@@ -263,7 +263,7 @@ div.vertical-tabs {
 	    padding: 8px;
 	    font-weight: bold;
 	    border: none;
-			background: $light-bg;
+			background: $light-bg-color;
 			@include font-size($base-font-size);
 		}
 	}

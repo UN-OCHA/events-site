@@ -7,14 +7,14 @@ button, input[type="submit"] {
 
 .btn-primary {
 	border-radius: 4px;
-	background: $primary-color;
+	background: $primary-bg-color;
 	text-transform: uppercase;
 	color: $light-text-color;
 	padding: $base-unit*1.5;
 	transition: background 0.3s ease;
 
 	&:hover, &:focus {
-		background: darken($primary-color, 10%);
+		background: darken($primary-bg-color, 10%);
 	}
 }
 
