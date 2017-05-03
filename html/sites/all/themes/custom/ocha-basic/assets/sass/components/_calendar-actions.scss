@@ -48,7 +48,7 @@
 	.block-views {
 		width: 25%;
 
-		&:last-child {
+		&:nth-child(4n) {
 			padding: 0;
 		}
 	}
