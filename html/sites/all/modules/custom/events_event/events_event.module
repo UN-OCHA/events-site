@@ -88,6 +88,7 @@ function events_event_exported_term_fields() {
       'short_key' => 'hub',
       'value_key' => '',
       'bundle' => '',
+      'exposed' => FALSE,
     ),
     'field_event_cluster' => array(
       'label' => t('Clusters'),
@@ -95,6 +96,7 @@ function events_event_exported_term_fields() {
       'short_key' => 'clu',
       'value_key' => '',
       'bundle' => '',
+      'exposed' => TRUE,
     ),
     'field_event_category' => array(
       'label' => t('Categories'),
@@ -102,6 +104,7 @@ function events_event_exported_term_fields() {
       'short_key' => 'cat',
       'value_key' => '',
       'bundle' => '',
+      'exposed' => TRUE,
     ),
     'field_event_organization' => array(
       'label' => t('Organizations'),
@@ -109,6 +112,7 @@ function events_event_exported_term_fields() {
       'short_key' => 'org',
       'value_key' => '',
       'bundle' => '',
+      'exposed' => TRUE,
     ),
     'field_event_location' => array(
       'label' => t('Location of event'),
@@ -116,6 +120,7 @@ function events_event_exported_term_fields() {
       'short_key' => 'loc',
       'value_key' => 'vloc',
       'bundle' => 'ev_location',
+      'exposed' => TRUE,
     ),
     'field_event_disasters' => array(
       'label' => t('Disasters'),
@@ -123,6 +128,7 @@ function events_event_exported_term_fields() {
       'short_key' => 'dis',
       'value_key' => '',
       'bundle' => '',
+      'exposed' => TRUE,
     ),
   );
 }
@@ -162,6 +168,10 @@ function events_event_calendar() {
   $query_filters = events_event_get_query_filters();
 
   foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
+    if (!$term_field_info['exposed']) {
+      continue;
+    }
+
     // List of available filters visible to the user.
     $settings['availableFilters'][$term_field_info['short_key']] = '';
 

@@ -243,13 +243,16 @@
         var filterCount = 0;
         for (var f in facets) {
           var facet = facets[f];
-          filterCount++;
-
-          var filter = document.createElement('div');
-
           if (facet.values.length === 0) {
             continue;
           }
+
+          if (typeof eventFilters[f] == 'undefined') {
+            continue;
+          }
+
+          filterCount++;
+          var filter = document.createElement('div');
 
           // Construct label.
           var newLabel = document.createElement('label');
