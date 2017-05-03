@@ -8,6 +8,10 @@
 		font-weight: bold;
 	}
 
+	.field-label {
+		color: $heading-text-color;
+	}
+
 	table {
 		table-layout: fixed;
 		width: 100%;
@@ -26,11 +30,26 @@
 		word-wrap: break-word;
 		padding: $base-unit/2 0;
 
+		&:first-child {
+			font-weight: bold;
+			padding-left: 0;
+		}
+
 		img {
 			float: left;
 			margin-right: $base-unit/2;
 		}
 	}
+
+	.field-name-field-event-info{
+		background: $light-bg-color;
+		padding: $base-unit*2;
+
+		.field-label {
+			color: $secondary-heading-text-color;
+		}
+	}
+
 }
 
 @include media-query(sm) {
@@ -50,7 +69,11 @@
 			display: table-cell;
 			width: auto;
 			padding: $base-unit;
-			border: 1px solid #ccc;
+			border-bottom: 1px solid $border-color;
+		}
+
+		.field-name-field-event-info{
+			padding: $base-unit*3;
 		}
 
 	}

@@ -15,7 +15,7 @@
 
 		li.active-result {
 			&.highlighted {
-				background: $primary-color;
+				background: $primary-bg-color;
 			}
 		}
 
@@ -25,7 +25,7 @@
 .chosen-container-single.chosen-container-active {
 
 	.chosen-single {
-		border-color: $dark-blue;
+		border-color: $highlight-border-color;
 	}
 
 }
