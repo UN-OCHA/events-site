@@ -129,6 +129,7 @@ function events_event_calendar() {
     'editable' => FALSE,
     'eventLimit' => TRUE,
     'firstDay' => 1,
+    'defaultView' => 'month',
     'weekends' => TRUE,
     'timeFormat' => 'H:mm',
     'timezone' => drupal_get_user_timezone(),
@@ -160,7 +161,19 @@ function events_event_calendar() {
       $settings['defaultFilters'][$term_field_info['short_key']] = $query_filters[$term_field];
     }
   }
-  $settings['events']['data']['timezone'] = drupal_get_user_timezone();
+
+  if (isset($_GET['timezone'])) {
+    $settings['timezone'] = $_GET['timezone'];
+  };
+  $settings['events']['data']['timezone'] = $settings['timezone'];
+
+  if (isset($_GET['view'])) {
+    $settings['defaultView'] = $_GET['view'];
+  };
+
+  if (isset($_GET['date'])) {
+    $settings['defaultDate'] = $_GET['date'];
+  };
 
   drupal_add_library('chosen', 'drupal.chosen');
   drupal_add_js('/sites/all/libraries/jspdf/dist/jspdf.min.js');
