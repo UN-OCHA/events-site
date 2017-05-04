@@ -87,28 +87,32 @@ function events_event_exported_term_fields() {
       'has_parents' => FALSE,
       'short_key' => 'hub',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_coordination_hub',
+      'exposed' => FALSE,
     ),
     'field_event_cluster' => array(
       'label' => t('Clusters'),
       'has_parents' => FALSE,
       'short_key' => 'clu',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_list',
+      'exposed' => TRUE,
     ),
     'field_event_category' => array(
       'label' => t('Categories'),
       'has_parents' => FALSE,
       'short_key' => 'cat',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_category',
+      'exposed' => TRUE,
     ),
     'field_event_organization' => array(
       'label' => t('Organizations'),
       'has_parents' => FALSE,
       'short_key' => 'org',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_organization',
+      'exposed' => TRUE,
     ),
     'field_event_location' => array(
       'label' => t('Location of event'),
@@ -116,13 +120,15 @@ function events_event_exported_term_fields() {
       'short_key' => 'loc',
       'value_key' => 'vloc',
       'bundle' => 'ev_location',
+      'exposed' => TRUE,
     ),
     'field_event_disasters' => array(
       'label' => t('Disasters'),
       'has_parents' => FALSE,
       'short_key' => 'dis',
       'value_key' => '',
-      'bundle' => '',
+      'bundle' => 'ev_disaster',
+      'exposed' => TRUE,
     ),
   );
 }
@@ -162,6 +168,10 @@ function events_event_calendar() {
   $query_filters = events_event_get_query_filters();
 
   foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
+    if (!$term_field_info['exposed']) {
+      continue;
+    }
+
     // List of available filters visible to the user.
     $settings['availableFilters'][$term_field_info['short_key']] = '';
 
@@ -205,7 +215,7 @@ function events_event_calendar() {
 /**
  * Fetch events from search api.
  */
-function events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub, $location, $disasters) {
+function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array()) {
   $index = search_api_index_load('un_events');
   $query = new SearchApiQuery($index);
 
@@ -216,23 +226,11 @@ function events_event_fetch_events_from_search_api($start, $end, $organisation, 
   if ($end) {
     $filter->condition('field_event_date:value', $end, '<=');
   }
-  if ($organisation) {
-    $filter->condition('field_event_organization', $organisation);
-  }
-  if ($cluster) {
-    $filter->condition('field_event_cluster', $cluster);
-  }
-  if ($category) {
-    $filter->condition('field_event_category', $category);
-  }
-  if ($coordination_hub) {
-    $filter->condition('field_event_coordination_hub', $coordination_hub);
-  }
-  if ($location) {
-    $filter->condition('field_event_location', $location);
-  }
-  if ($disasters) {
-    $filter->condition('field_event_disasters', $disasters);
+
+  foreach ($filters as $key => $filter_info) {
+    if (isset($filter_info['value']) && !empty($filter_info['value'])) {
+      $filter->condition($key, $filter_info['value']);
+    }
   }
 
   $query->filter($filter);
@@ -297,16 +295,9 @@ function events_event_fetch_events() {
   }
 
   $query_filters = events_event_get_query_filters();
-  $organisation = $query_filters['field_event_organization']['value'];
-  $cluster = $query_filters['field_event_cluster']['value'];
-  $category = $query_filters['field_event_category']['value'];
-  $coordination_hub = $query_filters['field_event_coordination_hub']['value'];
-  $location = $query_filters['field_event_location']['value'];
-  $disasters = $query_filters['field_event_disasters']['value'];
-
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub, $location, $disasters);
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters);
   $nodes = $data['events'];
 
   $events = array();
@@ -355,14 +346,7 @@ function events_event_fetch_events() {
  */
 function events_event_to_ical() {
   $query_filters = events_event_get_query_filters();
-  $organisation = $query_filters['field_event_organization']['value'];
-  $cluster = $query_filters['field_event_cluster']['value'];
-  $category = $query_filters['field_event_category']['value'];
-  $coordination_hub = $query_filters['field_event_coordination_hub']['value'];
-  $location = $query_filters['field_event_location']['value'];
-  $disasters = $query_filters['field_event_disasters']['value'];
-
-  $data = events_event_fetch_events_from_search_api('', '', $organisation, $cluster, $category, $coordination_hub, $location, $disasters);
+  $data = events_event_fetch_events_from_search_api('', '', $query_filters);
   $nodes = $data['events'];
 
   $library = libraries_load('iCalcreator');
@@ -737,16 +721,7 @@ function events_event_fetch_facets() {
   }
 
   $query_filters = events_event_get_query_filters();
-  $organisation = $query_filters['field_event_organization']['value'];
-  $cluster = $query_filters['field_event_cluster']['value'];
-  $category = $query_filters['field_event_category']['value'];
-  $coordination_hub = $query_filters['field_event_coordination_hub']['value'];
-  $location = $query_filters['field_event_location']['value'];
-  $disasters = $query_filters['field_event_disasters']['value'];
-
-  $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
-
-  $data = events_event_fetch_events_from_search_api($start, $end, $organisation, $cluster, $category, $coordination_hub, $location, $disasters);
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters);
   $facets = $data['facets'];
 
   events_event_json_output($facets);
