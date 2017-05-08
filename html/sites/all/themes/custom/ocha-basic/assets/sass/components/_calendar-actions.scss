@@ -1,0 +1,96 @@
+.block-views {
+	display: block;
+	float: left;
+	width: 50%;
+	margin-bottom: $base-unit*2;
+	padding-right: $base-unit;
+
+	h2 {
+		@include font-size($base-font-size);
+		margin-bottom: $base-unit/2;
+	}
+}
+
+.block-views.processed {
+	.content .item-list {
+     display: none;
+  }
+}
+
+.block-system {
+	padding-top: $base-unit;
+}
+
+.block-views, .calendar-settings {
+
+	label {
+		margin-bottom: $base-unit/2;
+	}
+}
+
+.calendar-settings {
+	background: $light-bg-color;
+	padding: $base-unit;
+	margin: $base-unit*2 0;
+
+	 h3, p {
+		margin-bottom: $base-unit;
+	}
+
+}
+
+.calendar-export {
+	order: 1;
+}
+
+@include media-query(sm) {
+
+	.block-views {
+		width: 25%;
+
+		&:nth-child(4n) {
+			padding: 0;
+		}
+	}
+
+	.calendar-export {
+		order: 0;
+		position: absolute;
+		right: 0;
+		top: -$base-unit*6.25;
+
+		&.open {
+			position: absolute;
+		}
+
+		.dropdown-menu {
+			left: auto;
+			right: 0;
+		}
+	}
+}
+
+@include media-query(md) {
+
+	.calendar-export {
+		top: -$base-unit*8.25;
+	}
+
+	.calendar-filters {
+		margin-bottom: $base-unit;
+	}
+}
+
+@media print {
+
+	.calendar-export, .calendar-filters {
+		display: none!important;
+	}
+
+	.calendar-settings {
+		h2, label, .chosen-container, select {
+			display: none!important;
+		}
+	}
+
+}

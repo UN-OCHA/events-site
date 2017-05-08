@@ -1,0 +1,81 @@
+.node-ev-event {
+
+	.field {
+		margin-bottom: $base-unit*2;
+	}
+
+	.field-name-field-event-date {
+		font-weight: bold;
+	}
+
+	.field-label {
+		color: $heading-text-color;
+	}
+
+	table {
+		table-layout: fixed;
+		width: 100%;
+		border-top: 1px solid #ccc;
+		margin-top: $base-unit;
+	}
+
+	tr.even, tr.odd {
+		background: none;
+		padding: 0;
+	}
+
+	td {
+		width: 100%;
+		display: block;
+		word-wrap: break-word;
+		padding: $base-unit/2 0;
+
+		&:first-child {
+			font-weight: bold;
+			padding-left: 0;
+		}
+
+		img {
+			float: left;
+			margin-right: $base-unit/2;
+		}
+	}
+
+	.field-name-field-event-info{
+		background: $light-bg-color;
+		padding: $base-unit*2;
+
+		.field-label {
+			color: $secondary-heading-text-color;
+		}
+	}
+
+}
+
+@include media-query(sm) {
+
+	.node-ev-event {
+
+		table {
+			width: auto;
+			border: none;
+		}
+
+		tr.even, tr.odd {
+			border-bottom: none;
+		}
+
+		td {
+			display: table-cell;
+			width: auto;
+			padding: $base-unit;
+			border-bottom: 1px solid $border-color;
+		}
+
+		.field-name-field-event-info{
+			padding: $base-unit*3;
+		}
+
+	}
+
+}

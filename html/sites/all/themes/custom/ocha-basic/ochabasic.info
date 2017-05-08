@@ -1,0 +1,10 @@
+name = OCHABasic
+description = A very simple OCHA branded theme
+
+core = 7.x
+stylesheets[all][] = assets/css/styles.css
+scripts[] = assets/js/bootstrap-dropdown.js
+scripts[] = assets/js/modernizr-output.js
+regions[page_top] = Page Top
+regions[content] = Content
+regions[page_bottom] = Page Bottom

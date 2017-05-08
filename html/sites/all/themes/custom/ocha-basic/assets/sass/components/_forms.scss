@@ -1,0 +1,282 @@
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+textarea {
+	@include font-size($base-font-size);
+	padding: $base-unit;
+	border: 1px solid #ccc;
+	max-width: 100%;
+}
+
+form {
+	.field-multiple-table {
+		width: 100%;
+		background: white;
+
+		td {
+			padding: $base-unit/2 0;
+		}
+	}
+}
+
+.form-item {
+	background: $light-bg-color;
+	padding: $base-unit*2;
+	margin: 0 0 1px 0;
+
+	.form-item, .vertical-tabs & {
+		padding: 0;
+		margin: 0 0 $base-unit 0;
+		background: none;
+	}
+
+	.description {
+		white-space: normal;
+	}
+}
+
+.form-actions {
+	margin: 0;
+}
+
+.form-managed-file {
+	position: relative;
+
+	.form-file {
+		width: 210px;
+		padding: 0 $base-unit/2;
+		margin: $base-unit*1.5 0 $base-unit*2;
+		position: relative;
+		z-index: 1;
+	}
+
+	&:before {
+		content: "";
+		width: 210px;
+		height: 40px;
+		border: 1px solid #ccc;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+}
+
+.field-widget-multifield-table {
+	position: relative;
+
+	tr.odd, tr.even {
+		border-bottom: 0;
+	}
+
+	tr {
+		border-top: 4px solid $light-bg-color;
+
+		&:first-child {
+			border: none;
+		}
+	}
+
+	.form-item {
+		padding-bottom: $base-unit*4;
+
+		.form-item {
+			padding-bottom: 0;
+		}
+	}
+}
+
+form .field-multiple-table {
+
+	th {
+		border-bottom: 1px solid #ddd;
+		display: none;
+	}
+
+	th.field-label, td {
+		padding: $base-unit;
+	}
+
+	td {
+		vertical-align: top;
+		display: block;
+	}
+
+	td.field-multiple-drag {
+		position: absolute;
+		right: $base-unit*2;
+
+		a.tabledrag-handle {
+			float: none;
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	&.tabledrag-processed {
+		th:first-child {
+			label {
+				display: none;
+			}
+		}
+	}
+
+}
+
+.form-type-managed-file {
+	label {
+		margin-bottom: $base-unit/2;
+	}
+}
+
+.i-am-dragdropfile.form-submit {
+	display: block;
+	margin: $base-unit/2 0;
+}
+
+a.tabledrag-handle .handle {
+	background-position: 0 0;
+	width: 14px;
+	height: 14px;
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+.tabledrag-toggle-weight-wrapper {
+	position: absolute;
+	left: $base-unit*2;
+	bottom: $base-unit;
+}
+
+label {
+	font-weight: bold;
+}
+
+.date-form-element-content-multiline {
+	border: none;
+	padding: 0;
+}
+
+.dragdropfile-processed {
+	outline: dotted 1px #ccc;
+	padding: $base-unit/2;
+	margin-right: $base-unit/2;
+
+	&.over {
+		background: $light-bg-color;
+	}
+
+	&:before {
+		content: none;
+	}
+}
+
+div.vertical-tabs {
+	margin: $base-unit*2 0;
+
+	ul.vertical-tabs-list {
+		float: none;
+		width: 100%;
+		margin: 0;
+		border-top: 0;
+
+		li {
+			border-left: 0;
+			border-right: 0;
+		}
+	}
+
+	fieldset.vertical-tabs-pane {
+		padding: $base-unit;
+	}
+}
+
+@include media-query(md) {
+
+	.form-managed-file {
+		.form-file {
+			width: 280px;
+			margin: 0 $base-unit $base-unit*2 0;
+		}
+
+		&:before {
+			width: 280px;
+		}
+	}
+
+	.field-widget-multifield-table {
+		.form-item {
+			padding-bottom: $base-unit*2;
+		}
+	}
+
+	form .field-multiple-table {
+		th, td {
+			display: table-cell;
+		}
+
+		td.field-multiple-drag {
+			position: relative;
+			right: auto;
+			padding-top: 10px;
+		}
+	}
+
+	.tabledrag-toggle-weight-wrapper {
+		bottom: $base-unit*5;
+		right: $base-unit*2;
+		left: auto;
+	}
+
+	.i-am-dragdropfile.form-submit {
+		display: inline-block;
+		margin: 0;
+	}
+
+	div.vertical-tabs {
+		margin: 1em 0 1em 15em;
+
+		ul.vertical-tabs-list {
+			width: 15em;
+			margin: -1px 0 -1px -15em;
+			float: left;
+			border-top: 1px solid #ccc;
+
+			li {
+				border: 1px solid #ccc;
+				border-top: 0;
+			}
+		}
+	}
+
+	.dragdropfile-processed {
+		&:before {
+			content: "Drag and drop files here";
+			display: block;
+			text-align: center;
+	    text-transform: uppercase;
+	    padding: 8px;
+	    font-weight: bold;
+	    border: none;
+			background: $light-bg-color;
+			@include font-size($base-font-size);
+		}
+	}
+
+}
+
+/* Hide text format options */
+.text-format-wrapper {
+	.form-item {
+		margin-bottom: 1px;
+	}
+
+	.filter-wrapper {
+		display: none;
+	}
+}

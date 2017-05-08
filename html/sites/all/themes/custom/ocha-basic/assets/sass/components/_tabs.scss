@@ -1,0 +1,44 @@
+.tabs.primary {
+	border-bottom: 1px solid $highlight-border-color;
+	background: $light-bg-color;
+	margin: $base-unit 0;
+	padding: 0;
+	display: flex;
+
+	li {
+		display: inline-block;
+	}
+
+	a {
+		display: block;
+		padding: $base-unit;
+		margin: 0;
+		border: none;
+		background: $light-bg-color;
+		text-transform: uppercase;
+		font-weight: bold;
+
+		&:hover, &:focus {
+			background: $secondary-bg-color;
+			color: $light-text-color;
+			opacity: 0.8;
+		}
+
+		&.active {
+			border: none;
+			background: $secondary-bg-color;
+			color: $light-text-color;
+		}
+	}
+}
+
+@include media-query(sm) {
+
+	.tabs.primary {
+
+		a {
+			padding: $base-unit $base-unit*2;
+		}
+
+	}
+}
