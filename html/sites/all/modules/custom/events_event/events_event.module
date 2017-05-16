@@ -115,7 +115,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_location' => array(
-      'label' => t('Location of event'),
+      'label' => t('Location of Event'),
       'has_parents' => TRUE,
       'short_key' => 'loc',
       'value_key' => 'vloc',
