@@ -78,7 +78,7 @@ function events_config_hybridauth_user_login($account, $data) {
   }
 
   $role = user_role_load_by_name('HID verified');
-  if ($data->verified) {
+  if ($data['verified']) {
     if (!isset($user->roles[$role->rid])) {
       $user->roles = $user->roles + array($role->rid => $role->name);
       $needs_update = TRUE;
