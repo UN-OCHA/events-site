@@ -114,6 +114,7 @@ class Hybrid_Providers_HumanitarianId extends Hybrid_Provider_Model_OAuth2
     $this->user->profile->locale        = @ $data->locale;
     $this->user->profile->zoneinfo      = @ $data->zoneinfo;
     $this->user->profile->organizations = @ $data->organizations;
+    $this->user->profile->verified      = @ $data->verified;
 
     $this->user->profile->identifier  = @ $data->user_id;
     $this->user->profile->displayName = @ $data->name;
