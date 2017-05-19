@@ -41,6 +41,8 @@
       var $settings = settings.fullcalendar_api.calendarSettings;
       $.extend($settings, {
         eventRender: function(event, element, view) {
+          element.attr('data-start', event.start._i);
+
           for (f in eventFilters) {
             if (eventFilters.hasOwnProperty(f) && event.hasOwnProperty(f) && typeof eventFilters[f] != 'undefined' && eventFilters[f] != '' && event[f].indexOf(eventFilters[f]) === -1) {
               return false;
@@ -147,56 +149,173 @@
         button.innerHTML = Drupal.t('ICAL');
         button.addEventListener('click', handleICal);
         return button;
-      }
+      };
 
-      renderElements = function (elements, doc, margin_top) {
-        html2canvas(elements.shift(), {
+      var renderPdf = function (pdfContainer) {
+        pdfContainer.removeClass('hidden');
+        html2canvas(pdfContainer, {
           onrendered: function(canvas) {
-            var height = canvas.height + 30 > doc.internal.pageSize.height ? doc.internal.pageSize.height - 30 : canvas.height;
-            var ratio = 1;
-            if (height !== canvas.height) {
-              ratio = height / canvas.height;
-            }
-            var width = canvas.width * ratio + 30 > doc.internal.pageSize.width ? doc.internal.pageSize.width - 30 : canvas.width * ratio;
-            var new_ratio = width / canvas.width;
-            if (new_ratio !== ratio) {
-              height = canvas.height * new_ratio;
-            }
-            if (margin_top + 15 + height > doc.internal.pageSize.height) {
-              doc.addPage();
-              margin_top = 15;
-            }
-            doc.addImage(canvas.toDataURL('image/png'), 'PNG', 15, margin_top, width, height);
-            if (!elements.length) {
-              doc.save('export.pdf');
-            }
-            else {
-              renderElements(elements, doc, margin_top + 15 + height);
-            }
+            canvasImage = new Image();
+            canvasImage.src= canvas.toDataURL("image/png");
+            canvasImage.onload = splitImage;
           }
         });
-      }
+      };
+
+      var splitImage = function () {
+        var a4 = [990.89, 595.28];
+        var winHeight = a4[1];
+        var contentHeight = $('.pdf-container').height();
+        var contentWidth = $('.pdf-container').width();
+        var imagePieces = [];
+        var totalImgs = Math.round(contentHeight/winHeight) + 1; // Add a page so content doesn't get cut off. Could be cleverer.
+
+        for(var i = 0; i < totalImgs; i++) {
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          canvas.width = contentWidth;
+          canvas.height = winHeight;
+          ctx.drawImage(canvasImage, 0, i * winHeight, contentWidth, winHeight, 0, 0, canvas.width, canvas.height);
+          imagePieces.push(canvas.toDataURL("image/png"));
+        }
+
+        var totalPieces = imagePieces.length - 1;
+        var doc = new jsPDF('landscape', 'px', 'A4', true);
+        imagePieces.forEach(function(img){
+            doc.addImage(img, 'JPEG', 20, 20);
+            if(totalPieces) {
+              doc.addPage();
+            }
+            totalPieces--;
+        });
+        doc.save('export.pdf');
+        $('.pdf-container').addClass('hidden');
+      };
+
+      var formatPdfHeading = function ($calendar) {
+        var headingText = $calendar.find('.fc-toolbar h2').text();
+        var heading = $('<h2 />');
+        heading.text('Calendar: ' + headingText);
+        return heading;
+      };
+
+      var formatPdfEvent = function (event, type, monthView) {
+        var tableRow = $('<tr />');
+        var date = $('<td />');
+        var time = $('<td />');
+        var title = $('<td />');
+        var timeSelector = type === 'list' ? '.fc-list-item-time' : '.fc-time';
+        var titleSelector = type === 'list' ? '.fc-list-item-title' : '.fc-title';
+        var start = moment($(event).data('start'))
+        var startDate = start.format('DD MMMM YYYY');
+
+        // On month view only include events in that month
+
+        if (monthView) {
+          var monthDate = moment($('.fc-toolbar h2').text(), 'MMMM YYYY');
+
+          if (monthDate.month() !== start.month()) {
+            return false;
+          }
+        }
+
+        var timeString = $(event).find(timeSelector).text() ? $(event).find(timeSelector).text() : 'All day';
+        date.html(startDate);
+        time.html(timeString);
+        title.html($(event).find(titleSelector).text());
+        tableRow.append(date).append(time).append(title);
+        return tableRow;
+      };
+
+      var formatPdfEvents = function (calendar, monthView) {
+        var events = [];
+        var eventsLength = 0;
+        var eventsType;
+        var displayEvents = [];
+        var displayEventsLength = 0;
+        var table = $('<table />');
+        var tableHeader = $('<tr />');
+        tableHeader.append($('<th>Date</th><th>Time</th><th>Name of meeting</th>'));
+        table.append(tableHeader);
+
+        var eventsList = calendar.find('.fc-list-table'); //list view (upcoming/past events)
+        events = eventsList.length ? eventsList.find('.fc-list-item') : calendar.find('.fc-event-container').not('.fc-helper-container').find('.fc-event');
+        eventsLength = events.length;
+        eventsType = eventsList.length ? 'list' : 'calendar';
+
+        //sort calendar events by date (because the dom for the calendar isnt in order)
+        if (!eventsList.length) {
+          events.sort(function (a,b) {
+            return moment($(a).data('start')) - moment($(b).data('start'));
+          });
+        }
+
+        for (var i=0; i < eventsLength; i++) {
+          displayEvents.push(formatPdfEvent(events[i], eventsType, monthView));
+        }
+        displayEventsLength = displayEvents.length;
+        for (var j = 0; j < displayEventsLength; j++) {
+          table.append($(displayEvents[j]));
+        }
+        return table;
+      };
+
+      var formatPdfFilters = function () {
+        var filters = $('.calendar-filters').find('.block-views');
+        var filtersLength = filters.length;
+        var selectedFilters = [];
+        var selectedFiltersLength = 0;
+        var defaultOptionText = '- Any -';
+        var filtersDiv = $('<div />');
+        var filtersHeading = $('<h3 />');
+        var displayFilters =  $('<ul />');
+
+        for (var i = 0; i < filtersLength; i++) {
+          var label = $(filters[i]).find('label').text();
+          var option = $(filters[i]).find('select').find('option:selected').text();
+
+          if (option !== defaultOptionText) {
+            selectedFilters.push({label: label, value: option});
+          }
+        }
+        selectedFiltersLength = selectedFilters.length;
+        if (!selectedFiltersLength) {
+          return;
+        }
+        for (var j = 0; j < selectedFiltersLength; j++) {
+          var filterItem = '<li><strong>' + selectedFilters[j].label + ':</strong> ' + selectedFilters[j].value +  '</pli>';
+          displayFilters.append($(filterItem));
+        }
+
+        filtersDiv.addClass('pdf-filters');
+        filtersHeading.text(Drupal.t('Filtered by:'));
+        filtersDiv.append(filtersHeading).append(displayFilters);
+        return filtersDiv;
+      };
 
       var buildPdfButton = function () {
+        $('body').append('<div class="pdf-container hidden" />');
+        var pdfContainer = $('.pdf-container');
+
         var button = document.createElement('button');
         button.innerHTML = Drupal.t('PDF');
         button.addEventListener('click', function (e) {
           e.preventDefault();
+          pdfContainer.html('');
           var elements = [];
-          elements.push($('.site-header'));
-          elements.push($calendar.find('.fc-view-container'));
+          var logo = $('.site-header__logo').clone();
+          var calendar = $calendar.find('.fc-view-container').clone();
+          var monthView = calendar.find('.fc-month-view').length;
+          var heading = formatPdfHeading($calendar);
+          var table = formatPdfEvents(calendar, monthView);
+          var filters = formatPdfFilters();
 
-          var filtered_elements = [];
-          for (var i = 0; i < elements.length; i++) {
-            if (elements[i]) {
-              filtered_elements.push(elements[i]);
-            }
-          }
-          var doc = new jsPDF('portrait', 'px', 'A4', true);
-          renderElements(filtered_elements, doc, 15);
+          pdfContainer.append(logo).append(heading).append(filters).append(table);
+          elements.push(pdfContainer);
+          renderPdf(pdfContainer);
         });
         return button;
-      }
+      };
 
       var buildExportOptions = function () {
         var container = document.createElement('div');
