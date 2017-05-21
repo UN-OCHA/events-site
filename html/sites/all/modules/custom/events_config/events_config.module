@@ -79,14 +79,18 @@ function events_config_hybridauth_user_login($account, $data) {
 
   $role = user_role_load_by_name('HID verified');
   if ($data['verified']) {
-    if (!isset($user->roles[$role->rid])) {
-      $user->roles = $user->roles + array($role->rid => $role->name);
+    // Make sure $user->roles is an array.
+    if (!isset($account->roles) || !is_array($account->roles)) {
+      $account->roles = array();
+    }
+    if (!isset($account->roles[$role->rid])) {
+      $account->roles = $account->roles + array($role->rid => $role->name);
       $needs_update = TRUE;
     }
   }
   else {
-    if (isset($user->roles[$role->rid])) {
-      unset($user->roles[$role->rid]);
+    if (isset($account->roles[$role->rid])) {
+      unset($account->roles[$role->rid]);
       $needs_update = TRUE;
     }
   }
