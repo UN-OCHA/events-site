@@ -680,13 +680,23 @@ be a descendant of the grid when it is being dragged.
 */
 
 .fc-day-grid-event, .fc-time-grid-event {
-	margin: 1px 2px 0; /* spacing between events and edges */
+	margin: 0 4px 4px 4px; /* spacing between events and edges */
 	padding: 2px 0 0 0;
+	border: 1px solid darken($light-bg-color, 10%);
+	border-top: 0;
 
 	.fc-content {
 		background: $light-bg-color;
 		color: $link-text-color;
 		padding: $base-unit/2;
+		height: 100%;
+	}
+
+	.fc-location {
+		display: block;
+		background: white;
+		padding: $base-unit/2;
+		margin: 4px -4px -4px -4px;
 		height: 100%;
 	}
 }
