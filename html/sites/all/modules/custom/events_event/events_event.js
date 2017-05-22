@@ -48,6 +48,17 @@
               return false;
             }
           }
+
+          // Add location.
+          if (event.location) {
+            if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
+              element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<div class="location">' + event.location + '</div>');
+            }
+            else {
+              element.append('<div class="location">' + event.location + '</div>');
+            }
+          }
+
           return true;
         },
         viewRender: function(view) {
