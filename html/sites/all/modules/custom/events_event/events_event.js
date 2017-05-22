@@ -40,6 +40,7 @@
 
       var $settings = settings.fullcalendar_api.calendarSettings;
       $.extend($settings, {
+        eventLimit: false,
         eventRender: function(event, element, view) {
           element.attr('data-start', event.start._i);
 
@@ -48,8 +49,20 @@
               return false;
             }
           }
+
+          // Add location.
+          if (event.location) {
+            if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
+              element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<div class="fc-location">' + event.location + '</div>');
+            }
+            else {
+              element.find('.fc-content').append('<span class="fc-location">' + event.location + '</span>');
+            }
+          }
+
           return true;
         },
+        height: 'auto',
         viewRender: function(view) {
           // Store view.name, view.start and view.end
           state.view = view.name;
