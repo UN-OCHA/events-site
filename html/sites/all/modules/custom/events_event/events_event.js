@@ -502,6 +502,7 @@
             Drupal.behaviors.chosen.attach($tz, Drupal.settings);
             $tz.chosen().change(function(e) {
               handleTimezone(e);
+              tzToggle.innerHTML = 'Time zone: ' + $(e.target).find('option:selected').text();
             });
           }
         });
