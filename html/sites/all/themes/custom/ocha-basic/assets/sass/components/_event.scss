@@ -2,6 +2,7 @@
 
 	.field {
 		margin-bottom: $base-unit*2;
+		@include clearfix;
 	}
 
 	.field-name-field-event-date {
@@ -10,43 +11,44 @@
 
 	.field-label {
 		color: $heading-text-color;
+		display: block;
+		float: none;
+	}
+
+	.field-items {
+		float: none;
+		display: block;
 	}
 
 	table {
 		table-layout: fixed;
 		width: 100%;
-		border-top: 1px solid #ccc;
 		margin-top: $base-unit;
 	}
 
 	tr.even, tr.odd {
 		background: none;
 		padding: 0;
+		border: none;
 	}
 
 	td {
 		width: 100%;
 		display: block;
 		word-wrap: break-word;
-		padding: $base-unit/2 0;
+		padding: 0;
 
 		&:first-child {
 			font-weight: bold;
-			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-bottom: $base-unit;
 		}
 
 		img {
 			float: left;
 			margin-right: $base-unit/2;
-		}
-	}
-
-	.field-name-field-event-info{
-		background: $light-bg-color;
-		padding: $base-unit*2;
-
-		.field-label {
-			color: $secondary-heading-text-color;
 		}
 	}
 
@@ -56,24 +58,31 @@
 
 	.node-ev-event {
 
-		table {
-			width: auto;
-			border: none;
+		.field-label {
+			width: $base-unit*17;
+			float: left;
 		}
 
-		tr.even, tr.odd {
-			border-bottom: none;
+		.field-items {
+			float: left;
+			width: calc(100% - 136px);
+			// display: inline-block;
+		}
+
+		table {
+			border: none;
+			margin: 0;
 		}
 
 		td {
 			display: table-cell;
 			width: auto;
-			padding: $base-unit;
-			border-bottom: 1px solid $border-color;
-		}
+			padding: 0 $base-unit $base-unit *2 $base-unit;
 
-		.field-name-field-event-info{
-			padding: $base-unit*3;
+			&:first-child {
+				width: 120px;
+				padding: 0 0 $base-unit 0;
+			}
 		}
 
 	}
