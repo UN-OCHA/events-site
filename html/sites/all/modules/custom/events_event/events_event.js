@@ -427,11 +427,9 @@
             });
           }
         }
-        document.querySelector('#block-system-main').insertBefore(filtersWrapper, document.querySelector('#block-system-main').firstChild);
-
+        $('.calendar-top').append(filtersWrapper);
         var exportDiv = buildExportOptions();
-        document.querySelector('#block-system-main').insertBefore(exportDiv, document.querySelector('#block-system-main').firstChild);
-
+        $('.calendar-top').append(exportDiv);
         eventFilters = $.extend(eventFilters, defaultFilters);
         // Trigger rerender.
         $calendar.fullCalendar('rerenderEvents');
@@ -440,33 +438,42 @@
       var filters = document.querySelectorAll('.block-views');
       if (filters) {
 
+        $('#block-system-main').prepend('<div class="calendar-top"></div>')
+
         // Add timezone selector.
         var tzDiv = document.createElement('div');
         tzDiv.className += 'calendar-settings';
 
-        var tzTitle = document.createElement('h2');
-        tzTitle.innerHTML = Drupal.t('Calendar settings');
-        tzDiv.appendChild(tzTitle);
+        var tzToggle = document.createElement('button');
+        tzToggle.id = 'timezone-dropdown';
+        tzToggle.className += 'calendar-settings__tz-button';
+        tzToggle.setAttribute('type', 'button');
+        tzToggle.setAttribute('data-toggle', 'dropdown');
+        tzToggle.setAttribute('aria-haspopup', 'true');
+        tzToggle.setAttribute('aria-expanded', 'false');
+        tzToggle.innerHTML = Drupal.t('Time zone: ');
+        tzDiv.appendChild(tzToggle);
 
-        var tzSubTitle = document.createElement('h3');
-        tzSubTitle.innerHTML = Drupal.t('Time zone');
-        tzDiv.appendChild(tzSubTitle);
-
-        var tzCurrent = document.createElement('p');
-        tzCurrent.innerHTML = Drupal.t('Current time zone: ');
-
-        tzDiv.appendChild(tzCurrent);
+        var tzDropdown = document.createElement('div');
+        tzDropdown.className = 'dropdown-menu';
+        tzDropdown.setAttribute('aria-labelledby', 'timezone-dropdown');
+        tzDiv.appendChild(tzDropdown);
 
         var tzLabel = document.createElement('label');
         tzLabel.setAttribute('for', 'timezone-selector');
         tzLabel.innerHTML = Drupal.t('Display times from the following time zone');
-        tzDiv.appendChild(tzLabel);
+        tzDropdown.appendChild(tzLabel);
 
         var tzSelect = document.createElement('select');
         tzSelect.id = 'timezone-selector';
 
-        tzDiv.appendChild(tzSelect);
-        document.querySelector('#fullcalendar').insertBefore(tzDiv, null);
+        tzDropdown.appendChild(tzSelect);
+
+        $(document).on('click', '.calendar-settings .dropdown-menu', function (e) {
+          e.stopPropagation();
+        });
+
+        $('.calendar-top').append(tzDiv);
 
         $.getJSON($settings.base_url + '/api/v0/timezones', function(timezones) {
           var $tz = $('#timezone-selector');
@@ -487,7 +494,7 @@
             $tz.append($newtz);
           }
 
-          tzCurrent.innerHTML += currentTz;
+          tzToggle.innerHTML += currentTz;
 
           if (Drupal.behaviors && Drupal.behaviors.chosen) {
             $tz.chosen('destroy');
