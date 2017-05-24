@@ -53,9 +53,15 @@
           // Add location.
           if (event.location) {
             if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
+              if (event.locationDetails) {
+                element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<div class="fc-location-details">' + event.locationDetails + '</div>');
+              }
               element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<div class="fc-location">' + event.location + '</div>');
             }
             else {
+              if (event.locationDetails) {
+                element.find('.fc-content').append('<span class="fc-location-details">' + event.locationDetails + '</span>');
+              }
               element.find('.fc-content').append('<span class="fc-location">' + event.location + '</span>');
             }
           }

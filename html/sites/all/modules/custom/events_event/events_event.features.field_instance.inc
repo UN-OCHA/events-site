@@ -236,7 +236,7 @@ function events_event_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -271,7 +271,7 @@ function events_event_field_default_field_instances() {
         'year_range' => '-1:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -287,7 +287,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -310,7 +310,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -329,7 +329,7 @@ function events_event_field_default_field_instances() {
           'view_mode' => 'default',
         ),
         'type' => 'multifield_table',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -350,7 +350,7 @@ function events_event_field_default_field_instances() {
       'module' => 'multifield_table',
       'settings' => array(),
       'type' => 'multifield_table',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -366,7 +366,7 @@ function events_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -390,7 +390,7 @@ function events_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -430,6 +430,46 @@ function events_event_field_default_field_instances() {
       ),
       'type' => 'options_select',
       'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_location_details'.
+  $field_instances['node-ev_event-field_event_location_details'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_event_location_details',
+    'label' => 'Location details',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 6,
     ),
   );
 
@@ -715,6 +755,7 @@ function events_event_field_default_field_instances() {
   t('Info');
   t('Legend color');
   t('Location');
+  t('Location details');
   t('Organization');
 
   return $field_instances;
