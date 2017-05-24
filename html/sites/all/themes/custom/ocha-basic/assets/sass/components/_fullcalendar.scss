@@ -692,7 +692,8 @@ be a descendant of the grid when it is being dragged.
 		height: 100%;
 	}
 
-	.fc-location {
+	.fc-location,
+	.fc-location-details {
 		display: block;
 		background: white;
 		padding: $base-unit/2;
