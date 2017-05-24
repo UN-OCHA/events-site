@@ -38,6 +38,24 @@
         updateState();
       };
 
+      var addFilterLegend = function (select, chosen) {
+        // If new categories are added, add them to the sass map in variables/_colours.scss
+        // This is pretty fragile as relies on the category names, would be better to
+        // return the colours from drupal somehow.
+        if (select.find('option:first-child').val() !== 'cat') { // Only add legends to category filter
+          return;
+        }
+        var options = $(chosen.search_results).find('li');
+        var optionsLength = options.length;
+        var i = 0;
+        for (i; i < optionsLength; i++) {
+          var optionLabel = $(options[i]).text();
+          optionLabel = optionLabel.split(' ').join('-');
+          optionLabel = optionLabel.toLowerCase();
+          $(options[i]).addClass('chosen-option-has-legend').prepend('<span class="chosen-legend ' + optionLabel + '"></span>');
+        }
+      };
+
       var $settings = settings.fullcalendar_api.calendarSettings;
 
       // Needed to fix navigation problem on past events.
@@ -448,6 +466,8 @@
             Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
             jQuery(newSelect).chosen().change(function(e) {
               handleSelect(e);
+            }).on('chosen:showing_dropdown', function (e, theChosen) {
+              addFilterLegend($(this), theChosen.chosen);
             });
           }
         }

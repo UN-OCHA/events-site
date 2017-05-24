@@ -24,3 +24,10 @@ $light-text-color: white;
 $link-text-color: $secondary-color;
 $active-link-text-color: $primary-color;
 $error-text-color: $red;
+
+// Legend for categories
+$category-colors:
+	(meeting, #ADCAD6),
+  (conference, #F18F01),
+  (training, #99C24D),
+  (workshop, #41BBD9);
