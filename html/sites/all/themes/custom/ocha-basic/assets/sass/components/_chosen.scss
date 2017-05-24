@@ -67,3 +67,17 @@
 	  }
 	}
 }
+
+.chosen-legend {
+	display: inline-block;
+	width: $base-unit;
+	height: $base-unit;
+	border-radius: 100%;
+	margin-right: $base-unit;
+}
+
+@each $category, $color in $category-colors {
+  .chosen-legend.#{$category} {
+    background-color: $color;
+  }
+}
