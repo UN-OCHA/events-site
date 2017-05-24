@@ -196,6 +196,42 @@ div.vertical-tabs {
 	}
 }
 
+.date-repeat-radios input[type=radio] {
+	margin-top: 3px;
+}
+
+.until .date-prefix-inline {
+	min-width: 40px;
+	padding-left: 6px;
+}
+
+.container-inline-date .form-item input {
+	width: 95px;
+}
+
+#repeat-settings-fieldset {
+	border-top: 1px dashed white;
+	padding-top: $base-unit*2;
+}
+
+#edit-field-event-date-und-0-rrule-daily-interval-child {
+	margin-right: 4px;
+}
+
+.date-repeat {
+	margin-bottom: $base-unit;
+
+	.container-inline-date {
+		display: inline-block;
+	}
+
+	input[type="submit"] {
+		vertical-align: bottom;
+		margin-bottom: 33px;
+		padding: 9px $base-unit*1.5;
+	}
+}
+
 @include media-query(md) {
 
 	.form-managed-file {
