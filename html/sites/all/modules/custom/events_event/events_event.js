@@ -229,13 +229,14 @@
         var date = $('<td />');
         var time = $('<td />');
         var title = $('<td />');
+        var location = $('<td />');
         var timeSelector = type === 'list' ? '.fc-list-item-time' : '.fc-time';
-        var titleSelector = type === 'list' ? '.fc-list-item-title' : '.fc-title';
+        var titleSelector = type === 'list' ? '.fc-list-item-title a' : '.fc-title';
         var start = moment($(event).data('start'))
         var startDate = start.format('DD MMMM YYYY');
+        var locationString = '';
 
         // On month view only include events in that month
-
         if (monthView) {
           var monthDate = moment($('.fc-toolbar h2').text(), 'MMMM YYYY');
 
@@ -244,11 +245,22 @@
           }
         }
 
+        if ($(event).find('.fc-location-details').length) {
+          locationString += $(event).find('.fc-location-details').text();
+          if ($(event).find('.fc-location').length) {
+            locationString += ', ';
+          }
+        }
+        if ($(event).find('.fc-location').length) {
+          locationString += $(event).find('.fc-location').text();
+        }
+
         var timeString = $(event).find(timeSelector).text() ? $(event).find(timeSelector).text() : 'All day';
         date.html(startDate);
         time.html(timeString);
         title.html($(event).find(titleSelector).text());
-        tableRow.append(date).append(time).append(title);
+        location.html(locationString);
+        tableRow.append(date).append(time).append(title).append(location);
         return tableRow;
       };
 
@@ -260,7 +272,7 @@
         var displayEventsLength = 0;
         var table = $('<table />');
         var tableHeader = $('<tr />');
-        tableHeader.append($('<th>Date</th><th>Time</th><th>Name of meeting</th>'));
+        tableHeader.append($('<th>Date</th><th>Time</th><th>Name of meeting</th><th>Location</th>'));
         table.append(tableHeader);
 
         var eventsList = calendar.find('.fc-list-table'); //list view (upcoming/past events)
