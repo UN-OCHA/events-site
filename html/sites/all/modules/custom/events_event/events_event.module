@@ -294,6 +294,10 @@ function events_event_fetch_events() {
     exit();
   }
 
+  // Round to midnight.
+  $start = $start - (60 * 60 * 24) - ($start % 86400);
+  $end = $end + (60 * 60 * 24) - ($end % 86400);
+
   $query_filters = events_event_get_query_filters();
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 

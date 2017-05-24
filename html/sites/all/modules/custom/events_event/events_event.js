@@ -76,7 +76,7 @@
           updateState();
 
           if (view.name === 'upcoming') {
-            if ($calendar.fullCalendar('getDate').unix() < moment().unix()) {
+            if ($calendar.fullCalendar('getDate').unix() < moment().add(-1, 'days').unix()) {
               $calendar.fullCalendar('gotoDate', moment());
             }
           }
