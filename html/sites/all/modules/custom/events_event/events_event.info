@@ -50,6 +50,7 @@ features[field_instance][] = node-ev_event-field_event_info
 features[field_instance][] = node-ev_event-field_event_location
 features[field_instance][] = node-ev_event-field_event_location_details
 features[field_instance][] = node-ev_event-field_event_organization
+features[field_instance][] = taxonomy_term-ev_category-field_ev_legend_color
 features[field_instance][] = taxonomy_term-ev_coordination_hub-field_external_id
 features[field_instance][] = taxonomy_term-ev_disaster-field_external_id
 features[field_instance][] = taxonomy_term-ev_list-field_ev_legend_color
