@@ -512,6 +512,37 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-ev_category-field_ev_legend_color'.
+  $field_instances['taxonomy_term-ev_category-field_ev_legend_color'] = array(
+    'bundle' => 'ev_category',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'color_field',
+        'settings' => array(),
+        'type' => 'color_field_default_formatter',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_ev_legend_color',
+    'label' => 'Legend color',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'color_field',
+      'settings' => array(),
+      'type' => 'color_field_simple_widget',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance:
   // 'taxonomy_term-ev_coordination_hub-field_external_id'.
   $field_instances['taxonomy_term-ev_coordination_hub-field_external_id'] = array(

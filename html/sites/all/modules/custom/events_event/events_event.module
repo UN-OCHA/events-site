@@ -832,7 +832,7 @@ function events_event_get_event_locations($node) {
  * Create a stripe based on a taxonomy term.
  */
 function events_event_get_event_color($node) {
-  $term_field_name = 'field_event_organization';
+  $term_field_name = 'field_event_category';
   if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
     foreach ($terms_for_entity as $delta => $item) {
       $term_for_entity = taxonomy_term_load($item['tid']);
