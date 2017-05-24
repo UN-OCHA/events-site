@@ -39,6 +39,10 @@
       };
 
       var $settings = settings.fullcalendar_api.calendarSettings;
+
+      // Needed to fix navigation problem on past events.
+      var alreadyTrigger = false;
+
       $.extend($settings, {
         eventLimit: false,
         eventRender: function(event, element, view) {
@@ -81,10 +85,12 @@
             }
           }
           else if (view.name === 'past') {
-            if ($calendar.fullCalendar('getDate').toISOString() >= moment().format('Y-MM-DD')) {
-              $calendar.fullCalendar('gotoDate', moment().add(-1, 'days'));
+            if (!alreadyTrigger && $calendar.fullCalendar('getDate').toISOString() >= moment().format('Y-MM-DD')) {
+              $calendar.fullCalendar('gotoDate', moment().add(0, 'days'));
+              alreadyTrigger = true;
               window.setTimeout(function () {
                 $calendar.fullCalendar('prev');
+                alreadyTrigger = false;
               }, 250);
             }
           }
@@ -116,15 +122,15 @@
           'duration': {
             'days': 90
           },
+          'validRange': function(currentDate) {
+            return {
+              end: currentDate.clone()
+            };
+          },
           'visibleRange': function(currentDate) {
             return {
               start: currentDate.clone().add(-90, 'days'),
-              end: currentDate.clone().add(1, 'days')
-            };
-          },
-          'validRange': function(currentDate) {
-            return {
-              end: currentDate.clone().add(-1, 'days')
+              end: currentDate.clone()
             };
           }
         }
