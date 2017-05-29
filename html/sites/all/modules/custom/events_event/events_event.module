@@ -689,6 +689,9 @@ function events_event_fetch_categories() {
   events_event_json_output($categories);
 }
 
+/**
+ * Build list of categories.
+ */
 function _events_event_fetch_categories() {
   $cache_key = 'events_event:categories';
 
