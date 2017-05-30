@@ -318,14 +318,37 @@
           });
         }
 
+        var timeSelector = eventsType === 'list' ? '.fc-list-item-time' : '.fc-time';
+        var titleSelector = eventsType === 'list' ? '.fc-list-item-title a' : '.fc-title';
+
         for (var i=0; i < eventsLength; i++) {
-          displayEvents.push(formatPdfEvent(events[i], eventsType, monthView));
+          event = events[i];
+          var start = moment($(event).data('start'));
+          var startDate = start.format('DD MMMM YYYY');
+          var locationString = '';
+          var timeString = $(event).find(timeSelector).text() ? $(event).find(timeSelector).text() : 'All day';
+          if ($(event).find('.fc-location-details').length) {
+            locationString += $(event).find('.fc-location-details').text();
+            if ($(event).find('.fc-location').length) {
+              locationString += ', ';
+            }
+          }
+          if ($(event).find('.fc-location').length) {
+            locationString += $(event).find('.fc-location').text();
+          }
+
+          displayEvents.push([
+            startDate,
+            timeString,
+            $(event).find(titleSelector).text(),
+            locationString,
+          ]);
         }
-        displayEventsLength = displayEvents.length;
-        for (var j = 0; j < displayEventsLength; j++) {
-          table.append($(displayEvents[j]));
-        }
-        return table;
+
+        return {
+          cols: ['Date', 'Time', 'Name of meeting', 'Location'],
+          rows: displayEvents
+        };
       };
 
       var formatPdfFilters = function () {
@@ -364,6 +387,7 @@
       var buildPdfButton = function () {
         $('body').append('<div class="pdf-container hidden" />');
         var pdfContainer = $('.pdf-container');
+        pdfContainer.removeClass('hidden');
 
         var button = document.createElement('button');
         button.innerHTML = Drupal.t('PDF');
@@ -379,8 +403,14 @@
           var filters = formatPdfFilters();
 
           pdfContainer.append(logo).append(heading).append(filters).append(table);
+
+          var doc = new jsPDF('p', 'pt');
+          doc.autoTable(table.cols, table.rows);
+          doc.save('table.pdf');
+/*
           elements.push(pdfContainer);
           renderPdf(pdfContainer);
+*/
         });
         return button;
       };
