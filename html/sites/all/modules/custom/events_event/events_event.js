@@ -238,7 +238,7 @@
         var totalPieces = imagePieces.length - 1;
         var doc = new jsPDF('landscape', 'px', 'A4', true);
         imagePieces.forEach(function(img){
-            doc.addImage(img, 'JPEG', 20, 20);
+            doc.addImage(img, 'PNG', 20, 20);
             if(totalPieces) {
               doc.addPage();
             }
