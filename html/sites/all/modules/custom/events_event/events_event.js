@@ -38,21 +38,34 @@
         updateState();
       };
 
-      var addFilterLegend = function (select, chosen) {
-        // If new categories are added, add them to the sass map in variables/_colours.scss
-        // This is pretty fragile as relies on the category names, would be better to
-        // return the colours from drupal somehow.
-        if (select.find('option:first-child').val() !== 'cat') { // Only add legends to category filter
+      var getLegendColor = function (id, categories) {
+        var categoriesLength = categories.length;
+        var i = 0;
+        var color;
+        for (i; i < categoriesLength; i++) {
+          if (categories[i].tid === id) {
+            color = categories[i].color;
+          }
+        }
+        return color;
+      }
+
+      var addFilterLegend = function (select, chosen, categories) {
+        var type = 'cat';
+        if (select.find('option:first-child').val() !== type) { // Only add legends to category filter
           return;
         }
         var options = $(chosen.search_results).find('li');
         var optionsLength = options.length;
         var i = 0;
         for (i; i < optionsLength; i++) {
-          var optionLabel = $(options[i]).text();
-          optionLabel = optionLabel.split(' ').join('-');
-          optionLabel = optionLabel.toLowerCase();
-          $(options[i]).addClass('chosen-option-has-legend').prepend('<span class="chosen-legend ' + optionLabel + '"></span>');
+          var value = select.find('option').eq(i).val();
+          var id = value.replace(type + ':', '');
+          var color = getLegendColor(id, categories);
+          if (color) {
+            var legend = '<span class="chosen-legend" style="background-color:' + color + '"></span>';
+            $(options[i]).addClass('chosen-option-has-legend').prepend(legend);
+          }
         }
       };
 
@@ -467,7 +480,7 @@
             jQuery(newSelect).chosen().change(function(e) {
               handleSelect(e);
             }).on('chosen:showing_dropdown', function (e, theChosen) {
-              addFilterLegend($(this), theChosen.chosen);
+              addFilterLegend($(this), theChosen.chosen, Drupal.settings.fullcalendar_api.calendarSettings.categories);
             });
           }
         }
