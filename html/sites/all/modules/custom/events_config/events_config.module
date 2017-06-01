@@ -433,39 +433,52 @@ function events_config_cron() {
  * Fetch and sync organisations from HID.
  */
 function events_config_fetch_and_sync_organisations() {
-  events_config_api_call_list('organization', 'events_config_get_organisation_term');
-
-  cache_clear_all('events_event:organisations', 'cache');
+  $last_run = variable_get('events_config_fetch_and_sync_organisations_last_run', 0);
+  if ((REQUEST_TIME - $last_run) >= 86400) {
+    events_config_api_call_list('organization', 'events_config_get_organisation_term');
+    cache_clear_all('events_event:organisations', 'cache');
+    variable_set('events_config_fetch_and_sync_organisations_last_run', REQUEST_TIME);
+  }
 }
 
 /**
  * Fetch and sync lists from HID.
  */
 function events_config_fetch_and_sync_lists() {
-  events_config_api_call_list('bundle', 'events_config_get_list_term');
-
-  cache_clear_all('events_event:clusters', 'cache');
+  $last_run = variable_get('events_config_fetch_and_sync_lists_last_run', 0);
+  if ((REQUEST_TIME - $last_run) >= 86400) {
+    events_config_api_call_list('bundle', 'events_config_get_list_term');
+    cache_clear_all('events_event:clusters', 'cache');
+    variable_set('events_config_fetch_and_sync_lists_last_run', REQUEST_TIME);
+  }
 }
 
 /**
  * Fetch and sync coordination hubs from HID.
  */
 function events_config_fetch_and_sync_coordination_hubs() {
-  events_config_api_call_list('office', 'events_config_get_coordination_hub_term');
-
-  cache_clear_all('events_event:coordination_hubs', 'cache');
+  $last_run = variable_get('events_config_fetch_and_sync_coordination_hubs_last_run', 0);
+  if ((REQUEST_TIME - $last_run) >= 86400) {
+    events_config_api_call_list('office', 'events_config_get_coordination_hub_term');
+    cache_clear_all('events_event:coordination_hubs', 'cache');
+    variable_set('events_config_fetch_and_sync_coordination_hubs_last_run', REQUEST_TIME);
+  }
 }
 
 /**
  * Fetch and sync locations from HRInfo.
  */
 function events_config_fetch_and_sync_locations() {
-  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=0');
-  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=1', TRUE, 2);
-  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=2', TRUE, 3);
-  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=3', TRUE, 4);
+  $last_run = variable_get('events_config_fetch_and_sync_locations_last_run', 0);
+  if ((REQUEST_TIME - $last_run) >= (3 * 86400)) {
+    events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=0');
+    events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=1', TRUE, 2);
+    events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=2', TRUE, 3);
+    events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=3', TRUE, 4);
 
-  cache_clear_all('events_event:locations', 'cache');
+    cache_clear_all('events_event:locations', 'cache');
+    variable_set('events_config_fetch_and_sync_locations_last_run', REQUEST_TIME);
+  }
 }
 
 /**
@@ -534,34 +547,38 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
  * Fetch and sync disasters from RW.
  */
 function events_config_fetch_and_sync_disasters() {
-  $endpoint = 'https://api.reliefweb.int/v1/disasters';
-  $offset = 0;
+  $last_run = variable_get('events_config_fetch_and_sync_disasters_last_run', 0);
+  if ((REQUEST_TIME - $last_run) >= 86400) {
+    $endpoint = 'https://api.reliefweb.int/v1/disasters';
+    $offset = 0;
 
-  while (TRUE) {
-    $params = array(
-      'appname' => 'hrevents',
-      'preset' => 'external',
-      'offset' => $offset,
-      'limit' => 200,
-    );
+    while (TRUE) {
+      $params = array(
+        'appname' => 'hrevents',
+        'preset' => 'external',
+        'offset' => $offset,
+        'limit' => 200,
+      );
 
-    $url = $endpoint . '?' . drupal_http_build_query($params);
-    $request = drupal_http_request($url);
-    if (isset($request->data)) {
-      $data = drupal_json_decode($request->data);
-      if (empty($data['data'])) {
-        break;
-      }
-      foreach ($data['data'] as $item) {
-        if ($item['fields']['name']) {
-          events_config_get_disaster_term($item['fields']['name'], $item['id']);
+      $url = $endpoint . '?' . drupal_http_build_query($params);
+      $request = drupal_http_request($url);
+      if (isset($request->data)) {
+        $data = drupal_json_decode($request->data);
+        if (empty($data['data'])) {
+          break;
+        }
+        foreach ($data['data'] as $item) {
+          if ($item['fields']['name']) {
+            events_config_get_disaster_term($item['fields']['name'], $item['id']);
+          }
         }
       }
+      else {
+        break;
+      }
+      $offset += 200;
     }
-    else {
-      break;
-    }
-    $offset += 200;
+    variable_set('events_config_fetch_and_sync_disasters_last_run', REQUEST_TIME);
   }
 }
 
