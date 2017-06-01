@@ -21,7 +21,7 @@
 	padding-top: $base-unit;
 }
 
-.block-views, .calendar-settings {
+.block-views {
 
 	label {
 		margin-bottom: $base-unit/2;
@@ -29,18 +29,73 @@
 }
 
 .calendar-settings {
-	background: $light-bg-color;
-	padding: $base-unit;
-	margin: $base-unit*2 0;
+	margin: 0 $base-unit $base-unit*2 0;
 
-	 h3, p {
-		margin-bottom: $base-unit;
+	.dropdown-menu {
+		border-radius: 0;
+		border-top: 0;
+		box-shadow: none;
+		padding: $base-unit;
+		width: 100%;
+		max-width: 100%;
+		margin-top: 0;
+
+		label {
+			line-height: 1.3;
+			margin-bottom: $base-unit;
+		}
+
+		a {
+			&:hover, &:focus {
+				background: none;
+				color: $body-text-color;
+			}
+		}
 	}
 
+	.chosen-container.chosen-with-drop .chosen-drop {
+		position: relative;
+	}
+}
+
+.calendar-settings__tz-button {
+	text-align: left;
+	width: 100%;
+	max-width: 100%;
+	position: relative;
+	background: none;
+	font-weight: bold;
+	padding: $base-unit $base-unit*2.5 $base-unit $base-unit;
+	border: 1px solid $border-color;
+
+	&:after {
+		content: "";
+		position: absolute;
+		right: $base-unit;
+		top: $base-unit*1.5;
+		width: 10px;
+		height: 10px;
+		background: url(../images/arrow-down.svg) center right no-repeat;
+		background-size: 100%;
+	}
+
+	&[aria-expanded="true"] {
+		border-bottom: 0;
+
+		&:focus {
+			outline: none;
+			color: $active-link-text-color;
+		}
+
+		&:after {
+			transform: rotate(180deg);
+		}
+	}
 }
 
 .calendar-export {
 	order: 1;
+	margin-bottom: $base-unit;
 }
 
 @include media-query(sm) {
@@ -50,6 +105,28 @@
 
 		&:nth-child(4n) {
 			padding: 0;
+		}
+	}
+
+	.calendar-settings {
+		padding: 0;
+	}
+
+	.calendar-settings__tz-button {
+		border-color: transparent;
+		padding: $base-unit $base-unit $base-unit 0;
+
+		&:after {
+			display: inline-block;
+			position: relative;
+			top: auto;
+			right: auto;
+			margin-left: $base-unit;
+		}
+
+		&[aria-expanded="true"] {
+			border-color: $border-color;
+			padding-left: $base-unit;
 		}
 	}
 
@@ -79,6 +156,26 @@
 	.calendar-filters {
 		margin-bottom: $base-unit;
 	}
+}
+
+@include media-query(lg) {
+
+	.calendar-settings {
+		position: absolute;
+		top: -$base-unit*8;
+		right: 100px;
+		max-width: 600px;
+		margin: 0;
+
+		&.open {
+			position: absolute;
+		}
+	}
+
+	.calendar-settings__tz-button {
+		padding: $base-unit;
+	}
+
 }
 
 @media print {

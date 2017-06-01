@@ -5,18 +5,18 @@
  */
 
 
-.fc {
-	direction: ltr;
-	text-align: left;
-}
+ .fc {
+ 	direction: ltr;
+ 	text-align: left;
+ }
 
-.fc-rtl {
-	text-align: right;
-}
+ .fc-rtl {
+ 	text-align: right;
+ }
 
-body .fc { /* extra precedence to overcome jqui */
-	font-size: 1em;
-}
+ body .fc { /* extra precedence to overcome jqui */
+ 	font-size: 1em;
+ }
 
 
 /* Colors
@@ -99,7 +99,7 @@ body .fc { /* extra precedence to overcome jqui */
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	}
+}
 
 /*
 Acceptable font-family overrides for individual icons:
@@ -200,38 +200,38 @@ NOTE: use percentage font sizes or else old IE chokes
 /*
   button states
   borrowed from twitter bootstrap (http://twitter.github.com/bootstrap/)
-*/
+  */
 
-.fc-state-default {
-	border: none;
-	background: transparent;
-	text-transform: uppercase;
-	color: $link-text-color;
-	font-weight: bold;
+  .fc-state-default {
+  	border: none;
+  	background: transparent;
+  	text-transform: uppercase;
+  	color: $link-text-color;
+  	font-weight: bold;
 
-	&:hover, &:focus {
-		background: $secondary-bg-color;
-		color: $light-text-color;
-	}
-}
+  	&:hover, &:focus {
+  		background: $secondary-bg-color;
+  		color: $light-text-color;
+  	}
+  }
 
-.fc-state-active,
-.fc-state-disabled {
-	color: #333333;
-	background-color: #e6e6e6;
-}
-.fc-state-down,
-.fc-state-active {
-	background: $secondary-bg-color;
-	color: $light-text-color;
-}
+  .fc-state-active,
+  .fc-state-disabled {
+  	color: #333333;
+  	background-color: #e6e6e6;
+  }
+  .fc-state-down,
+  .fc-state-active {
+  	background: $secondary-bg-color;
+  	color: $light-text-color;
+  }
 
-.fc-state-disabled {
-	cursor: default;
-	background-image: none;
-	opacity: 0.65;
-	box-shadow: none;
-}
+  .fc-state-disabled {
+  	cursor: default;
+  	background-image: none;
+  	opacity: 0.65;
+  	box-shadow: none;
+  }
 
 
 /* Buttons Groups
@@ -399,7 +399,7 @@ a[data-goto]:hover {
 
 .fc-row table {
 	/* don't put left/right border on anything within a fake row.
-	   the outer tbody will worry about this */
+	the outer tbody will worry about this */
 	border-left: 0 hidden transparent;
 	border-right: 0 hidden transparent;
 
@@ -525,7 +525,7 @@ temporary rendered events).
 
 .fc-not-allowed, /* causes a "warning" cursor. applied on body */
 .fc-not-allowed .fc-event { /* to override an event's custom cursor */
-	cursor: not-allowed;
+cursor: not-allowed;
 }
 
 .fc-event .fc-bg { /* the generic .fc-bg already does position */
@@ -680,13 +680,24 @@ be a descendant of the grid when it is being dragged.
 */
 
 .fc-day-grid-event, .fc-time-grid-event {
-	margin: 1px 2px 0; /* spacing between events and edges */
+	margin: 0 4px 4px 4px; /* spacing between events and edges */
 	padding: 2px 0 0 0;
+	border: 1px solid darken($light-bg-color, 10%);
+	border-top: 0;
 
 	.fc-content {
 		background: $light-bg-color;
 		color: $link-text-color;
 		padding: $base-unit/2;
+		height: 100%;
+	}
+
+	.fc-location,
+	.fc-location-details {
+		display: block;
+		background: white;
+		padding: $base-unit/2;
+		margin: 4px -4px -4px -4px;
 		height: 100%;
 	}
 }
@@ -751,7 +762,7 @@ a.fc-more:hover {
 }
 
 .fc-limited { /* rows and cells that are hidden because of a "more" link */
-	display: none;
+display: none;
 }
 
 /* popover that appears when "more" link is clicked */
@@ -784,10 +795,10 @@ a.fc-more:hover {
 
 .fc-unselectable {
 	-webkit-user-select: none;
-	 -khtml-user-select: none;
-	   -moz-user-select: none;
-	    -ms-user-select: none;
-	        user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 	-webkit-touch-callout: none;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -836,9 +847,9 @@ a.fc-more:hover {
 
 .fc-toolbar .fc-center {
 	height: $base-unit*4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 /* the things within each left/right/center section */
@@ -896,8 +907,8 @@ a.fc-more:hover {
 
 .fc-view, /* scope positioning and z-index's for everything within the view */
 .fc-view > table { /* so dragged elements can be above the view's main element */
-	position: relative;
-	z-index: 1;
+position: relative;
+z-index: 1;
 }
 
 
@@ -1025,7 +1036,7 @@ a.fc-more:hover {
 }
 
 .fc-time-grid table { /* don't put outer borders on slats/bg/content/etc */
-	border: 0 hidden transparent;
+border: 0 hidden transparent;
 }
 
 .fc-time-grid > .fc-bg {
@@ -1414,6 +1425,14 @@ be a descendant of the grid when it is being dragged.
 	.fc-past {
 		background: #fafafa;
 	}
+}
+
+@include media-query(sm) {
+
+	.fc-day-grid-event .fc-content {
+		white-space: initial;
+	}
+
 }
 
 @include media-query(lg) {

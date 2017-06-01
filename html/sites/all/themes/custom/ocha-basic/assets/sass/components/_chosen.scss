@@ -43,15 +43,20 @@
 	}
 }
 
-.chosen-container-single {
-	.chosen-single {
+.chosen-container {
+	.chosen-single, .chosen-choices {
 		background: none;
 		box-shadow: none;
 		border: 1px solid #ddd;
 		border-radius: 0;
 		height: auto;
 		padding: $base-unit/2 $base-unit;
+		line-height: $base-unit*3;
 
+
+	}
+
+	.chosen-single {
 		div {
 			width: $base-unit*3;
 
@@ -61,4 +66,11 @@
 	    }
 	  }
 	}
+}
+
+.chosen-legend {
+	display: inline-block;
+	width: $base-unit;
+	height: $base-unit;
+	margin-right: $base-unit;
 }
