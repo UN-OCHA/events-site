@@ -348,7 +348,7 @@
           var totalPages = doc.internal.getNumberOfPages();
           for (var i = 0; i < totalPages; i++) {
             var realPageNumber = i + 1;
-            doc.setPage(i);
+            doc.setPage(realPageNumber);
             doc.text(Drupal.t('Page') + ' ' + realPageNumber + '/' + totalPages, docMargin, doc.internal.pageSize.height - 25);
           }
 
