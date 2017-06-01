@@ -289,12 +289,10 @@
       };
 
       var getPdfFooter = function (data, doc) {
-        var pageNum = "Page " + data.pageCount;
         var createdAt = 'Created: ' + moment().format('DD MMM YYYY');
         var poweredBy = 'Powered by Humanitarian Events. https://events.rwlabs.org';
         doc.setFontSize(8);
         doc.setFontType('normal');
-        doc.text(pageNum, data.settings.margin.left, doc.internal.pageSize.height - 25);
         doc.text(createdAt, doc.internal.pageSize.width - 118, doc.internal.pageSize.height - 35);
         doc.text(poweredBy, doc.internal.pageSize.width - 250, doc.internal.pageSize.height - 25);
       }
@@ -343,6 +341,16 @@
               getPdfFooter(data, doc);
             }
           });
+
+          // Add page numbers.
+          doc.setFontSize(8);
+          doc.setFontType('normal');
+          var totalPages = doc.internal.getNumberOfPages();
+          for (var i = 0; i < totalPages; i++) {
+            var realPageNumber = i + 1;
+            doc.setPage(i);
+            doc.text(Drupal.t('Page') + ' ' + realPageNumber + '/' + totalPages, docMargin, doc.internal.pageSize.height - 25);
+          }
 
           // Save.
           var fileName = 'events-';
