@@ -461,7 +461,9 @@ function events_config_fetch_and_sync_coordination_hubs() {
  */
 function events_config_fetch_and_sync_locations() {
   events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=0');
-  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=1', TRUE);
+  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=1', TRUE, 2);
+  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=2', TRUE, 3);
+  events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=3', TRUE, 4);
 
   cache_clear_all('events_event:locations', 'cache');
 }
@@ -469,10 +471,13 @@ function events_config_fetch_and_sync_locations() {
 /**
  * Fetch and sync locations from HRInfo.
  */
-function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_needed = FALSE) {
+function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_needed = FALSE, $max_depth = 9) {
   $url = $endpoint;
 
   while (TRUE) {
+    if (function_exists('drush_log')) {
+      drush_log('Fetching ' . $url);
+    }
     $request = drupal_http_request($url);
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
@@ -485,7 +490,7 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
           $parent = 0;
           if (isset($item['parent'][0]['id'])) {
             // Skip levels that are too deep.
-            if (count($item['parents']) > 2) {
+            if (count($item['parents']) > $max_depth) {
               continue;
             }
 
