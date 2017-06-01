@@ -47,8 +47,9 @@ function events_config_hybridauth_user_login($account, $data) {
   }
 
   if (isset($data['zoneinfo'])) {
-    if ($account->timezone != $data['zoneinfo']) {
-      $account->timezone = $data['zoneinfo'];
+    $tz = events_config_map_hid_timezone($data['zoneinfo']);
+    if ($account->timezone != $tz) {
+      $account->timezone = $tz;
       $needs_update = TRUE;
     }
   }
@@ -102,6 +103,53 @@ function events_config_hybridauth_user_login($account, $data) {
   }
 }
 
+/**
+ * Map timezone from HID.
+ */
+function events_config_map_hid_timezone($tz) {
+  $mapping = array(
+    'Pacific/Yap' => 'Pacific/Chuuk',
+    'Poland' => 'Europe/Warsaw',
+    'Portugal' => 'Europe/Lisbon',
+    'PRC' => 'Asia/Shanghai',
+    'ROC' => 'Asia/Taipei',
+    'ROK' => 'Asia/Seoul',
+    'Singapore' => 'Asia/Singapore',
+    'Turkey' => 'Europe/Istanbul',
+    'UCT' => 'UTC',
+    'Universal' => 'UTC',
+    'US/Alaska' => 'America/Anchorage',
+    'US/Aleutian' => 'America/Adak',
+    'US/Arizona' => 'America/Phoenix',
+    'US/Central' => 'America/Chicago',
+    'US/Eastern' => 'America/New_York',
+    'US/East-Indiana' => 'America/Indiana/Indianapolis',
+    'US/Hawaii' => 'Pacific/Honolulu',
+    'US/Indiana-Starke' => 'America/Indiana/Knox',
+    'US/Michigan' => 'America/Detroit',
+    'US/Mountain' => 'America/Denver',
+    'US/Pacific' => 'America/Los_Angeles',
+    'US/Pacific-New' => 'America/Los_Angeles',
+    'US/Samoa' => 'Link to Pacific/Pago_Pago',
+    'Etc/UTC' => 'UTC',
+    'W-SU' => 'Europe/Moscow',
+    'Zulu' => 'UTC',
+  );
+
+  // Map if possible.
+  if (array_key_exists($tz, $mapping)) {
+    $tz = $mapping[$tz];
+  }
+
+  // Make sure timezone is valid.
+  $zonelist = timezone_identifiers_list();
+  if (!in_array($tz, $zonelist)) {
+    // Fallback to UTC.
+    $tz = 'UTC';
+  }
+
+  return $tz;
+}
 /**
  * Load or create a term.
  */
