@@ -317,8 +317,10 @@
           doc.autoTable(table.cols, table.rows, {startY: 140});
 
           // Filters.
-          doc.fromHTML(filters.get(0), 30, doc.autoTable.previous.finalY + 10, {
-          });
+          if (filters) {
+            doc.fromHTML(filters.get(0), 30, doc.autoTable.previous.finalY + 10, {
+            });
+          }
 
           // Save.
           doc.save('table.pdf');
