@@ -57,7 +57,7 @@ class MultifieldEntityController extends DrupalDefaultEntityController {
           foreach ($entities as $entity) {
             if ($items = field_get_items($entity_type, $entity, $field_name)) {
               foreach ($items as $item) {
-                $pseudo_entities[$item['id']] = _multifield_field_item_to_entity($field['type'], $item);
+                $pseudo_entities[$item['id']] = _multifield_field_item_to_entity(multifield_extract_multifield_machine_name($field), $item);
               }
             }
           }
