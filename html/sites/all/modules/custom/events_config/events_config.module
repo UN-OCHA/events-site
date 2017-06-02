@@ -90,7 +90,7 @@ function events_config_hybridauth_user_login($account, $data) {
     }
   }
   else {
-    if (isset($account->roles[$role->rid])) {
+    if (isset($account->roles) && isset($account->roles[$role->rid])) {
       unset($account->roles[$role->rid]);
       $needs_update = TRUE;
     }
