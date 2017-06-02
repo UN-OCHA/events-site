@@ -34,6 +34,8 @@ function multifield_field_info() {
       'hide_blank_items' => TRUE,
       'entity_translation_sync' => array('id'),
     ),
+    'property_type' => 'multifield',
+    'property_callbacks' => array('multifield_field_property_callback'),
   );
 
   // Deprecated field types from the CTools exports.
@@ -56,6 +58,86 @@ function multifield_field_info() {
   }
 
   return $info;
+}
+
+/**
+ * Property callback for the Entity Metadata framework.
+ */
+function multifield_field_property_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $instance['property info'] = array(
+    'getter callback' => 'multifield_field_property_get',
+    'setter callback' => 'multifield_field_property_set',
+    'raw getter callback' => 'multifield_field_property_get_raw',
+  );
+  // Then apply the default.
+  entity_metadata_field_default_property_callback($info, $entity_type, $field, $instance, $field_type);
+  unset($info['query callback']);
+}
+
+/**
+ * Callback for getting field property values.
+ */
+function multifield_field_property_get($entity, array $options, $name, $entity_type, $info) {
+  $field = field_info_field($name);
+  $langcode = LANGUAGE_NONE;
+  // When entity translation is used, the language property is by default NULL.
+  if (isset($options['language'])) {
+    $langcode = $options['language'];
+  } elseif (module_exists('entity_translation') && field_is_translatable($entity_type, $field)) {
+    global $language;
+    $handler = entity_translation_get_handler($entity_type, $entity);
+    $translations = $handler->getTranslations();
+    if (array_key_exists($language->language, $translations->data)) {
+      $langcode = $language->language;
+    }
+  }
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode, TRUE);
+  $values = array();
+  if (isset($entity->{$name}[$langcode])) {
+    foreach ($entity->{$name}[$langcode] as $delta => $data) {
+      $multifield_entity = _multifield_field_item_to_entity(multifield_extract_multifield_machine_name($field), $data);
+      $values[$delta] = $multifield_entity->id;
+    }
+  }
+  // For an empty single-valued field, we have to return NULL.
+  return $field['cardinality'] == 1 ? ($values ? reset($values) : NULL) : $values;
+}
+
+/**
+ * Callback for getting raw field property values.
+ */
+function multifield_field_property_get_raw($entity, array $options, $name, $entity_type, $info) {
+  $field = field_info_field($name);
+  $langcode = LANGUAGE_NONE;
+  // When entity translation is used, the language property is by default NULL.
+  if (isset($options['language'])) {
+    $langcode = $options['language'];
+  } elseif (module_exists('entity_translation') && field_is_translatable($entity_type, $field)) {
+    global $language;
+    $handler = entity_translation_get_handler($entity_type, $entity);
+    $translations = $handler->getTranslations();
+    if (array_key_exists($language->language, $translations->data)) {
+      $langcode = $language->language;
+    }
+  }
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode, TRUE);
+  $values = isset($entity->{$name}[$langcode]) ? $entity->{$name}[$langcode] : array();
+  // For an empty single-valued field, we have to return NULL.
+  return $field['cardinality'] == 1 ? ($values ? reset($values) : NULL) : $values;
+}
+
+/**
+ * Callback for setting field property values.
+ */
+function multifield_field_property_set($entity, $name, $value, $langcode, $entity_type, $info) {
+  $field = field_info_field($name);
+  $langcode = entity_metadata_field_get_language($entity_type, $entity, $field, $langcode);
+  $values = $field['cardinality'] == 1 ? array($value) : (array) $value;
+
+  $entity->{$name}[$langcode] = $values;
+  // Empty the static field language cache, so the field system picks up any
+  // possible new languages.
+  drupal_static_reset('field_language');
 }
 
 /**

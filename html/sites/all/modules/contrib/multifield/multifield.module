@@ -4,6 +4,17 @@ require_once dirname(__FILE__) . '/multifield.field.inc';
 require_once dirname(__FILE__) . '/multifield.features.inc';
 
 /**
+ * Implements hook_hook_info_alter().
+ */
+function multifield_hook_info_alter(&$info) {
+  // @todo Remove when https://www.drupal.org/node/2309543 is fixed.
+  $info += array_fill_keys(array(
+    'field_views_data',
+    'field_views_data_alter',
+  ), array('group' => 'views'));
+}
+
+/**
  * Implements hook_permission().
  */
 function multifield_permission() {
@@ -101,17 +112,20 @@ function multifield_entity_info() {
     'label' => t('Multifield'),
     'controller class' => 'MultifieldEntityController',
     'base table' => 'multifield',
+    'revision table' => 'multifield',
     'fieldable' => TRUE,
     // Mark this as a configuration entity type to prevent other modules from
     // assuming they can do stuff with this entity type.
     'configuration' => TRUE,
     'bundle keys' => array(
       'bundle' => 'machine_name',
+      'revision' => 'revision_id',
     ),
     'entity keys' => array(
       'id' => 'id',
       'bundle' => 'type',
     ),
+    'access callback' => 'multifield_access_callback',
   );
 
   // Bundles must provide a human readable name so we can create help and error
@@ -129,6 +143,34 @@ function multifield_entity_info() {
   }
 
   return $info;
+}
+
+/**
+ * Access callback for entity access.
+ */
+function multifield_access_callback($op, $entity, $account, $entity_type) {
+  // If there is no multifield entity there is no host entity we can check. In
+  // that situation, grant access.
+  if (empty($entity)) {
+    return TRUE;
+  }
+  // The field name is the bundle of the multifield entity.
+  list($multifield_id, , $field_name) = entity_extract_ids($entity_type, $entity);
+  $field = field_info_field($field_name);
+
+  // Find out the entity and entity type for the host entity.
+  $field_column = _field_sql_storage_columnname($field_name, 'id');
+  $field_table = _field_sql_storage_tablename($field);
+  $host_entity_info = db_query('SELECT entity_type, entity_id FROM {' . $field_table . '} WHERE ' . $field_column . ' = :entity_id', array(
+    ':entity_id' => $multifield_id,
+  ))->fetch();
+  if (!$host_entity_info) {
+    // If the host entity could not be found, then deny access.
+    return FALSE;
+  }
+  $host_entities = entity_load($host_entity_info->entity_type, array($host_entity_info->entity_id));
+  $host_entity = reset($host_entities);
+  return field_access($op, $field, $host_entity_info->entity_type, $host_entity, $account);
 }
 
 function multifield_load($name) {
@@ -598,20 +640,6 @@ function multifield_form_field_ui_field_delete_form_alter(&$form, &$form_state) 
       $form['description']['#markup'] = '<div class="messages error">' . t('This field cannot be deleted since this multifield has instances.') . '</div>';
       unset($form['actions']['submit']);
     }
-  }
-}
-
-/**
- * Implements hook_views_data_alter().
- */
-function multifield_views_data_alter(array &$data) {
-  // Remove any references to the fake multifield table.
-  unset($data['multifield']);
-  unset($data['entity_multifield']);
-  unset($data['views_entity_multifield']);
-  foreach ($data as &$table) {
-    unset($table['table']['join']['multifield']);
-    unset($table['table']['default_relationship']['multifield']);
   }
 }
 
