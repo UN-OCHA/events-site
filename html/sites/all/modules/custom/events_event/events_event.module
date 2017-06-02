@@ -67,6 +67,13 @@ function events_event_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['api/v0/documents'] = array(
+    'title' => 'Fetch documents',
+    'page callback' => 'events_event_fetch_documents',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['ical'] = array(
     'title' => 'Ical',
     'page callback' => 'events_event_to_ical',
@@ -129,6 +136,16 @@ function events_event_exported_term_fields() {
       'value_key' => '',
       'bundle' => 'ev_disaster',
       'exposed' => TRUE,
+    ),
+    'field_event_documents:field_document_type' => array(
+      'label' => t('Document type'),
+      'has_parents' => FALSE,
+      'short_key' => 'doct',
+      'value_key' => '',
+      'bundle' => 'ev_document_type',
+      'exposed' => FALSE,
+      'node_field' => 'field_event_documents',
+      'multifield_field' => 'field_document_type',
     ),
   );
 }
@@ -285,6 +302,12 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
 }
 
 /**
+ * Page callback for facets.
+ */
+function events_event_fetch_documents() {
+}
+
+/**
  * Page callback for events.
  */
 function events_event_fetch_events() {
@@ -338,6 +361,26 @@ function events_event_fetch_events() {
               if ($parent->tid) {
                 $event[$term_field_info['short_key']][] = $parent->tid;
               }
+            }
+          }
+        }
+        else if (isset($term_field_info['node_field'])) {
+          $node_field = $term_field_info['node_field'];
+          $multifield_field = $term_field_info['multifield_field'];
+          if (isset($node->{$node_field}['und'][0][$multifield_field]['und'])) {
+            foreach ($node->{$node_field}['und'][0][$multifield_field]['und'] as $key => $multifield) {
+              $event[$term_field_info['short_key']][] = $multifield['tid'];
+            }
+            // Avoid duplicates.
+            $event[$term_field_info['short_key']] = array_unique($event[$term_field_info['short_key']]);
+
+            // Add documents.
+            foreach ($node->{$node_field}['und'][0]['field_document_file']['und'] as $key => $multifield_file) {
+              $event['files'][] = array(
+                'uri' => file_create_url($multifield_file['uri'], array('absolute' => TRUE)),
+                'name' => $multifield_file['origname'],
+                'type' => $node->{$node_field}['und'][0][$multifield_field]['und'][$key]['tid'],
+              );
             }
           }
         }
