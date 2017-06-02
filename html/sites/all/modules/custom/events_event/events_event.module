@@ -364,7 +364,7 @@ function events_event_fetch_events() {
             }
           }
         }
-        else if (isset($term_field_info['node_field'])) {
+        elseif (isset($term_field_info['node_field'])) {
           $node_field = $term_field_info['node_field'];
           $multifield_field = $term_field_info['multifield_field'];
           if (isset($node->{$node_field}['und'][0][$multifield_field]['und'])) {
