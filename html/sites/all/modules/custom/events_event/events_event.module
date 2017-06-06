@@ -347,7 +347,9 @@ function events_event_fetch_events() {
         'backgroundColor' => events_event_get_event_color($node),
         'location' => events_event_get_event_locations($node),
         'locationDetails' => isset($node->field_event_location_details['und'][0]['value']) ? $node->field_event_location_details['und'][0]['value'] : '',
+        'description' => isset($node->field_event_info['und'][0]['safe_value']) ? $node->field_event_info['und'][0]['safe_value'] : '',
       );
+
       foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
         $event[$term_field_info['short_key']] = array();
         if (isset($node->{$term_field}['und'][0]['tid'])) {
@@ -378,7 +380,7 @@ function events_event_fetch_events() {
             foreach ($node->{$node_field}['und'][0]['field_document_file']['und'] as $key => $multifield_file) {
               $event['files'][] = array(
                 'uri' => file_create_url($multifield_file['uri'], array('absolute' => TRUE)),
-                'name' => $multifield_file['origname'],
+                'name' => !empty($multifield_file['description']) ? $multifield_file['description'] : $multifield_file['origname'],
                 'type' => $node->{$node_field}['und'][0][$multifield_field]['und'][$key]['tid'],
               );
             }
