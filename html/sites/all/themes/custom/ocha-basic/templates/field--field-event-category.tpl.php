@@ -1,7 +1,7 @@
 <?php
 /**
- * @file field--filed-event-category.tpl.php
- * Template for event category field
+ * @file
+ * Template for event category field.
  *
  * Available variables:
  * - $items: An array of field values. Use render() to output them.

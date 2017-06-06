@@ -1,6 +1,6 @@
 <?php
 /**
- * @file field.tpl.php
+ * @file
  * Default template implementation to display the value of a field.
  *
  * Available variables:
