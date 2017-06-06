@@ -5,8 +5,8 @@
 	margin-bottom: $base-unit*2;
 	padding-right: $base-unit;
 
-	h2 {
-		@include font-size($base-font-size);
+	label {
+		font-family: $heading-font;
 		margin-bottom: $base-unit/2;
 	}
 }
@@ -19,13 +19,6 @@
 
 .block-system {
 	padding-top: $base-unit;
-}
-
-.block-views {
-
-	label {
-		margin-bottom: $base-unit/2;
-	}
 }
 
 .calendar-settings {
@@ -67,16 +60,14 @@
 	font-weight: bold;
 	padding: $base-unit $base-unit*2.5 $base-unit $base-unit;
 	border: 1px solid $border-color;
+	@extend .icon-arrow-down;
 
-	&:after {
-		content: "";
+	&:before {
+		font-family: 'unocha-icons';
+		font-weight: normal;
 		position: absolute;
-		right: $base-unit;
-		top: $base-unit*1.5;
-		width: 10px;
-		height: 10px;
-		background: url(../images/arrow-down.svg) center right no-repeat;
-		background-size: 100%;
+		right: $base-unit/2;
+		top: 11px;
 	}
 
 	&[aria-expanded="true"] {
@@ -87,7 +78,7 @@
 			color: $active-link-text-color;
 		}
 
-		&:after {
+		&:before {
 			transform: rotate(180deg);
 		}
 	}
@@ -114,15 +105,7 @@
 
 	.calendar-settings__tz-button {
 		border-color: transparent;
-		padding: $base-unit $base-unit $base-unit 0;
-
-		&:after {
-			display: inline-block;
-			position: relative;
-			top: auto;
-			right: auto;
-			margin-left: $base-unit;
-		}
+		padding: $base-unit $base-unit*2.5 $base-unit 0;
 
 		&[aria-expanded="true"] {
 			border-color: $border-color;
@@ -170,10 +153,6 @@
 		&.open {
 			position: absolute;
 		}
-	}
-
-	.calendar-settings__tz-button {
-		padding: $base-unit;
 	}
 
 }
