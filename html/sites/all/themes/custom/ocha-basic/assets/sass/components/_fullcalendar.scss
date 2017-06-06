@@ -357,6 +357,7 @@ hr.fc-divider {
 }
 
 .fc th {
+	font-family: $heading-font;
 	text-align: center;
 	background: $light-bg-color;
 	text-transform: uppercase;
@@ -504,7 +505,7 @@ temporary rendered events).
 	display: block; /* make the <a> tag block */
 	@include font-size($small-font-size);
 	line-height: 1.3;
-	font-weight: normal; /* undo jqui's ui-widget-header bold */
+	font-weight: 300; /* undo jqui's ui-widget-header bold */
 	color: $link-text-color;
 	text-decoration: none;
 
@@ -814,6 +815,11 @@ display: none;
 
 .fc-toolbar.fc-header-toolbar {
 	margin-bottom: $base-unit*2;
+	font-family: $heading-font;
+
+	button {
+		font-family: $heading-font;
+	}
 
 	h2 {
 		color: $heading-text-color;

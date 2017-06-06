@@ -21,6 +21,7 @@ html, input {
 body {
   font-family: $body-font;
   @include font-size($base-font-size);
+  font-weight: 300;
   color: $body-text-color;
   line-height: 1.5;
   background: white;
@@ -29,12 +30,13 @@ body {
 h1, h2 ,h3 ,h4 ,h5 {
   line-height: 1.2;
   font-weight: bold;
+  font-family: $heading-font;
 }
 
 h1 {
   @include font-size($medium-font-size);
-  text-transform: uppercase;
   color: $heading-text-color;
+  font-weight: normal;
 }
 
 h1, h2 ,h3 ,h4 ,h5, p, ol, ul {
@@ -94,6 +96,21 @@ tr.odd, tr.even {
 }
 
 @include media-query(md) {
+
+  // Display Suite layout //
+  .ds-2col-stacked {
+    @include clearfix;
+    .group-left, .group-right {
+      width: 49%;
+      float: left;
+      margin: 0 1% 0 0;
+    }
+
+    .group-right {
+      margin: 0 0 0 1%;
+    }
+  }
+  //
 
   h2 {
     @include font-size($medium-font-size);

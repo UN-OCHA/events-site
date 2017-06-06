@@ -1,8 +1,18 @@
+.event-heading {
+	padding-bottom: $base-unit*1.5;
+	color: $heading-text-dark-color;
+	border-bottom: 1px solid $border-color;
+
+	span {
+		color: $heading-text-color;
+		font-weight: 300;
+	}
+}
+
 .node-ev-event {
 
 	.field {
-		margin-bottom: $base-unit*2;
-		@include clearfix;
+		margin-bottom: $base-unit*3;
 	}
 
 	.field-name-field-event-date {
@@ -10,16 +20,26 @@
 	}
 
 	.field-label {
+		font-family: $heading-font;
 		color: $heading-text-color;
 		display: block;
 		float: none;
+		text-transform: uppercase;
+		margin-bottom: $base-unit;
 	}
 
 	.field-items {
 		float: none;
 		display: block;
+
+		strong {
+			font-weight: 400;
+		}
 	}
 
+}
+
+.field-item {
 	table {
 		table-layout: fixed;
 		width: 100%;
@@ -36,55 +56,131 @@
 		width: 100%;
 		display: block;
 		word-wrap: break-word;
-		padding: 0;
+		padding: $base-unit;;
+		background: $light-bg-color;
+		position: relative;
+		padding-left: $base-unit*9;
+
+		a {
+			font-style: italic;
+			text-decoration: none;
+			height: $base-unit*2;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			line-height: 1;
+			width: 100%;
+			display: inline-block;
+			@extend .icon-document;
+
+			&:before {
+				font-family: 'unocha-icons';
+				font-style: normal;
+				@include font-size(38);
+				position: absolute;
+				background: white;
+				width: $base-unit*8;
+				height: 65px;
+				line-height: 65px;
+				text-align: center;
+				margin-top: -36px;
+				margin-left: -$base-unit*9 +1;
+				position: absolute;
+			}
+
+			&:hover, &:focus {
+				text-decoration: underline;
+			}
+		}
+
+		a[href$= ".docx"] {
+			@extend .icon-document-file-docx;
+		}
+
+		a[href$= ".pdf"] {
+			@extend .icon-document-file-pdf;
+		}
+
+		a[href$= ".ppt"], a[href$= ".pps"] {
+			@extend .icon-document-file-ppt;
+		}
+
+		a[href$= ".txt"] {
+			@extend .icon-document-file-txt;
+		}
 
 		&:first-child {
-			font-weight: bold;
+			font-weight: 400;
+			color: $heading-text-dark-color;
+			padding-bottom: 0;
 		}
 
 		&:last-child {
-			padding-bottom: $base-unit;
+			margin-bottom: $base-unit/2;
 		}
 
 		img {
-			float: left;
-			margin-right: $base-unit/2;
+			display: none;
 		}
 	}
+}
 
+.icon-calendar.category-meeting {
+	color: #79EBFD;
+}
+.icon-calendar.category-conference {
+	color: #EF816B;
+}
+.icon-calendar.category-training {
+	color: #346C7D;
+}
+.icon-calendar.category-workshop {
+	color: #FFE389;
 }
 
 @include media-query(sm) {
 
+	.event-heading {
+		@include font-size($large-font-size);
+	}
+
 	.node-ev-event {
 
-		.field-label {
-			width: $base-unit*17;
-			float: left;
-		}
-
 		.field-items {
-			float: left;
-			width: calc(100% - 136px);
-			// display: inline-block;
+			@include font-size($medium-font-size);
 		}
 
+	}
+
+	.field-item {
 		table {
 			border: none;
 			margin: 0;
 		}
 
-		td {
-			display: table-cell;
-			width: auto;
-			padding: 0 $base-unit $base-unit *2 $base-unit;
-
-			&:first-child {
-				width: 120px;
-				padding: 0 0 $base-unit 0;
-			}
+		tr {
+			position: relative;
 		}
 
+		td {
+			padding: 0 $base-unit*2 $base-unit*2 $base-unit*12;
+
+			a {
+				&:before {
+					@include font-size(48);
+					width: $base-unit*10;
+					height: 82px;
+					line-height: 82px;
+					margin-top: -44px;
+					margin-left: -$base-unit*12 +1;
+				}
+			}
+
+			&:first-child {
+				padding: $base-unit*2 $base-unit*2 $base-unit/2 $base-unit*12;
+			}
+
+		}
 	}
 
 }

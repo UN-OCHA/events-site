@@ -2,8 +2,9 @@
 $primary-color: #007ac0;
 $secondary-color: #0d6084;
 $light-grey: #ecf1f4;
-$mid-grey: #ddd;
-$dark-grey: #232323;
+$mid-light-grey: #b3b3b3;
+$mid-grey: #565d68;
+$dark-grey: #262A30;
 $red: #e85c41;
 
 // Background colors
@@ -12,13 +13,14 @@ $primary-bg-color: $primary-color;
 $secondary-bg-color: $secondary-color;
 
 // Border colours
-$border-color: $mid-grey;
+$border-color: $mid-light-grey;
 $highlight-border-color: $secondary-color;
 $error-border-color: $red;
 
 // Text colours
-$body-text-color: $dark-grey;
+$body-text-color: $mid-grey;
 $heading-text-color: $primary-color;
+$heading-text-dark-color: $dark-grey;
 $secondary-heading-text-color: $secondary-color;
 $light-text-color: white;
 $link-text-color: $secondary-color;
