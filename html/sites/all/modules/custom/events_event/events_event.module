@@ -602,6 +602,7 @@ function events_event_fetch_organisations() {
   $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $organisations = array();
@@ -636,6 +637,7 @@ function events_event_fetch_clusters() {
   $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $clusters = array();
@@ -670,6 +672,7 @@ function events_event_fetch_locations() {
   $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $locations = array();
@@ -704,6 +707,7 @@ function events_event_fetch_disasters() {
   $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $disasters = array();
