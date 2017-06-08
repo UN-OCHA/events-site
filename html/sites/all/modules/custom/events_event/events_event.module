@@ -719,7 +719,7 @@ function events_event_fetch_countries() {
   $countries = array();
   $vocabularies = taxonomy_vocabulary_get_names();
   $vid = $vocabularies['ev_location']->vid;
-  
+
   $query = db_query('select td.tid from {taxonomy_term_data} td left join {taxonomy_term_hierarchy} th on td.tid = th.tid where vid = :vid AND parent = 0;', array(
     ':vid' => $vid,
   ));
