@@ -61,9 +61,19 @@
 			width: $base-unit*3;
 
 			b {
-	    	background: url(../images/arrow-down.svg) center no-repeat !important; // to over ride chosen sprite media queries
-	    	background-size: 10px 10px!important;
+				font-family: 'unocha-icons';
+				@extend .icon-arrow-down;
+				text-align: center;
+				line-height: 32px;
+				background: none!important;
 	    }
 	  }
 	}
+}
+
+.chosen-legend {
+	display: inline-block;
+	width: $base-unit;
+	height: $base-unit;
+	margin-right: $base-unit;
 }

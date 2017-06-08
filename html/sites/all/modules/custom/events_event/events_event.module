@@ -67,6 +67,13 @@ function events_event_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['api/v0/documents'] = array(
+    'title' => 'Fetch documents',
+    'page callback' => 'events_event_fetch_documents',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['ical'] = array(
     'title' => 'Ical',
     'page callback' => 'events_event_to_ical',
@@ -130,6 +137,16 @@ function events_event_exported_term_fields() {
       'bundle' => 'ev_disaster',
       'exposed' => TRUE,
     ),
+    'field_event_documents:field_document_type' => array(
+      'label' => t('Document type'),
+      'has_parents' => FALSE,
+      'short_key' => 'doct',
+      'value_key' => '',
+      'bundle' => 'ev_document_type',
+      'exposed' => FALSE,
+      'node_field' => 'field_event_documents',
+      'multifield_field' => 'field_document_type',
+    ),
   );
 }
 
@@ -162,6 +179,7 @@ function events_event_calendar() {
       'url' => 'api/v0/fetch-events',
       'type' => 'GET',
     ),
+    'categories' => _events_event_fetch_categories(),
   );
 
   // Parse query parameters.
@@ -203,6 +221,7 @@ function events_event_calendar() {
   drupal_add_library('chosen', 'drupal.chosen');
   drupal_add_js('sites/all/libraries/jspdf/dist/jspdf.min.js');
   drupal_add_js('sites/all/libraries/html2canvas/html2canvas.js');
+  drupal_add_js('sites/all/libraries/jspdf/jspdf.plugin.autotable.js');
 
   drupal_add_js(drupal_get_path('module', 'events_event') . '/events_event.js');
 
@@ -283,6 +302,12 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
 }
 
 /**
+ * Page callback for facets.
+ */
+function events_event_fetch_documents() {
+}
+
+/**
  * Page callback for events.
  */
 function events_event_fetch_events() {
@@ -322,7 +347,9 @@ function events_event_fetch_events() {
         'backgroundColor' => events_event_get_event_color($node),
         'location' => events_event_get_event_locations($node),
         'locationDetails' => isset($node->field_event_location_details['und'][0]['value']) ? $node->field_event_location_details['und'][0]['value'] : '',
+        'description' => isset($node->field_event_info['und'][0]['safe_value']) ? $node->field_event_info['und'][0]['safe_value'] : '',
       );
+
       foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
         $event[$term_field_info['short_key']] = array();
         if (isset($node->{$term_field}['und'][0]['tid'])) {
@@ -336,6 +363,28 @@ function events_event_fetch_events() {
               if ($parent->tid) {
                 $event[$term_field_info['short_key']][] = $parent->tid;
               }
+            }
+          }
+        }
+        elseif (isset($term_field_info['node_field'])) {
+          $document_types = events_event_document_types();
+          $node_field = $term_field_info['node_field'];
+          $multifield_field = $term_field_info['multifield_field'];
+          if (isset($node->{$node_field}['und'][0][$multifield_field]['und'])) {
+            foreach ($node->{$node_field}['und'][0][$multifield_field]['und'] as $key => $multifield) {
+              $event[$term_field_info['short_key']][] = $multifield['tid'];
+            }
+            // Avoid duplicates.
+            $event[$term_field_info['short_key']] = array_unique($event[$term_field_info['short_key']]);
+
+            // Add documents.
+            foreach ($node->{$node_field}['und'][0]['field_document_file']['und'] as $key => $multifield_file) {
+              $event['files'][] = array(
+                'uri' => file_create_url($multifield_file['uri'], array('absolute' => TRUE)),
+                'name' => !empty($multifield_file['description']) ? $multifield_file['description'] : $multifield_file['origname'],
+                'type' => $node->{$node_field}['und'][0][$multifield_field]['und'][$key]['tid'],
+                'type_human' => isset($node->{$node_field}['und'][0][$multifield_field]['und'][$key]['tid']) ? $document_types[$node->{$node_field}['und'][0][$multifield_field]['und'][$key]['tid']]['name'] : '',
+              );
             }
           }
         }
@@ -550,9 +599,10 @@ function events_event_to_ical() {
 function events_event_fetch_organisations() {
   $cache_key = 'events_event:organisations';
 
-  $cache = cache_get($cache_id);
+  $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $organisations = array();
@@ -584,9 +634,10 @@ function events_event_fetch_organisations() {
 function events_event_fetch_clusters() {
   $cache_key = 'events_event:clusters';
 
-  $cache = cache_get($cache_id);
+  $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $clusters = array();
@@ -618,9 +669,10 @@ function events_event_fetch_clusters() {
 function events_event_fetch_locations() {
   $cache_key = 'events_event:locations';
 
-  $cache = cache_get($cache_id);
+  $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $locations = array();
@@ -652,9 +704,10 @@ function events_event_fetch_locations() {
 function events_event_fetch_disasters() {
   $cache_key = 'events_event:disasters';
 
-  $cache = cache_get($cache_id);
+  $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
     events_event_json_output($cache->data);
+    return;
   }
 
   $disasters = array();
@@ -684,14 +737,22 @@ function events_event_fetch_disasters() {
  * Page callback for categories.
  */
 function events_event_fetch_categories() {
+  $categories = _events_event_fetch_categories();
+  events_event_json_output($categories);
+}
+
+/**
+ * Build list of categories.
+ */
+function _events_event_fetch_categories() {
   $cache_key = 'events_event:categories';
 
-  $cache = cache_get($cache_id);
+  $cache = cache_get($cache_key);
   if ($cache && !empty($cache->data)) {
-    events_event_json_output($cache->data);
+    return $cache->data;
   }
 
-  $clusters = array();
+  $categories = array();
 
   $query = new EntityFieldQuery();
   $result = $query
@@ -703,15 +764,16 @@ function events_event_fetch_categories() {
     $tids = array_keys($result['taxonomy_term']);
     $terms = taxonomy_term_load_multiple($tids);
     foreach ($terms as $term) {
-      $clusters[] = array(
+      $categories[] = array(
         'tid' => $term->tid,
         'name' => $term->name,
+        'color' => isset($term->field_ev_legend_color['und'][0]['rgb']) ? $term->field_ev_legend_color['und'][0]['rgb'] : '',
       );
     }
   }
 
-  cache_set($cache_key, $clusters);
-  events_event_json_output($clusters);
+  cache_set($cache_key, $categories);
+  return $categories;
 }
 
 /**
@@ -879,6 +941,16 @@ function events_event_field_extra_fields() {
     'description' => t('Display date in user time (as defined on profile).'),
     'weight' => 2,
   );
+  $extra['node']['ev_event']['display']['ev_display_date_time'] = array(
+    'label' => t('Display date in user and local time'),
+    'description' => t('Display datein user (as defined on profile) and local time  (as entered by the user).'),
+    'weight' => 2,
+  );
+  $extra['node']['ev_event']['display']['ev_page_heading'] = array(
+    'label' => t('Display date and title in heading'),
+    'description' => t('Display date and event title in page heading.'),
+    'weight' => 2,
+  );
 
   return $extra;
 }
@@ -902,6 +974,60 @@ function events_event_node_view($node, $view_mode, $langcode) {
       && $extrafields[$extrafield_name]['visible']) {
     $node->content[$extrafield_name] = _events_event_ev_user_time($node, $view_mode, $langcode);
   }
+
+  $extrafield_name = 'ev_display_date_time';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_display_date_time($node, $view_mode, $langcode);
+  }
+
+  $extrafield_name = 'ev_page_heading';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_page_heading($node, $view_mode, $langcode);
+  }
+}
+
+/**
+ * Display date in page heading.
+ */
+function _events_event_ev_page_heading($node, $view_mode, $langcode) {
+  $date = $node->field_event_date['und'][0];
+  $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
+  $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
+
+  $dates = array(
+    'show_remaining_days' => FALSE,
+    'value' => array(
+      'formatted' => $date_start->format('d F Y H:i'),
+      'formatted_date' => $date_start->format('d F Y'),
+      'formatted_time' => $date_start->format('H:i'),
+      'formatted_timezone' => drupal_get_user_timezone(),
+    ),
+  );
+
+  $output = $dates['value']['formatted_date'];
+
+  return array(
+    '#markup' => '<h1 class="event-heading"><span>' . $output . '</span> ' . $node->title . '</h1>',
+  );
+}
+
+/**
+ * Display date in user and local time.
+ */
+function _events_event_ev_display_date_time($node, $view_mode, $langcode) {
+  $local = _events_event_ev_local_time($node, $view_mode, $langcode);
+  $user = _events_event_ev_user_time($node, $view_mode, $langcode);
+  $local_html = '<p><strong>Local time:</strong><br>' . $local . '</p>';
+  $user_html = '<p><strong>Your time:</strong><br>' . $user . '</p>';
+
+  return array(
+    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">Date & time </div><div class="field-items">' . $local_html . $user_html . '</div></div>',
+  );
+
 }
 
 /**
@@ -931,9 +1057,8 @@ function _events_event_ev_local_time($node, $view_mode, $langcode) {
   );
 
   $output = _events_event_render_dates_as_string($dates);
-  return array(
-    '#markup' => '<div class="field field-type-date field-type-date-local"><div class="field-label">Local time: </div>' . $output . '</div>',
-  );
+
+  return $output;
 }
 
 /**
@@ -963,9 +1088,7 @@ function _events_event_ev_user_time($node, $view_mode, $langcode) {
   );
 
   $output = _events_event_render_dates_as_string($dates);
-  return array(
-    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">Your time: </div>' . $output . '</div>',
-  );
+  return $output;
 }
 
 /**
@@ -1105,4 +1228,30 @@ function events_event_field_widget_form_alter(&$element, &$form_state, $context)
       }
     }
   }
+}
+
+/**
+ * List of document types.
+ */
+function events_event_document_types() {
+  $document_types = array();
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'ev_document_type')
+    ->execute();
+
+  if (isset($result['taxonomy_term'])) {
+    $tids = array_keys($result['taxonomy_term']);
+    $terms = taxonomy_term_load_multiple($tids);
+    foreach ($terms as $term) {
+      $document_types[$term->tid] = array(
+        'tid' => $term->tid,
+        'name' => $term->name,
+      );
+    }
+  }
+
+  return $document_types;
 }
