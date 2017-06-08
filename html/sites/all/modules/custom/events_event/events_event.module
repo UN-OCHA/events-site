@@ -721,7 +721,7 @@ function events_event_fetch_countries() {
   $query = db_query('select td.tid from {taxonomy_term_data} td left join {taxonomy_term_hierarchy} th on td.tid = th.tid where vid = :vid AND parent = 0;', array(
     ':vid' => $vid,
   ));
-  $result = $query->fetchAllKeyed(0,0);
+  $result = $query->fetchAllKeyed(0, 0);
 
   if ($result) {
     $terms = taxonomy_term_load_multiple($result);
@@ -980,16 +980,6 @@ function events_event_field_extra_fields() {
     'description' => t('Display date in user time (as defined on profile).'),
     'weight' => 2,
   );
-  $extra['node']['ev_event']['display']['ev_display_date_time'] = array(
-    'label' => t('Display date in user and local time'),
-    'description' => t('Display datein user (as defined on profile) and local time  (as entered by the user).'),
-    'weight' => 2,
-  );
-  $extra['node']['ev_event']['display']['ev_page_heading'] = array(
-    'label' => t('Display date and title in heading'),
-    'description' => t('Display date and event title in page heading.'),
-    'weight' => 2,
-  );
 
   return $extra;
 }
@@ -1013,60 +1003,6 @@ function events_event_node_view($node, $view_mode, $langcode) {
       && $extrafields[$extrafield_name]['visible']) {
     $node->content[$extrafield_name] = _events_event_ev_user_time($node, $view_mode, $langcode);
   }
-
-  $extrafield_name = 'ev_display_date_time';
-  if (isset($extrafields[$extrafield_name])
-      && isset($extrafields[$extrafield_name]['visible'])
-      && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_display_date_time($node, $view_mode, $langcode);
-  }
-
-  $extrafield_name = 'ev_page_heading';
-  if (isset($extrafields[$extrafield_name])
-      && isset($extrafields[$extrafield_name]['visible'])
-      && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_page_heading($node, $view_mode, $langcode);
-  }
-}
-
-/**
- * Display date in page heading.
- */
-function _events_event_ev_page_heading($node, $view_mode, $langcode) {
-  $date = $node->field_event_date['und'][0];
-  $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
-  $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
-
-  $dates = array(
-    'show_remaining_days' => FALSE,
-    'value' => array(
-      'formatted' => $date_start->format('d F Y H:i'),
-      'formatted_date' => $date_start->format('d F Y'),
-      'formatted_time' => $date_start->format('H:i'),
-      'formatted_timezone' => drupal_get_user_timezone(),
-    ),
-  );
-
-  $output = $dates['value']['formatted_date'];
-
-  return array(
-    '#markup' => '<h1 class="event-heading"><span>' . $output . '</span> ' . $node->title . '</h1>',
-  );
-}
-
-/**
- * Display date in user and local time.
- */
-function _events_event_ev_display_date_time($node, $view_mode, $langcode) {
-  $local = _events_event_ev_local_time($node, $view_mode, $langcode);
-  $user = _events_event_ev_user_time($node, $view_mode, $langcode);
-  $local_html = '<p><strong>Local time:</strong><br>' . $local . '</p>';
-  $user_html = '<p><strong>Your time:</strong><br>' . $user . '</p>';
-
-  return array(
-    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">Date & time </div><div class="field-items">' . $local_html . $user_html . '</div></div>',
-  );
-
 }
 
 /**
@@ -1096,8 +1032,9 @@ function _events_event_ev_local_time($node, $view_mode, $langcode) {
   );
 
   $output = _events_event_render_dates_as_string($dates);
-
-  return $output;
+  return array(
+    '#markup' => '<div class="field field-type-date field-type-date-local"><div class="field-label">Local time: </div>' . $output . '</div>',
+  );
 }
 
 /**
@@ -1127,7 +1064,9 @@ function _events_event_ev_user_time($node, $view_mode, $langcode) {
   );
 
   $output = _events_event_render_dates_as_string($dates);
-  return $output;
+  return array(
+    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">Your time: </div>' . $output . '</div>',
+  );
 }
 
 /**
