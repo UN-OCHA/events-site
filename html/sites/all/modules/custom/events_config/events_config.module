@@ -315,7 +315,7 @@ function events_config_get_user_data($account = NULL) {
     );
   }
 
-  $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
+  $secret = variable_get('events_config_hid_api_key', NULL);
 
   $endpoint = 'https://api.humanitarian.id/api/v2/';
   $endpoint .= 'user/' . $account->data['hybridauth']['id'];
@@ -381,7 +381,7 @@ function events_config_get_user_organizations($account = NULL) {
  * Fetch data from HID.
  */
 function events_config_api_call_list($type, $callback) {
-  $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
+  $secret = variable_get('events_config_hid_api_key', NULL);
 
   $offset = 0;
   $base_endpoint = 'https://api.humanitarian.id/api/v2/';
