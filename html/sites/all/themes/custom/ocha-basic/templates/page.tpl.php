@@ -17,7 +17,7 @@
 
     <?php if ($tabs): ?><div class="tabs"><?php print render($tabs); ?></div><?php endif; ?>
 
-    <?php if (!drupal_is_front_page() && $title && $node->type !== 'ev_event'): ?>
+    <?php if (!drupal_is_front_page() && $title && isset($node) && $node->type !== 'ev_event'): ?>
       <h1>
         <?php print $title; ?>
       </h1>
