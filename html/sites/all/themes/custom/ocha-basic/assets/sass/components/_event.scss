@@ -184,3 +184,10 @@
 	}
 
 }
+
+.page-node-add-ev-event .form-wrapper {
+  display: none;
+}
+.page-node-add-ev-event.loaded .form-wrapper {
+  display: inherit;
+}
