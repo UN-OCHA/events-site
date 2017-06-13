@@ -186,8 +186,19 @@
 }
 
 .page-node-add-ev-event .form-wrapper {
-  display: none;
+  select {
+    display: none;
+  }
+  &[class*="field-widget-"] > div > label:after {
+    content: ' (Loading, please wait ...)';
+  }
 }
+
 .page-node-add-ev-event.loaded .form-wrapper {
-  display: inherit;
+  select {
+    display: inherit;
+  }
+  &[class*="field-widget-"] > div > label:after {
+    content: '';
+  }
 }
