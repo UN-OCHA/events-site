@@ -99,6 +99,20 @@
               }
               element.find('.fc-content').append('<span class="fc-location">' + event.location + '</span>');
             }
+
+            // Add more details to past events.
+            if (view.name === 'past') {
+              if (event.description) {
+                element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<span class="fc-description">' + event.description + '</span>');
+              }
+              if (event.files && event.files.length > 0) {
+                var ul = $('<ul class="ev-files"></ul');
+                for (var i = 0; i < event.files.length; i++) {
+                  ul.append('<li class="ev-doc-' + event.files[i].type_human.toLowerCase().replace(/[^0-9a-z]/gi,'-') + '"><a href="' + event.files[i].uri + '" target="_blank">' + event.files[i].name + '</a></li>');
+                }
+                element.find('.fc-list-item-title').append(ul);
+              }
+            }
           }
 
           return true;

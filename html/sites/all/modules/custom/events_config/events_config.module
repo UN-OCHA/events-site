@@ -90,7 +90,7 @@ function events_config_hybridauth_user_login($account, $data) {
     }
   }
   else {
-    if (isset($account->roles[$role->rid])) {
+    if (isset($account->roles) && isset($account->roles[$role->rid])) {
       unset($account->roles[$role->rid]);
       $needs_update = TRUE;
     }
@@ -315,9 +315,9 @@ function events_config_get_user_data($account = NULL) {
     );
   }
 
-  $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
+  $secret = variable_get('events_config_hid_api_key', '');
 
-  $endpoint = 'https://api.humanitarian.id/api/v2/';
+  $endpoint = variable_get('events_config_hid_endpoint', 'https://api.humanitarian.id/api/v2/');
   $endpoint .= 'user/' . $account->data['hybridauth']['id'];
 
   $headers = array(
@@ -381,10 +381,10 @@ function events_config_get_user_organizations($account = NULL) {
  * Fetch data from HID.
  */
 function events_config_api_call_list($type, $callback) {
-  $secret = variable_get('events_config_hid_api_key', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhpZC1kZXYifQ.eyJpZCI6IjU4ZTRhNmNjM2YwZTBkMDBhZWVjNmZjNiIsImlhdCI6MTQ5MjAwODU3NH0.MxQM-WJLxU5-YRemztLcdLF8yrtGTv-C5ZM4qVkQZlFd6_917YcaMAvOBdTfNxIr8bMArGE5nNXK0l9n0VDqdcnCAFm-x50DcqzFeiGhzC2yyNgJ8XwR9kKnMBVj7vV3KDngSh0rSloGMAlRMEzSQRp8iv3iT0hcr4hRevg4MMkOlkHbVmAjfpwr9trntvu0dv0c3oxBH6ZWnBC8XxSLfIfzbbO8A5_XnEr10kDNKP08SFcHPvwY0jhLxs5-TLbUV7RD21D-Ci8qBSTSAWokQ_mJT8aHAUMhTwh_DGVEa5syOlcabYjeOChV6g1r7SiKNLr1cmGliR0wcKSUQrq5PA');
+  $secret = variable_get('events_config_hid_api_key', '');
 
   $offset = 0;
-  $base_endpoint = 'https://api.humanitarian.id/api/v2/';
+  $base_endpoint = variable_get('events_config_hid_endpoint', 'https://api.humanitarian.id/api/v2/');
 
   $headers = array(
     'Accept' => 'application/json',
@@ -477,6 +477,7 @@ function events_config_fetch_and_sync_locations() {
     events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=3', TRUE, 4);
 
     cache_clear_all('events_event:locations', 'cache');
+    cache_clear_all('events_event:edit-locations', 'cache');
     variable_set('events_config_fetch_and_sync_locations_last_run', REQUEST_TIME);
   }
 }
