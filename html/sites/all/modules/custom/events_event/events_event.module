@@ -892,6 +892,7 @@ function events_event_taxonomy_term_update($term) {
 
       case 'ev_location':
         cache_clear_all('events_event:locations', 'cache');
+        cache_clear_all('events_event:edit-locations', 'cache');
         break;
 
       case 'ev_disaster':
@@ -1257,6 +1258,14 @@ function events_event_get_query_filters() {
  */
 function events_event_field_widget_form_alter(&$element, &$form_state, $context) {
   if (isset($element['#options']) && $element['#field_name'] == 'field_event_location') {
+    $cache_key = 'events_event:edit-locations';
+
+    $cache = cache_get($cache_key);
+    if ($cache && !empty($cache->data)) {
+      $element['#options'] = $cache->data;
+      return;
+    }
+
     foreach ($element['#options'] as $tid => &$option) {
       if (is_numeric($tid)) {
         $option_label = array();
@@ -1267,6 +1276,7 @@ function events_event_field_widget_form_alter(&$element, &$form_state, $context)
         $option = implode(' > ', $option_label);
       }
     }
+    cache_set($cache_key, $element['#options']);
   }
 }
 

@@ -477,6 +477,7 @@ function events_config_fetch_and_sync_locations() {
     events_config_fetch_and_sync_locations_endpoint('https://www.humanitarianresponse.info/en/api/v1.0/locations?filter[admin_level]=3', TRUE, 4);
 
     cache_clear_all('events_event:locations', 'cache');
+    cache_clear_all('events_event:edit-locations', 'cache');
     variable_set('events_config_fetch_and_sync_locations_last_run', REQUEST_TIME);
   }
 }
