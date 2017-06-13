@@ -138,6 +138,25 @@
 	color: #FFE389;
 }
 
+.page-node-add-ev-event .form-wrapper {
+  select {
+  	opacity: 0;
+  	height: 34px;
+  }
+  &[class*="field-widget-"] > div > label:after {
+    content: ' (Loading, please wait...)';
+    font-weight: normal;
+    font-style: italic;
+    color: $secondary-heading-text-color;
+  }
+
+  .js & {
+  	&[class*="field-widget-"] > div > label:after {
+	    content: none;
+	  }
+  }
+}
+
 @include media-query(sm) {
 
 	.event-heading {
@@ -183,22 +202,4 @@
 		}
 	}
 
-}
-
-.page-node-add-ev-event .form-wrapper {
-  select {
-    display: none;
-  }
-  &[class*="field-widget-"] > div > label:after {
-    content: ' (Loading, please wait ...)';
-  }
-}
-
-.page-node-add-ev-event.loaded .form-wrapper {
-  select {
-    display: inherit;
-  }
-  &[class*="field-widget-"] > div > label:after {
-    content: '';
-  }
 }
