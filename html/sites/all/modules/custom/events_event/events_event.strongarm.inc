@@ -100,6 +100,9 @@ function events_event_strongarm() {
       'token' => array(
         'custom_settings' => FALSE,
       ),
+      'revision' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -110,13 +113,25 @@ function events_event_strongarm() {
       'display' => array(
         'ev_local_time' => array(
           'default' => array(
-            'weight' => '7',
-            'visible' => TRUE,
+            'weight' => '19',
+            'visible' => FALSE,
           ),
         ),
         'ev_user_time' => array(
           'default' => array(
-            'weight' => '8',
+            'weight' => '20',
+            'visible' => FALSE,
+          ),
+        ),
+        'ev_display_date_time' => array(
+          'default' => array(
+            'weight' => '1',
+            'visible' => TRUE,
+          ),
+        ),
+        'ev_page_heading' => array(
+          'default' => array(
+            'weight' => '0',
             'visible' => TRUE,
           ),
         ),
@@ -124,6 +139,13 @@ function events_event_strongarm() {
     ),
   );
   $export['field_bundle_settings_node__ev_event'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'language_content_type_ev_event';
+  $strongarm->value = '0';
+  $export['language_content_type_ev_event'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
