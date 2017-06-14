@@ -375,9 +375,10 @@ function events_event_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_event_info',
-    'label' => 'Info',
+    'label' => 'Additional Information',
     'required' => 0,
     'settings' => array(
       'text_processing' => 1,
@@ -775,6 +776,7 @@ function events_event_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Additional Information');
   t('Category');
   t('Cluster');
   t('Coordination Hub');
@@ -784,7 +786,6 @@ function events_event_field_default_field_instances() {
   t('Documents');
   t('External Id');
   t('File');
-  t('Info');
   t('Legend color');
   t('Location');
   t('Location details');
