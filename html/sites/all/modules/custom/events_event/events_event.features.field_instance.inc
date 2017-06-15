@@ -83,7 +83,7 @@ function events_event_field_default_field_instances() {
         'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'taxonomy_term_reference_plain',
         'weight' => 0,
       ),
     ),
@@ -121,7 +121,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 0,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -133,7 +133,7 @@ function events_event_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_event_category',
     'label' => 'Category',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -183,7 +183,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 3,
+      'weight' => 7,
     ),
   );
 
@@ -199,7 +199,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 3,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -222,7 +222,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 10,
     ),
   );
 
@@ -236,7 +236,7 @@ function events_event_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 21,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -271,7 +271,7 @@ function events_event_field_default_field_instances() {
         'year_range' => '-1:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 9,
+      'weight' => 2,
     ),
   );
 
@@ -287,7 +287,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -310,7 +310,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 7,
+      'weight' => 6,
     ),
   );
 
@@ -329,7 +329,7 @@ function events_event_field_default_field_instances() {
           'view_mode' => 'default',
         ),
         'type' => 'multifield_table',
-        'weight' => 9,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -350,7 +350,7 @@ function events_event_field_default_field_instances() {
       'module' => 'multifield_table',
       'settings' => array(),
       'type' => 'multifield_table',
-      'weight' => 10,
+      'weight' => 4,
     ),
   );
 
@@ -366,7 +366,7 @@ function events_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 10,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -375,9 +375,10 @@ function events_event_field_default_field_instances() {
         'weight' => 0,
       ),
     ),
+    'ds_extras_field_template' => '',
     'entity_type' => 'node',
     'field_name' => 'field_event_info',
-    'label' => 'Info',
+    'label' => 'Additional Information',
     'required' => 0,
     'settings' => array(
       'text_processing' => 1,
@@ -390,7 +391,7 @@ function events_event_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 3,
     ),
   );
 
@@ -406,7 +407,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -429,7 +430,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 8,
     ),
   );
 
@@ -445,7 +446,7 @@ function events_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -469,7 +470,7 @@ function events_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 9,
     ),
   );
 
@@ -485,7 +486,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 1,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -508,7 +509,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 2,
+      'weight' => 5,
     ),
   );
 
@@ -538,7 +539,7 @@ function events_event_field_default_field_instances() {
       'active' => 0,
       'module' => 'color_field',
       'settings' => array(),
-      'type' => 'color_field_simple_widget',
+      'type' => 'color_field_plain_text',
       'weight' => 2,
     ),
   );
@@ -775,6 +776,7 @@ function events_event_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Additional Information');
   t('Category');
   t('Cluster');
   t('Coordination Hub');
@@ -784,7 +786,6 @@ function events_event_field_default_field_instances() {
   t('Documents');
   t('External Id');
   t('File');
-  t('Info');
   t('Legend color');
   t('Location');
   t('Location details');

@@ -8,6 +8,9 @@
  * Implements hook_ctools_plugin_api().
  */
 function events_event_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "ds" && $api == "ds") {
+    return array("version" => "1");
+  }
   if ($module == "multifield" && $api == "") {
     return array("version" => "");
   }
@@ -29,7 +32,7 @@ function events_event_views_api($module = NULL, $api = NULL) {
 function events_event_node_info() {
   $items = array(
     'ev_event' => array(
-      'name' => t('ev_event'),
+      'name' => t('Event'),
       'base' => 'node_content',
       'description' => '',
       'has_title' => '1',
