@@ -608,7 +608,7 @@ function events_config_fetch_and_sync_themes() {
           'field' => 'theme',
           'limit' => 50,
           'sort' => 'value:asc',
-        )
+        ),
       ),
     );
 
