@@ -52,6 +52,12 @@ function events_event_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['api/v0/themes'] = array(
+    'title' => 'Fetch themes',
+    'page callback' => 'events_event_fetch_themes',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
   $items['api/v0/categories'] = array(
     'title' => 'Fetch categories',
@@ -141,6 +147,14 @@ function events_event_exported_term_fields() {
       'short_key' => 'dis',
       'value_key' => '',
       'bundle' => 'ev_disaster',
+      'exposed' => TRUE,
+    ),
+    'field_event_theme' => array(
+      'label' => t('Themes'),
+      'has_parents' => FALSE,
+      'short_key' => 'the',
+      'value_key' => '',
+      'bundle' => 'ev_theme',
       'exposed' => TRUE,
     ),
     'field_event_documents:field_document_type' => array(
@@ -359,18 +373,21 @@ function events_event_fetch_events() {
       foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
         $event[$term_field_info['short_key']] = array();
         if (isset($node->{$term_field}['und'][0]['tid'])) {
-          $event[$term_field_info['short_key']][] = $node->{$term_field}['und'][0]['tid'];
+          foreach ($node->{$term_field}['und'] as $child) {
+            $event[$term_field_info['short_key']][] = $child['tid'];
 
-          // Add parent tid.
-          if ($term_field_info['has_parents']) {
-            $parents = taxonomy_get_parents($node->{$term_field}['und'][0]['tid']);
-            if ($parents) {
-              $parent = reset($parents);
-              if ($parent->tid) {
-                $event[$term_field_info['short_key']][] = $parent->tid;
+            // Add parent tid.
+            if ($term_field_info['has_parents']) {
+              $parents = taxonomy_get_parents($child['tid']);
+              if ($parents) {
+                $parent = reset($parents);
+                if ($parent->tid) {
+                  $event[$term_field_info['short_key']][] = $parent->tid;
+                }
               }
             }
           }
+          $event[$term_field_info['short_key']] = array_unique($event[$term_field_info['short_key']]);
         }
         elseif (isset($term_field_info['node_field'])) {
           $document_types = events_event_document_types();
@@ -772,6 +789,41 @@ function events_event_fetch_disasters() {
 
   cache_set($cache_key, $disasters);
   events_event_json_output($disasters);
+}
+
+/**
+ * Page callback for themes.
+ */
+function events_event_fetch_themes() {
+  $cache_key = 'events_event:themes';
+
+  $cache = cache_get($cache_key);
+  if ($cache && !empty($cache->data)) {
+    events_event_json_output($cache->data);
+    return;
+  }
+
+  $themes = array();
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'ev_theme')
+    ->execute();
+
+  if (isset($result['taxonomy_term'])) {
+    $tids = array_keys($result['taxonomy_term']);
+    $terms = taxonomy_term_load_multiple($tids);
+    foreach ($terms as $term) {
+      $themes[] = array(
+        'tid' => $term->tid,
+        'name' => $term->name,
+      );
+    }
+  }
+
+  cache_set($cache_key, $themes);
+  events_event_json_output($themes);
 }
 
 /**

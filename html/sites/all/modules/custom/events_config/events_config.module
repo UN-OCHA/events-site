@@ -286,6 +286,14 @@ function events_config_get_disaster_term($name, $external_id = NULL) {
 }
 
 /**
+ * Fetch theme term.
+ */
+function events_config_get_theme_term($name, $external_id = NULL) {
+  $output = events_config_get_term($name, 'ev_theme', $external_id);
+  return $output['term'];
+}
+
+/**
  * Fetch user data from HID.
  */
 function events_config_get_user_data($account = NULL) {
@@ -427,6 +435,7 @@ function events_config_cron() {
   events_config_fetch_and_sync_coordination_hubs();
   events_config_fetch_and_sync_locations();
   events_config_fetch_and_sync_disasters();
+  events_config_fetch_and_sync_themes();
 }
 
 /**
@@ -579,7 +588,42 @@ function events_config_fetch_and_sync_disasters() {
       }
       $offset += 200;
     }
+    cache_clear_all('events_event:disasters', 'cache');
     variable_set('events_config_fetch_and_sync_disasters_last_run', REQUEST_TIME);
+  }
+}
+
+/**
+ * Fetch and sync themes from RW.
+ */
+function events_config_fetch_and_sync_themes() {
+  $last_run = variable_get('events_config_fetch_and_sync_themes_last_run', 0);
+  if ((REQUEST_TIME - $last_run) >= 86400) {
+    $endpoint = 'https://api.reliefweb.int/v1/reports';
+    $params = array(
+      'appname' => 'hrevents',
+      'limit' => 0,
+      'facets' => array(
+        array(
+          'field' => 'theme',
+          'limit' => 50,
+          'sort' => 'value:asc',
+        ),
+      ),
+    );
+
+    $url = $endpoint . '?' . drupal_http_build_query($params);
+    $request = drupal_http_request($url);
+    if (isset($request->data)) {
+      $data = drupal_json_decode($request->data);
+      if (isset($data['embedded']['facets']['theme']['data'])) {
+        foreach ($data['embedded']['facets']['theme']['data'] as $item) {
+          events_config_get_theme_term($item['value']);
+        }
+      }
+    }
+    cache_clear_all('events_event:themes', 'cache');
+    variable_set('events_config_fetch_and_sync_themes_last_run', REQUEST_TIME);
   }
 }
 
