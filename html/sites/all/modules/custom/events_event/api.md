@@ -216,6 +216,54 @@ Example output.
 * Data[0].tid: /^[0-9]+$/
 * Data[0].name: /./
 
+## `GET /disasters`
+
+Gets a list of disasters.
+
+Example output.
+
+```json
+[
+  {
+    "tid": "7",
+    "name": "OCHA",
+  }
+]
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"
+* Data[0].tid: /^[0-9]+$/
+* Data[0].name: /./
+
+## `GET /themes`
+
+Gets a list of themes.
+
+Example output.
+
+```json
+[
+  {
+    "tid": "7",
+    "name": "OCHA",
+  }
+]
+```
+
+===
+
+### Response
+
+* Status: `200`
+* Content-Type: "application/json"
+* Data[0].tid: /^[0-9]+$/
+* Data[0].name: /./
+
 ## `GET /timezones`
 
 Gets a list of time zones.
