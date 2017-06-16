@@ -44,6 +44,7 @@ function events_config_default_search_api_index() {
         "field_event_documents:field_document_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_event_location" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_event_organization" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_theme" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "search_api_language" : { "type" : "string" },
         "title" : { "type" : "text" }
       },
@@ -228,6 +229,12 @@ function events_config_default_search_api_server() {
           },
           "field_event_documents:field_document_type" : {
             "table" : "search_api_db_un_events_field_event_documents_field_document_t",
+            "column" : "value",
+            "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "field_event_theme" : {
+            "table" : "search_api_db_un_events_field_event_theme",
             "column" : "value",
             "type" : "list\\u003Cinteger\\u003E",
             "boost" : "1.0"
