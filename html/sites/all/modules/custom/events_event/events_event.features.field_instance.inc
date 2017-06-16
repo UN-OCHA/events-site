@@ -108,7 +108,11 @@ function events_event_field_default_field_instances() {
   // Exported field_instance: 'node-ev_event-field_event_category'.
   $field_instances['node-ev_event-field_event_category'] = array(
     'bundle' => 'ev_event',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'tid' => 5576,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
