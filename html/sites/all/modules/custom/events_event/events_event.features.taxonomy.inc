@@ -65,5 +65,13 @@ function events_event_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
+    'ev_theme' => array(
+      'name' => 'Theme',
+      'machine_name' => 'ev_theme',
+      'description' => 'Themes from ReliefWeb',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
   );
 }

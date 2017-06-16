@@ -75,6 +75,7 @@ function events_event_ds_layout_settings_info() {
         8 => 'field_event_organization',
         9 => 'field_event_coordination_hub',
         10 => 'field_event_disasters',
+        11 => 'field_event_theme',
       ),
     ),
     'fields' => array(
@@ -89,6 +90,7 @@ function events_event_ds_layout_settings_info() {
       'field_event_organization' => 'right',
       'field_event_coordination_hub' => 'right',
       'field_event_disasters' => 'right',
+      'field_event_theme' => 'right',
     ),
     'classes' => array(),
     'wrappers' => array(
