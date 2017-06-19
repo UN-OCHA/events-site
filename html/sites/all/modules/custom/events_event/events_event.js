@@ -77,23 +77,24 @@
       $.extend($settings['events'], {
         timeout: 5000,
         success: function(data, textStatus, jqXHR) {
-          document.querySelector('body').classList.remove('error--loading');
+          $('.fc-view').removeClass('fc-view--error');
+          $('.fc-loading-message--error').remove();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          document.querySelector('body').classList.add('error--loading');
+          var errorMessage = '<div class="fc-loading-message fc-loading-message--error">' + Drupal.t('There was an error fetching events, please try again') + '</div>';
+          $('.fc-view').addClass('fc-view--error').before(errorMessage);
         }
       });
 
       $.extend($settings, {
         loading: function(isLoading, view) {
           if (isLoading) {
-            document.querySelector('body').classList.remove('fetching--done');
-            document.querySelector('body').classList.add('fetching--started');
+            var loadingMessage = '<div class="fc-loading-message">' + Drupal.t('Please wait while we fetch events') + '</div>';
+            view.el.addClass('fc-view--loading').before(loadingMessage);
+            return
           }
-          else {
-            document.querySelector('body').classList.remove('fetching--started');
-            document.querySelector('body').classList.add('fetching--done');
-          }
+          view.el.removeClass('fc-view--loading');
+          $('.fc-loading-message').fadeOut();
         },
         eventLimit: false,
         eventRender: function(event, element, view) {
