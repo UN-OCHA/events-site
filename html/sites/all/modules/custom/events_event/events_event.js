@@ -74,7 +74,27 @@
       // Needed to fix navigation problem on past events.
       var alreadyTrigger = false;
 
+      $.extend($settings['events'], {
+        timeout: 5000,
+        success: function(data, textStatus, jqXHR) {
+          document.querySelector('body').classList.remove('error--loading');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          document.querySelector('body').classList.add('error--loading');
+        }
+      });
+
       $.extend($settings, {
+        loading: function(isLoading, view) {
+          if (isLoading) {
+            document.querySelector('body').classList.remove('fetching--done');
+            document.querySelector('body').classList.add('fetching--started');
+          }
+          else {
+            document.querySelector('body').classList.remove('fetching--started');
+            document.querySelector('body').classList.add('fetching--done');
+          }
+        },
         eventLimit: false,
         eventRender: function(event, element, view) {
           element.attr('data-start', event.start._i);
