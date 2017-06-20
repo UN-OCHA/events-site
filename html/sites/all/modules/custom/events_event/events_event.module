@@ -1361,11 +1361,16 @@ function events_event_document_types() {
 /**
  * Add default terms for categoy.
  */
-function _events_event_category_defaults() {
+function _events_event_default_terms() {
   $field_instance = field_info_instance('node', 'field_event_category', 'ev_event');
   if (!$field_instance) {
     return;
   }
+
+  // Create terms for document type.
+  events_config_get_term('Agenda', 'ev_document_type');
+  events_config_get_term('Meeting Minutes', 'ev_document_type');
+  events_config_get_term('Presentation', 'ev_document_type');
 
   // Create terms for category.
   events_config_get_term('Conference', 'ev_category');
@@ -1390,8 +1395,8 @@ function events_event_features_post_restore($op, $items) {
     $index->queueItems();
   }
 
-  // Category terms.
+  // Default terms.
   if ($op == 'revert' || $op == 'enable') {
-    _events_event_category_defaults();
+    _events_event_default_terms();
   }
 }
