@@ -40,6 +40,7 @@ Background:
     | Test 1      | Training             | Just testing     | OCHA                     | Agriculture, Health | Earthquake Feb 1991, Earthquake Apr 2016 | Aviation             | Nejrab               | Central Region               |
     | Test 2      | Training             | Just testing     | OCHA                     | Agriculture, Health | Earthquake Apr 2016                      | Aviation             | Nejrab               | Central Region               |
     | Test 3      | Training             | Just testing     | ACHIEVE                  | Health              | Earthquake Feb 1991, Earthquake Apr 2016 | Aviation             | Nejrab               | Central Region               |
+  And I run drush "search-api-index"
 
 @api
 Scenario: Check 'Themes' filter
