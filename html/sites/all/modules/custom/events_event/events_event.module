@@ -1383,6 +1383,14 @@ function _events_event_category_defaults() {
  * Implements hook_features_post_restore().
  */
 function events_event_features_post_restore($op, $items) {
+  // Rebuild search api tables.
+  if ($op == 'revert' || $op == 'enable') {
+    $index = search_api_index_load('un_events');
+    $index->server()->fieldsUpdated($index);
+    $index->queueItems();
+  }
+
+  // Category terms.
   if ($op == 'revert' || $op == 'enable') {
     _events_event_category_defaults();
   }
