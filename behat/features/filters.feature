@@ -41,38 +41,38 @@ Background:
     | Test 2      | Training             | Just testing     | OCHA                     | Agriculture, Health | Earthquake Apr 2016                      | Aviation             | Nejrab               | Central Region               |
     | Test 3      | Training             | Just testing     | ACHIEVE                  | Health              | Earthquake Feb 1991, Earthquake Apr 2016 | Aviation             | Nejrab               | Central Region               |
 
+@api
 Scenario: Check 'Themes' filter
   Given I am on the homepage
-  And I wait for the ajax response
+  And I wait for AJAX to finish
   Then I should see "Themes"
 
+@api
 Scenario: Check 'Location of Event' filter
   Given I am on the homepage
-  And I wait for the ajax response
+  And I wait for AJAX to finish
   Then I should see "Location of Event"
 
+@api
 Scenario: Check 'Disasters' filter
   Given I am on the homepage
-  And I wait for the ajax response
+  And I wait for AJAX to finish
   Then I should see "Disasters"
 
+@api
 Scenario: Check 'Organizations' filter
   Given I am on the homepage
-  And I wait for the ajax response
+  And I wait for AJAX to finish
   Then I should see "Organizations"
 
+@api
 Scenario: Check 'Clusters' filter
   Given I am on the homepage
-  And I wait for the ajax response
+  And I wait for AJAX to finish
   Then I should see "Clusters"
 
+@api
 Scenario: Check 'Categories' filter
   Given I am on the homepage
-  And I wait for the ajax response
+  And I wait for AJAX to finish
   Then I should see "Categories"
-
-Scenario: Check 'Themes' filter
-  Given I am on the homepage
-  And I wait for the ajax response
-  And I select "Health" from chosen.js "Themes"
-  Then I should see "Themes"
