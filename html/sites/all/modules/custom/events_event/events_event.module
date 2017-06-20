@@ -1359,25 +1359,32 @@ function events_event_document_types() {
 }
 
 /**
- * Implements hook_post_features_enable_feature().
+ * Add default terms for categoy.
  */
-function events_event_post_features_enable_feature() {
+function _events_event_category_defaults() {
+  $field_instance = field_info_instance('node', 'field_event_category', 'ev_event');
+  if (!$field_instance) {
+    return;
+  }
+
   // Create terms for category.
   events_config_get_term('Conference', 'ev_category');
   events_config_get_term('Meeting', 'ev_category');
   events_config_get_term('Training', 'ev_category');
   events_config_get_term('Workshop', 'ev_category');
+
+  // Set default to Meeting for category field.
+  $default = events_config_get_term('Meeting', 'ev_category');
+  $field_instance['default_value'][0]['tid'] = $default['term']->tid;
+  field_update_instance($field_instance);
 }
 
 /**
- * Implements hook_post_features_revert().
+ * Implements hook_features_post_restore().
  */
-function events_event_post_features_revert($component) {
-  // Set default to Meeting for category field.
-  if ($component == 'field_instance') {
-    $default = events_config_get_term('Meeting', 'ev_category');
-    $field_instance = field_info_instance('node', 'field_event_category', 'ev_event');
-    $field_instance['default_value'][0]['tid'] = $default['term']->tid;
-    field_update_instance($field_instance);
+function events_event_features_post_restore($op, $items) {
+  drush_log($op);
+  if ($op == 'revert' || $op == 'enable') {
+    _events_event_category_defaults();
   }
 }
