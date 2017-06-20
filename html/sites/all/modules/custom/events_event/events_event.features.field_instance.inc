@@ -136,6 +136,11 @@ function events_event_field_default_field_instances() {
     'label' => 'Category',
     'required' => 1,
     'settings' => array(
+      'default_value' => array(
+        0 => array(
+          'tid' => 5576,
+        ),
+      ),
       'user_register_form' => FALSE,
     ),
     'widget' => array(

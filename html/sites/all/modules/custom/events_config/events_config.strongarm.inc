@@ -13,6 +13,13 @@ function events_config_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'cron_safe_threshold';
+  $strongarm->value = '0';
+  $export['cron_safe_threshold'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'hybridauth_destination';
   $strongarm->value = '';
   $export['hybridauth_destination'] = $strongarm;
@@ -276,13 +283,6 @@ After that, you will be able to log in at [site:login-url] using your [user:hybr
   $strongarm->name = 'hybridauth_widget_weight';
   $strongarm->value = '100';
   $export['hybridauth_widget_weight'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'site_frontpage';
-  $strongarm->value = 'calendar';
-  $export['site_frontpage'] = $strongarm;
 
   return $export;
 }
