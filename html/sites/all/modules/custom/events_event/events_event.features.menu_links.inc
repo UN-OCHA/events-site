@@ -24,7 +24,7 @@ function events_event_menu_default_menu_links() {
     ),
     'module' => 'menu',
     'hidden' => 0,
-    'external' => 1,
+    'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
     'weight' => -49,
@@ -90,7 +90,7 @@ function events_event_menu_default_menu_links() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('About this service');
+  t('About');
   t('Add event');
   t('Log out');
   t('Login');
