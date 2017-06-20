@@ -1359,9 +1359,9 @@ function events_event_document_types() {
 }
 
 /**
- * Implements hook_enable().
+ * Implements hook_post_features_enable_feature().
  */
-function events_event_enable() {
+function events_event_post_features_enable_feature() {
   // Create terms for category.
   events_config_get_term('Conference', 'ev_category');
   events_config_get_term('Meeting', 'ev_category');
