@@ -22,3 +22,6 @@ default:
       api_driver: 'drupal'
       drupal:
         drupal_root: '../html'
+      drush:
+        root: '../html'
+        binary: '/home/peter/.composer/vendor/drush/drush/drush.php --uri=http://127.0.0.1:8888'
