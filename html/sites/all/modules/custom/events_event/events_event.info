@@ -147,6 +147,7 @@ features[variable][] = node_admin_theme
 features[variable][] = node_options_ev_event
 features[variable][] = node_preview_ev_event
 features[variable][] = node_submitted_ev_event
+features[variable][] = site_frontpage
 features[variable][] = site_name
 features[variable][] = theme_default
 features[variable][] = user_default_timezone
