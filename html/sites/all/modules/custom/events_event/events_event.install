@@ -1,0 +1,12 @@
+<?php
+/**
+ * @file
+ * Code for the Event feature.
+ */
+
+/*
+ * Implements hook_install().
+ */
+function events_event_install() {
+  theme_enable(array('ochabasic'));
+}
