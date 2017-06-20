@@ -168,7 +168,7 @@ function events_event_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@un_events';
   $facet->realm = 'block';
   $facet->facet = 'field_event_date:value';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',
@@ -204,7 +204,7 @@ function events_event_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@un_events';
   $facet->realm = 'block';
   $facet->facet = 'field_event_date:value2';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',
