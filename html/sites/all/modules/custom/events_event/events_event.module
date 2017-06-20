@@ -1357,3 +1357,27 @@ function events_event_document_types() {
 
   return $document_types;
 }
+
+/**
+ * Implements hook_enable().
+ */
+function events_event_enable() {
+  // Create terms for category.
+  events_config_get_term('Conference', 'ev_category');
+  events_config_get_term('Meeting', 'ev_category');
+  events_config_get_term('Training', 'ev_category');
+  events_config_get_term('Workshop', 'ev_category');
+}
+
+/**
+ * Implements hook_post_features_revert().
+ */
+function events_event_post_features_revert($component) {
+  // Set default to Meeting for category field.
+  if ($component == 'field_instance') {
+    $default = events_config_get_term('Meeting', 'ev_category');
+    $field_instance = field_info_instance('node', 'field_event_category', 'ev_event');
+    $field_instance['default_value'][0]['tid'] = $default['term']->tid;
+    field_update_instance($field_instance);
+  }
+}
