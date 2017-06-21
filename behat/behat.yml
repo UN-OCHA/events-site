@@ -20,4 +20,4 @@ default:
         drupal_root: '/home/travis/build/UN-OCHA/events-site/html'
       drush:
         root: '/home/travis/build/UN-OCHA/events-site/html'
-        binary: '/home/travis/build/UN-OCHA/events-site/behat/bin/drush --uri=http://127.0.0.1:8888'
+        binary: '/home/travis/build/UN-OCHA/events-site/behat/bin/drush --debug --uri=http://127.0.0.1:8888'
