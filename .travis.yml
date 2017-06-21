@@ -1,5 +1,8 @@
 language: php
 
+addons:
+  chrome: stable
+
 php:
   - 5.6
 
@@ -40,6 +43,7 @@ before_script:
   - cd $TRAVIS_BUILD_DIR/behat
   - ./scripts/install.sh
   - cd $TRAVIS_BUILD_DIR/behat
+  - chromedriver &
   - ./scripts/startserver.sh
   - ls $TRAVIS_BUILD_DIR/html/sites
   - ls $TRAVIS_BUILD_DIR/html/sites/test
