@@ -1,1 +1,1 @@
-bin/behat --config=behat.travis.yml --format pretty
+bin/behat --config behat.travis.yml --format pretty
