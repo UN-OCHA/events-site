@@ -1,4 +1,4 @@
-## Setup
+## Setup - scripts/setup.sh
 
 ```
 cd behat
@@ -6,7 +6,7 @@ composer install
 ln -s ../html/sites sites
 ```
 
-## Install site
+## Install site - scripts/install.sh
 ```
 cd sites
 /usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" drush site-install standard --db-url=sqlite:///tmp/test.db --sites-subdir=test --account-pass=admin -y
@@ -17,14 +17,14 @@ drush fra -y
 drush search-index
 ```
 
-## Run server
+## Run server - scripts/startserver.sh
 ```
 cd sites/test
 drush runserver 8888
 
 ```
 
-## Run behat
+## Run behat - scripts/runbehat.sh
 ```
 bin/behat
 ```
