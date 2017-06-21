@@ -36,17 +36,11 @@ before_script:
 
   # Behat
   - cd $TRAVIS_BUILD_DIR/behat
-  - composer install
-  - ln -s ../html/sites sites
-  - cd sites
-  - /usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" drush site-install minimal --db-url=sqlite:test.db --sites-subdir=test --account-pass=admin -y
-  - cd test
-  - drush en events_config -y
-  - drush en events_event -y
-  - drush fra -y
-  - drush search-api-index
+  - ./scripts/setup.sh
+  - cd $TRAVIS_BUILD_DIR/behat
+  - ./scripts/install.sh
 
 script:
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && phpcs --extensions=info,module,install,inc,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
-  - cd $TRAVIS_BUILD_DIR/behat/sites/test && drush runserver 8888 & && cd ../.. && bin/behat --format pretty
+  - cd $TRAVIS_BUILD_DIR/behat && ./scripts/startserver.sh && cd $TRAVIS_BUILD_DIR/behat && ./scripts/runbehat.sh
