@@ -5,12 +5,18 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Behat\Hook\Scope\BeforeStepScope;
 
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
+
+  public $screenshots;
+  public $lastStep = 'none';
 
   /**
    * Initializes context.
@@ -19,7 +25,8 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    * You can also pass arbitrary arguments to the
    * context constructor through behat.yml.
    */
-  public function __construct() {
+  public function __construct($screenshots) {
+    $this->screenshots = $screenshots ? $screenshots : '/tmp';
   }
 
   /**
@@ -139,4 +146,26 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
       $this->nodeCreate($node);
     }
   }
+
+  /**
+   * @BeforeStep
+   */
+  public function trackLastStep(BeforeStepScope $scope) {
+    $this->lastStep = $scope->getStep();
+  }
+
+  /**
+   * @AfterStep
+   */
+  public function takeScreenShotAfterFailedStep(afterStepScope $scope) {
+    if (99 === $scope->getTestResult()->getResultCode()) {
+      $driver = $this->getSession()->getDriver();
+      if (!($driver instanceof Selenium2Driver)) {
+        return;
+      }
+      $filename = preg_replace('/[^a-zA-Z0-9]/', '-', $this->lastStep->getText());
+      file_put_contents($this->screenshots . '/' . $filename . '.png', $this->getSession()->getDriver()->getScreenshot());
+    }
+  }
+
 }
