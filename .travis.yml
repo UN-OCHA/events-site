@@ -39,6 +39,7 @@ before_script:
   - composer install
   - ln -s ../html/sites sites
   - cd sites
+  - /usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`"
   - drush site-install minimal --db-url=sqlite:test.db --sites-subdir=test --account-pass=admin -y
   - cd test
   - drush en events_config -y
