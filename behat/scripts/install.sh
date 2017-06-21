@@ -1,8 +1,9 @@
-cd sites
-/usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" drush site-install standard --db-url=sqlite:///tmp/test.db --sites-subdir=test --account-pass=admin -y
-cd test
-drush en events_config -y
-drush en events_event -y
-drush fra -y
-drush search-index
-cd ../..
+cp scripts/sites.php ../html/sites/
+cd ../html
+export PHP_OPTIONS="-d sendmail_path=`which true`"
+../behat/bin/drush site-install standard --db-url=sqlite://sites/all/test.db --sites-subdir=test --account-pass=admin -y
+cd sites/test
+../../../behat/bin/drush en events_config -y
+../../../behat/bin/drush en events_event -y
+../../../behat/bin/drush fra -y
+../../../behat/bin/drush search-index
