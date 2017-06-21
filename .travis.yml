@@ -48,4 +48,4 @@ before_script:
 script:
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && phpcs --extensions=info,module,install,inc,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
-  - cd $TRAVIS_BUILD_DIR/behat && bin/behat --config behat.travis.yml --format pretty
+  - cd $TRAVIS_BUILD_DIR/behat && bin/behat -vv
