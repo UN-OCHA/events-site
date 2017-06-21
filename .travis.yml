@@ -10,6 +10,7 @@ env:
      - DRUSH_VERSION='7.*'
      - PHPCS_VERSION='1.5.*@dev'
      - CODER_VERSION='dev-7.x-2.x'
+     - DB=sqlite
 
 before_script:
   # Ensure we have the latest sources.
