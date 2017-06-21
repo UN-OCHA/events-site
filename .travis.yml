@@ -25,16 +25,6 @@ before_script:
   - source $HOME/.bashrc
   - composer self-update
 
-  # Drush.
-  - composer global require drush/drush:$DRUSH_VERSION
-
-  # Codesniffer.
-  - composer global require squizlabs/php_codesniffer:$PHPCS_VERSION
-
-  # Coder.
-  - composer global require drupal/coder:$CODER_VERSION
-  - ln -s ~/.composer/vendor/drupal/coder/coder_sniffer/Drupal ~/.composer/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/
-
   # Ensure the PHP environment is ready.
   - phpenv rehash
 
@@ -44,7 +34,7 @@ before_script:
   - cd $TRAVIS_BUILD_DIR/behat
   - ./scripts/install.sh
   - cd $TRAVIS_BUILD_DIR/behat
-  - $TRAVIS_BUILD_DIR/behat/chromedriver --verbose &
+  - $TRAVIS_BUILD_DIR/behat/chromedriver &
   - ./scripts/startserver.sh
   - ls $TRAVIS_BUILD_DIR/html/sites
   - ls $TRAVIS_BUILD_DIR/html/sites/test
@@ -52,6 +42,4 @@ before_script:
   - cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/
 
 script:
-  - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
-  - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && phpcs --extensions=info,module,install,inc,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
   - cd $TRAVIS_BUILD_DIR/behat && bin/behat -vv
