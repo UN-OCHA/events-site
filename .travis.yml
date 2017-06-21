@@ -33,6 +33,19 @@ before_script:
   # Ensure the PHP environment is ready.
   - phpenv rehash
 
+  # Behat
+  - composer global require drupal/drupal-extension:3.3.*
+  - ln -s $TRAVIS_BUILD_DIR/html/sites $TRAVIS_BUILD_DIR/behat/sites
+  - cd behat
+  - cd sites
+  - drush site-install minimal --db-url=sqlite:///tmp/test.db --sites-subdir=test --account-pass=admin -y
+  - cd test
+  - drush en events_config -y
+  - drush en events_event -y
+  - drush fra -y
+  - drush search-api-index
+
 script:
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && phpcs --extensions=info,module,install,inc,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
+  - 
