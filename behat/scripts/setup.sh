@@ -4,4 +4,4 @@ wget -N https://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zi
 unzip chromedriver_linux64.zip
 cd ../html/sites/all/themes/custom/ocha-basic
 npm install
-grunt
+# grunt: Loading "svgmin.js" tasks...ERROR >> SyntaxError: Use of const in strict mode.
