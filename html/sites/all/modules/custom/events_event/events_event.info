@@ -91,6 +91,7 @@ features[field_instance][] = taxonomy_term-ev_list-field_external_id
 features[field_instance][] = taxonomy_term-ev_location-field_external_id
 features[field_instance][] = taxonomy_term-ev_organization-field_ev_legend_color
 features[field_instance][] = taxonomy_term-ev_organization-field_external_id
+features[field_instance][] = taxonomy_term-ev_theme-field_external_id
 features[filter][] = markdown
 features[menu_custom][] = user-menu
 features[menu_links][] = user-menu_about:about
