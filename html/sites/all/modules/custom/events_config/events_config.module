@@ -599,27 +599,17 @@ function events_config_fetch_and_sync_disasters() {
 function events_config_fetch_and_sync_themes() {
   $last_run = variable_get('events_config_fetch_and_sync_themes_last_run', 0);
   if ((REQUEST_TIME - $last_run) >= 86400) {
-    $endpoint = 'https://api.reliefweb.int/v1/reports';
+    $endpoint = 'https://api.reliefweb.int/v1/references/themes';
     $params = array(
       'appname' => 'hrevents',
-      'limit' => 0,
-      'facets' => array(
-        array(
-          'field' => 'theme',
-          'limit' => 50,
-          'sort' => 'value:asc',
-        ),
-      ),
     );
 
     $url = $endpoint . '?' . drupal_http_build_query($params);
     $request = drupal_http_request($url);
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
-      if (isset($data['embedded']['facets']['theme']['data'])) {
-        foreach ($data['embedded']['facets']['theme']['data'] as $item) {
-          events_config_get_theme_term($item['value']);
-        }
+      foreach ($data['data'] as $item) {
+        events_config_get_theme_term($item['fields']['name'], $item['id']);
       }
     }
     cache_clear_all('events_event:themes', 'cache');
