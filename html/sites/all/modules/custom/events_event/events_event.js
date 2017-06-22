@@ -74,7 +74,30 @@
       // Needed to fix navigation problem on past events.
       var alreadyTrigger = false;
 
+      $.extend($settings['events'], {
+        timeout: 5000,
+        success: function(data, textStatus, jqXHR) {
+          $('.fc-view').removeClass('fc-view--error');
+          $('.fc-loading-message--error').remove();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          var errorMessage = '<div class="fc-loading-message fc-loading-message--error">' + Drupal.t('There was an error fetching events, please try again') + '</div>';
+          $('.fc-view').addClass('fc-view--error').before(errorMessage);
+        }
+      });
+
       $.extend($settings, {
+        loading: function(isLoading, view) {
+          if (isLoading) {
+            var loadingMessage = '<div class="fc-loading-message">' + Drupal.t('Please wait while we fetch events') + '</div>';
+            view.el.addClass('fc-view--loading').before(loadingMessage);
+            return
+          }
+          if (!view.el.hasClass('fc-view--error')) {
+            view.el.removeClass('fc-view--loading');
+            $('.fc-loading-message').fadeOut();
+          }
+        },
         eventLimit: false,
         eventRender: function(event, element, view) {
           element.attr('data-start', event.start._i);
@@ -259,16 +282,37 @@
             locationString += $(event).find('.fc-location').text();
           }
 
-          displayEvents.push([
-            startDate,
-            timeString,
-            $(event).find(titleSelector).text(),
-            locationString,
-          ]);
+          displayEvents.push(
+            {
+              'date': startDate,
+              'time': timeString,
+              'name': $(event).find(titleSelector).text(),
+              'location': locationString
+            }
+          );
         }
 
+        var columns = [
+          {
+            title: 'Date',
+            dataKey: 'date'
+          },
+          {
+            title: 'Time',
+            dataKey: 'time'
+          },
+          {
+            title: 'Name of meeting',
+            dataKey: 'name'
+          },
+          {
+            title: 'Location',
+            dataKey: 'location'
+          }
+        ];
+
         return {
-          cols: ['Date', 'Time', 'Name of meeting', 'Location'],
+          cols: columns,
           rows: displayEvents
         };
       };
@@ -351,6 +395,11 @@
           // Events.
           doc.autoTable(table.cols, table.rows, {
             startY: tableY,
+            styles: {overflow: 'linebreak', columnWidth: 'wrap'},
+            columnStyles: {
+              name: {columnWidth: 'auto'},
+              location: {columnWidth: 'auto'}
+            },
             addPageContent: function (data) {
               getPdfFooter(data, doc);
             }

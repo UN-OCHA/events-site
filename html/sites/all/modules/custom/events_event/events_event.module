@@ -1357,3 +1357,46 @@ function events_event_document_types() {
 
   return $document_types;
 }
+
+/**
+ * Add default terms for categoy.
+ */
+function _events_event_default_terms() {
+  $field_instance = field_info_instance('node', 'field_event_category', 'ev_event');
+  if (!$field_instance) {
+    return;
+  }
+
+  // Create terms for document type.
+  events_config_get_term('Agenda', 'ev_document_type');
+  events_config_get_term('Meeting Minutes', 'ev_document_type');
+  events_config_get_term('Presentation', 'ev_document_type');
+
+  // Create terms for category.
+  events_config_get_term('Conference', 'ev_category');
+  events_config_get_term('Meeting', 'ev_category');
+  events_config_get_term('Training', 'ev_category');
+  events_config_get_term('Workshop', 'ev_category');
+
+  // Set default to Meeting for category field.
+  $default = events_config_get_term('Meeting', 'ev_category');
+  $field_instance['default_value'][0]['tid'] = $default['term']->tid;
+  field_update_instance($field_instance);
+}
+
+/**
+ * Implements hook_features_post_restore().
+ */
+function events_event_features_post_restore($op, $items) {
+  // Rebuild search api tables.
+  if ($op == 'revert' || $op == 'enable') {
+    $index = search_api_index_load('un_events');
+    $index->server()->fieldsUpdated($index);
+    $index->queueItems();
+  }
+
+  // Default terms.
+  if ($op == 'revert' || $op == 'enable') {
+    _events_event_default_terms();
+  }
+}

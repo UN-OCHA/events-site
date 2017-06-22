@@ -13,6 +13,13 @@ function events_config_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'cron_safe_threshold';
+  $strongarm->value = '0';
+  $export['cron_safe_threshold'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'hybridauth_destination';
   $strongarm->value = '';
   $export['hybridauth_destination'] = $strongarm;
@@ -145,34 +152,6 @@ After that, you will be able to log in at [site:login-url] using your [user:hybr
     'Yandex' => 0,
   );
   $export['hybridauth_providers'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'hybridauth_provider_HumanitarianId_keys_id';
-  $strongarm->value = 'events-staging';
-  $export['hybridauth_provider_HumanitarianId_keys_id'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'hybridauth_provider_HumanitarianId_keys_key';
-  $strongarm->value = 'events-staging';
-  $export['hybridauth_provider_HumanitarianId_keys_key'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'hybridauth_provider_HumanitarianId_keys_secret';
-  $strongarm->value = 'I7I38i6ife5pU2d6Jo5xE3EIX730WC4l';
-  $export['hybridauth_provider_HumanitarianId_keys_secret'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'hybridauth_provider_HumanitarianId_oauth2_server';
-  $strongarm->value = 'https://server.example.org';
-  $export['hybridauth_provider_HumanitarianId_oauth2_server'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

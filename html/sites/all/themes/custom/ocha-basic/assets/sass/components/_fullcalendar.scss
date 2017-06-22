@@ -918,7 +918,6 @@ z-index: 1;
 }
 
 
-
 /* BasicView
 --------------------------------------------------------------------------------------------------*/
 
@@ -1432,6 +1431,29 @@ be a descendant of the grid when it is being dragged.
 		background: #fafafa;
 	}
 }
+
+/** Loading **/
+.fc-view--loading, .fc-view--error {
+	opacity: 0.5;
+}
+
+.fc-loading-message {
+	box-sizing: border-box;
+  width: 288px;
+  background: white;
+  padding: $base-unit*2 $base-unit;
+  box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.1);
+  text-align: center;
+  position: absolute;
+  z-index: 9;
+  text-transform: uppercase;
+  color: $heading-text-color;
+  font-weight: bold;
+  margin-left: -144px;
+  left: 50%;
+  margin-top: $base-unit*3;
+}
+
 
 @include media-query(sm) {
 
