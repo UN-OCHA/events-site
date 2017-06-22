@@ -28,6 +28,11 @@ before_script:
   # Ensure the PHP environment is ready.
   - phpenv rehash
 
+  # Code sniff
+  - cd $TRAVIS_BUILD_DIR
+  - composer install
+  - ln -s $TRAVIS_BUILD_DIR/vendor/drupal/coder/coder_sniffer/Drupal $TRAVIS_BUILD_DIR/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/
+
   # Behat
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -42,4 +47,6 @@ before_script:
   - cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/settings.travis.php
 
 script:
+  - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
+  - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,inc,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
   - cd $TRAVIS_BUILD_DIR/behat && bin/behat --config behat.travis.yml
