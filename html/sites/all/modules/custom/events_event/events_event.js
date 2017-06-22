@@ -93,8 +93,10 @@
             view.el.addClass('fc-view--loading').before(loadingMessage);
             return
           }
-          view.el.removeClass('fc-view--loading');
-          $('.fc-loading-message').fadeOut();
+          if (!view.el.hasClass('fc-view--error')) {
+            view.el.removeClass('fc-view--loading');
+            $('.fc-loading-message').fadeOut();
+          }
         },
         eventLimit: false,
         eventRender: function(event, element, view) {
