@@ -11,7 +11,13 @@ default:
   extensions:
     Behat\MinkExtension:
       selenium2:
-        browser: phantomjs
+        browser: chrome
+        wd_host: http://localhost:9515
+        capabilities:
+          chrome:
+              switches:
+                  - "--headless"
+                  - "--disable-gpu"
       base_url: http://127.0.0.1:8888
     Drupal\DrupalExtension:
       blackbox: ~
