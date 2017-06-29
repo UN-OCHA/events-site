@@ -17,9 +17,6 @@ env:
      - DB=sqlite
 
 before_script:
-  # Ensure we have the latest sources.
-  - sudo apt-get -y update
-
   # Composer.
   - sed -i '1i export PATH="$HOME/.composer/vendor/bin:$PATH"' $HOME/.bashrc
   - source $HOME/.bashrc
