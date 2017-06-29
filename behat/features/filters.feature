@@ -49,6 +49,7 @@ Scenario: Check 'Themes' filter
   Then I should see "Themes"
   And I click the ".calendar-filters--the .chosen-container" element
   Then I should see "Health"
+  And I should not see "Education"
 
 @api
 Scenario: Check 'Location of Event' filter
@@ -57,6 +58,7 @@ Scenario: Check 'Location of Event' filter
   Then I should see "Location of Event"
   And I click the ".calendar-filters--loc .chosen-container" element
   Then I should see "Afghanistan > Capital > Kapisa"
+  And I should not see "Logar"
 
 @api
 Scenario: Check 'Disasters' filter
@@ -65,6 +67,7 @@ Scenario: Check 'Disasters' filter
   Then I should see "Disasters"
   And I click the ".calendar-filters--dis .chosen-container" element
   Then I should see "Earthquake Apr 2016"
+  And I should not see "Avalanche Jan 2009"
 
 @api
 Scenario: Check 'Organizations' filter
@@ -73,6 +76,7 @@ Scenario: Check 'Organizations' filter
   Then I should see "Organizations"
   And I click the ".calendar-filters--org .chosen-container" element
   Then I should see "ACHIEVE"
+  And I should not see "Act for Peace"
 
 @api
 Scenario: Check 'Clusters' filter
@@ -81,6 +85,7 @@ Scenario: Check 'Clusters' filter
   Then I should see "Clusters"
   And I click the ".calendar-filters--clu .chosen-container" element
   Then I should see "Aviation"
+  And I should not see "Child Protection"
 
 @api
 Scenario: Check 'Categories' filter
@@ -89,3 +94,4 @@ Scenario: Check 'Categories' filter
   Then I should see "Categories"
   And I click the ".calendar-filters--cat .chosen-container" element
   Then I should see "Meeting"
+  And I should not see "Conference"
