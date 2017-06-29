@@ -37,7 +37,7 @@ Background:
     | Health      |
   And list of events:
     | title       | field_event_category | field_event_info | field_event_organization | field_event_theme   | field_event_disasters                    | field_event_cluster  | field_event_location | field_event_coordination_hub |
-    | Test 1      | Training             | Just testing     | OCHA                     | Agriculture, Health | Earthquake Feb 1991, Earthquake Apr 2016 | Aviation             | Nejrab               | Central Region               |
+    | Test 1      | Training             | Just testing     | OCHA                     | Agriculture         | Earthquake Feb 1991, Earthquake Apr 2016 | Aviation             | Nejrab               | Central Region               |
     | Test 2      | Training             | Just testing     | OCHA                     | Agriculture, Health | Earthquake Apr 2016                      | Aviation             | Nejrab               | Central Region               |
     | Test 3      | Meeting              | Just testing     | ACHIEVE                  | Health              | Earthquake Feb 1991, Earthquake Apr 2016 | Aviation             | Kapisa               | Central Region               |
   And I run drush "search-api-index"
@@ -47,9 +47,14 @@ Scenario: Check 'Themes' filter
   Given I am on the homepage
   And I wait for AJAX to finish
   Then I should see "Themes"
-  And I click the ".calendar-filters--the .chosen-container" element
+  When I click the ".calendar-filters--the .chosen-container" element
   Then I should see "Health"
   And I should not see "Education"
+  When I click the ".calendar-filters--the .chosen-container" element
+  And I set the chosen element ".calendar-filters--the select" to "Health"
+  Then I should see "Test 2"
+  And I should see "Test 3"
+  And I should not see "Test 1"
 
 @api
 Scenario: Check 'Location of Event' filter
