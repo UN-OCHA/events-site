@@ -27,36 +27,6 @@ body {
   background: white;
 }
 
-h1, h2 ,h3 ,h4 ,h5 {
-  line-height: 1.2;
-  font-weight: bold;
-  font-family: $heading-font;
-}
-
-h1 {
-  @include font-size($medium-font-size);
-  color: $heading-text-color;
-  font-weight: normal;
-}
-
-h1, h2 ,h3 ,h4 ,h5, p, ol, ul {
-  margin-bottom: $base-unit;
-}
-
-a {
-  color: $link-text-color;
-
-  &:hover, &:focus {
-    color: $active-link-text-color;
-    text-decoration: none;
-  }
-}
-
-ol, ul {
-  list-style: initial;
-  margin-left: $base-unit*3;
-}
-
 strong {
   font-weight: bold;
 }
@@ -111,14 +81,6 @@ tr.odd, tr.even {
     }
   }
   //
-
-  h2 {
-    @include font-size($medium-font-size);
-  }
-
-  h1, h2 ,h3 ,h4 ,h5, p, ol, ul {
-    margin-bottom: $base-unit*2;
-  }
 }
 
 @media print {
