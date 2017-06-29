@@ -299,19 +299,27 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
 
       $terms = taxonomy_term_load_multiple($tids);
       foreach ($terms as $term) {
-        $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->name;
         // Add parent.
         if ($term_fields[$key]['has_parents']) {
-          $parents = taxonomy_get_parents($term->tid);
+          $parents = taxonomy_get_parents_all($term->tid);
           if ($parents) {
-            $parent = reset($parents);
-            if ($parent->tid) {
-              $parent = taxonomy_term_load($parent->tid);
-              $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $parent->name . ' > ' . $term->name;
+            foreach ($parents as $parent) {
+              if (empty($facets[$term_fields[$key]['short_key']]['values'][$term->tid])) {
+                $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $parent->name;
+              }
+              else {
+                $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $parent->name . ' > ' . $facets[$term_fields[$key]['short_key']]['values'][$term->tid];
+              }
             }
           }
         }
+        else {
+          $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->name;
+        }
       }
+
+      // Sort array.
+      asort($facets[$term_fields[$key]['short_key']]['values']);
     }
   }
 
@@ -378,10 +386,10 @@ function events_event_fetch_events() {
 
             // Add parent tid.
             if ($term_field_info['has_parents']) {
-              $parents = taxonomy_get_parents($child['tid']);
-              if ($parents) {
-                $parent = reset($parents);
-                if ($parent->tid) {
+              $parents = taxonomy_get_parents_all($child['tid']);
+              if (count($parents) > 1) {
+                array_shift($parents);
+                foreach ($parents as $parent) {
                   $event[$term_field_info['short_key']][] = $parent->tid;
                 }
               }
