@@ -18,6 +18,7 @@ default:
               switches:
                   - "--headless"
                   - "--disable-gpu"
+                  - "--window-size=1920,1080"
       base_url: http://127.0.0.1:8888
     Drupal\DrupalExtension:
       blackbox: ~
