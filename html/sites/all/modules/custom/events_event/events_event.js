@@ -482,6 +482,7 @@
 
           filterCount++;
           var filter = document.createElement('div');
+          filter.className = 'calendar-filters--' + f;
 
           // Construct label.
           var newLabel = document.createElement('label');
