@@ -38,28 +38,45 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
   }
 
   /**
-   * @Given /^I select "([^"]*)" from chosen\.js "([^"]*)"$/
+   * @When /^I set the chosen element "([^"]*)" to "([^"]*)"$/
    */
-  public function iSelectFromChosenJsSelectBox($option, $select) {
-    $select = $this->fixStepArgument($select);
-    $option = $this->fixStepArgument($option);
+  public function iSetChosenElement($locator, $value) {
+    $session = $this->getSession();
+    $element = $session->getPage()->find('css', $locator);
 
-    $page = $this->getSession()->getPage();
-    $field = $page->findField($select, true);
-
-    if (null === $field) {
-      throw new ElementNotFoundException($this->getDriver(), 'form field', 'id|name|label|value', $select);
+    if (empty($element)) {
+      throw new ExpectationException(t('No such select element @locator ', array(
+        '@value' => $value,
+        '@locator' => $locator,
+      )), $session);
     }
 
-    $id = $field->getAttribute('id');
-    $opt = $field->find('named', array('option', $option));
-    $val = $opt->getValue();
+    $element_id = str_replace('-', '_', $element->getAttribute('id')) . '_chosen';
 
-    $javascript = "jQuery('#$id').val('$val');
-                  jQuery('#$id').trigger('chosen:updated');
-                  jQuery('#$id').trigger('change');";
+    $element = $session->getPage()->find('xpath', "//div[@id='{$element_id}']");
 
-    $this->getSession()->executeScript($javascript);
+    if ($element->hasClass('chosen-container-single')) {
+      // This is a single select element.
+      $element = $session->getPage()->find('xpath', "//div[@id='{$element_id}']/a[@class='chosen-single']");
+      $element->click();
+    }
+    elseif ($element->hasClass('chosen-container-multi')) {
+      // This is a multi select element.
+      $element = $session->getPage()->find('xpath', "//div[@id='{$element_id}']/ul[@class='chosen-choices']/li[@class='search-field']/input");
+      $element->click();
+    }
+
+    $selector = "//div[@id='{$element_id}']/div[@class='chosen-drop']/ul[@class='chosen-results']/li[text() = '{$value}']";
+    $element = $session->getPage()->find('xpath', $selector);
+
+    if (empty($element)) {
+      throw new ExpectationException(t('No such option @value in @locator ', array(
+        '@value' => $value,
+        '@locator' => $locator,
+      )), $session);
+    }
+
+    $element->click();
   }
 
   /**
