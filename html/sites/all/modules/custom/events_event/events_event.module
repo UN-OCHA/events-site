@@ -184,7 +184,7 @@ function events_event_calendar() {
     'editable' => FALSE,
     'eventLimit' => TRUE,
     'firstDay' => 1,
-    'defaultView' => 'month',
+    'defaultView' => 'upcoming',
     'weekends' => TRUE,
     'timeFormat' => 'H:mm',
     'timezone' => drupal_get_user_timezone(),
