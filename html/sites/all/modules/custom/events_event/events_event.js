@@ -170,12 +170,12 @@
           'type': 'list',
           'buttonText': 'Upcoming',
           'duration': {
-            'days': 90
+            'days': 7
           },
           'visibleRange': function(currentDate) {
             return {
               start: currentDate.clone(),
-              end: currentDate.clone().add(90, 'days')
+              end: currentDate.clone().add(7, 'days')
             };
           },
           'validRange': function(currentDate) {
