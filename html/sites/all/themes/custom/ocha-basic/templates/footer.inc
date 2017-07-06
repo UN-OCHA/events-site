@@ -7,8 +7,8 @@
 ?>
 <footer role="contentinfo" class="footer">
   <div class="container">
-  	<div class="row">
-  		<div class="col-md-8">
+    <div class="row">
+      <div class="col-md-8">
         <?php if ($secondary_menu): ?>
           <?php print theme('links__menu_footer_menu',
           array(
