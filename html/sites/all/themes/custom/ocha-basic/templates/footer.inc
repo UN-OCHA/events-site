@@ -3,6 +3,7 @@
  * @file
  * Displays the site footer.
  */
+
 ?>
 <footer role="contentinfo" class="footer">
   <div class="container">
@@ -10,7 +11,7 @@
       <div class="col-md-8">
         <?php if ($secondary_menu): ?>
           <?php print theme('links__menu_footer_menu',
-          array(
+            array(
               'links' => menu_navigation_links('menu-footer-menu'),
               'attributes' => array(
                 'id' => 'footer-menu',
