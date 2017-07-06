@@ -1,9 +1,8 @@
 <?php
 /**
-* @file
-* Displays the site footer.
-*/
-
+ * @file
+ * Displays the site footer.
+ */
 ?>
 <footer role="contentinfo" class="footer">
   <div class="container">
@@ -12,15 +11,15 @@
         <?php if ($secondary_menu): ?>
           <?php print theme('links__menu_footer_menu',
           array(
-          'links' => menu_navigation_links('menu-footer-menu'),
-          'attributes' => array(
-          'id' => 'footer-menu',
-          'class' => array('footer__nav'),
-          ),
-          )
+              'links' => menu_navigation_links('menu-footer-menu'),
+              'attributes' => array(
+                'id' => 'footer-menu',
+                'class' => array('footer__nav'),
+              ),
+            )
           ); ?>
-          <?php
-          endif; ?>
+        <?php
+endif; ?>
         </div>
       </div>
 
