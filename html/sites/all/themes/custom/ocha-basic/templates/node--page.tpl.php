@@ -86,9 +86,9 @@
 
     <div class="<?php if(!empty($content['field_sidebar'])): ?>col-md-8<?php endif; ?>">
       <?php
-        if(!empty($content['field_sidebar'])) {
+        if(!empty($content['field_sidebar'])) :
           hide($content['field_sidebar']);
-        }
+        endif;
         print render($content);
       ?>
     </div>
