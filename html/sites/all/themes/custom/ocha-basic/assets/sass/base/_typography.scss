@@ -58,6 +58,10 @@ ol {
 		color: $heading-text-color;
 	}
 
+  h2, h3 {
+    text-transform: uppercase
+  }
+
 	.submitted {
 		margin-bottom: $base-unit;
 	}
