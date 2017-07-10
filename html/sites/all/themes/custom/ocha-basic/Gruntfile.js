@@ -2,12 +2,12 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    
+
     sass_import: {
       options: {},
       dist: {
         files: {
-          'assets/css/styles.scss': ['assets/sass/variables/*.scss', 'assets/sass/mixins/*.scss', 'assets/sass/base/*.scss', 'assets/sass/components/*.scss'],
+          'assets/css/styles.scss': ['assets/sass/variables/*.scss', 'assets/sass/mixins/*.scss', 'assets/sass/base/*.scss', 'assets/sass/components/**/*.scss'],
         }
       }
     },
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     modernizr: {
       dist: {
         crawl: false,
