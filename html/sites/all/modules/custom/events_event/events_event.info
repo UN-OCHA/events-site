@@ -94,7 +94,6 @@ features[field_instance][] = taxonomy_term-ev_organization-field_external_id
 features[field_instance][] = taxonomy_term-ev_theme-field_external_id
 features[filter][] = markdown
 features[menu_custom][] = user-menu
-features[menu_links][] = user-menu_about:about
 features[menu_links][] = user-menu_add-event:node/add/ev-event
 features[menu_links][] = user-menu_log-out:user/logout
 features[menu_links][] = user-menu_login:login
