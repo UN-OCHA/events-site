@@ -1,4 +1,5 @@
 .cd-header {
+  margin-bottom: $base-unit;
 
   button {
     -webkit-appearance: none;
@@ -75,6 +76,13 @@
       background: $primary-bg-color;
       color: $light-text-color;
     }
+  }
+}
+
+@include media-query(md) {
+
+  .cd-header {
+    margin-bottom: $base-unit*3;
   }
 }
 

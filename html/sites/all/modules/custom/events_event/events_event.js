@@ -30,7 +30,9 @@
             path += f + '=' + state[f] + '&';
           }
         }
-        history.replaceState(state, '', path);
+        if (history.replaceState) {
+          history.replaceState(state, '', path);
+        }
       };
 
       var updateEventFilters = function (filters) {
@@ -220,8 +222,31 @@
         window.location = url;
       };
 
+      var updateCurrentFilters = function () {
+        var currentFilters = getPdfFilters();
+        var currentFiltersDiv = $('.calendar-filters__current');
+        if (!currentFilters) {
+          currentFiltersDiv.addClass('hidden');
+          $('.calendar-top').removeClass('calendar-top--filtered');
+          return;
+        }
+        var currentFiltersHtml = '<strong>Current filters:</strong> ' + currentFilters;
+        currentFiltersDiv.find('p').html(currentFiltersHtml)
+        currentFiltersDiv.removeClass('hidden');
+        $('.calendar-top').addClass('calendar-top--filtered');
+      }
+
+      var clearFilters = function () {
+        updateEventFilters(defaultFilters);
+        $('select.chosen-enable').find('option:first-child').prop('selected', true).end().trigger('chosen:updated');
+        updateCurrentFilters();
+        $calendar.fullCalendar('rerenderEvents');
+      }
+
       // Redirect to selected option.
       var handleSelect = function (e) {
+        updateCurrentFilters();
+
         if (e.target.value) {
           data = e.target.value;
           parts = data.split(':');
@@ -337,12 +362,14 @@
         if (!selectedFiltersLength) {
           return;
         }
+
         for (var j = 0; j < selectedFiltersLength; j++) {
           str += selectedFilters[j].value;
           if (j+1 < selectedFiltersLength) {
             str += ', ';
           }
         }
+
         return str;
       };
 
@@ -431,7 +458,7 @@
         container.className = 'calendar-export';
 
         var exportButton = document.createElement('button');
-        exportButton.className = 'btn-primary calendar-export__button';
+        exportButton.className = 'calendar-export__button calendar-actions__toggle';
         exportButton.innerHTML = Drupal.t('Export');
         exportButton.id = 'export-dropdown';
         exportButton.setAttribute('data-toggle', 'dropdown');
@@ -448,9 +475,11 @@
         var pdfButton = buildPdfButton();
 
         var exportListItem = document.createElement('li');
+        var exportListItem2 = document.createElement('li');
         exportListItem.appendChild(icalButton);
-        exportListItem.appendChild(pdfButton);
+        exportListItem2.appendChild(pdfButton);
         exportOptionsList.appendChild(exportListItem);
+        exportOptionsList.appendChild(exportListItem2);
         container.appendChild(exportOptionsList);
         return container;
       }
@@ -466,7 +495,21 @@
 
       $.getJSON($settings.base_url + facetURL, function(facets) {
         var filtersWrapper = document.createElement('div');
-        filtersWrapper.className = 'calendar-filters clearfix';
+        filtersWrapper.className = 'calendar-filters';
+
+        var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Filter events')+ '</button>';
+        $(filtersWrapper).append(filtersHeading);
+
+        var filtersWrapperInner = document.createElement('div');
+        filtersWrapperInner.className = 'calendar-filters__inner  dropdown-menu clearfix';
+        $(filtersWrapper).append(filtersWrapperInner);
+
+        var currentFiltersWrapper = document.createElement('div');
+        currentFiltersWrapper.className = 'calendar-filters__current hidden';
+        var clearBtn = '<button type="button" class="calendar-filters__clear"><i class="icon-cancel"></i>Clear filters</button>';
+        $(filtersWrapper).append(currentFiltersWrapper);
+        $(currentFiltersWrapper).append('<p />').append(clearBtn);
+        $(document).on('click', '.calendar-filters__clear', clearFilters);
 
         var filterCount = 0;
 
@@ -530,7 +573,7 @@
           filter.className += ' processed block-views';
           filter.appendChild(newLabel);
           filter.appendChild(newSelect);
-          filtersWrapper.appendChild(filter);
+          filtersWrapperInner.appendChild(filter);
 
           if (Drupal.behaviors && Drupal.behaviors.chosen) {
             Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
@@ -541,9 +584,12 @@
             });
           }
         }
-        $('.calendar-top').append(filtersWrapper);
+
         var exportDiv = buildExportOptions();
         $('.calendar-top').append(exportDiv);
+
+        $('.calendar-export, .calendar-settings').wrapAll('<div />');
+        $('.calendar-top').prepend(filtersWrapper);
         eventFilters = $.extend(eventFilters, defaultFilters);
         // Trigger rerender.
         $calendar.fullCalendar('rerenderEvents');
@@ -560,7 +606,7 @@
 
         var tzToggle = document.createElement('button');
         tzToggle.id = 'timezone-dropdown';
-        tzToggle.className += 'calendar-settings__tz-button';
+        tzToggle.className += 'calendar-settings__tz-button calendar-actions__toggle';
         tzToggle.setAttribute('type', 'button');
         tzToggle.setAttribute('data-toggle', 'dropdown');
         tzToggle.setAttribute('aria-haspopup', 'true');
@@ -569,7 +615,7 @@
         tzDiv.appendChild(tzToggle);
 
         var tzDropdown = document.createElement('div');
-        tzDropdown.className = 'dropdown-menu';
+        tzDropdown.className = 'calendar-settings__tz-dropdown dropdown-menu';
         tzDropdown.setAttribute('aria-labelledby', 'timezone-dropdown');
         tzDiv.appendChild(tzDropdown);
 
@@ -586,7 +632,6 @@
         $(document).on('click', '.calendar-settings .dropdown-menu', function (e) {
           e.stopPropagation();
         });
-
         $('.calendar-top').append(tzDiv);
 
         $.getJSON($settings.base_url + '/api/v0/timezones', function(timezones) {
@@ -622,6 +667,13 @@
         });
 
       }
+
+      // Prevent the filters etc dropdowns closing when click on their contents
+      $(document).on('click', 'body .dropdown-menu', function (e) {
+        e.stopPropagation();
+      });
     }
+
+
   }
 })(jQuery);
