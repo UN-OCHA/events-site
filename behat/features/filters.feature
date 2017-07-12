@@ -46,6 +46,7 @@ Background:
 Scenario: Check 'Themes' filter
   Given I am on the homepage
   And I wait for AJAX to finish
+  And I click the ".calendar-actions__toggle" element
   Then I should see "Themes"
   When I click the ".calendar-filters--the .chosen-container" element
   Then I should see "Health"
@@ -60,6 +61,7 @@ Scenario: Check 'Themes' filter
 Scenario: Check 'Location of Event' filter
   Given I am on the homepage
   And I wait for AJAX to finish
+  And I click the ".calendar-actions__toggle" element
   Then I should see "Location of Event"
   And I click the ".calendar-filters--loc .chosen-container" element
   Then I should see "Afghanistan > Capital > Kapisa"
@@ -69,6 +71,7 @@ Scenario: Check 'Location of Event' filter
 Scenario: Check 'Disasters' filter
   Given I am on the homepage
   And I wait for AJAX to finish
+  And I click the ".calendar-actions__toggle" element
   Then I should see "Disasters"
   And I click the ".calendar-filters--dis .chosen-container" element
   Then I should see "Earthquake Apr 2016"
@@ -78,6 +81,7 @@ Scenario: Check 'Disasters' filter
 Scenario: Check 'Organizations' filter
   Given I am on the homepage
   And I wait for AJAX to finish
+  And I click the ".calendar-actions__toggle" element
   Then I should see "Organizations"
   And I click the ".calendar-filters--org .chosen-container" element
   Then I should see "ACHIEVE"
@@ -87,6 +91,7 @@ Scenario: Check 'Organizations' filter
 Scenario: Check 'Clusters' filter
   Given I am on the homepage
   And I wait for AJAX to finish
+  And I click the ".calendar-actions__toggle" element
   Then I should see "Clusters"
   And I click the ".calendar-filters--clu .chosen-container" element
   Then I should see "Aviation"
@@ -96,6 +101,7 @@ Scenario: Check 'Clusters' filter
 Scenario: Check 'Categories' filter
   Given I am on the homepage
   And I wait for AJAX to finish
+  And I click the ".calendar-actions__toggle" element
   Then I should see "Categories"
   And I click the ".calendar-filters--cat .chosen-container" element
   Then I should see "Meeting"
