@@ -1395,9 +1395,14 @@ be a descendant of the grid when it is being dragged.
 	color: inherit;
 }
 
-.fc-list-item-title a[href]:hover {
-	/* hover effect only on titles with hrefs */
-	text-decoration: underline;
+.fc-list-item-title a[href] {
+	color: $link-text-color;
+	border-bottom: 1px solid;
+
+	&:hover, &:focus {
+		color: $active-link-text-color;
+		border-bottom: none;
+	}
 }
 
 /* message when no events */
