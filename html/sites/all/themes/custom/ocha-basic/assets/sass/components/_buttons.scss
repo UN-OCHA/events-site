@@ -1,6 +1,8 @@
 button, input[type="submit"] {
 	-webkit-appearance: none;
 	@include font-size($base-font-size);
+	color: $body-text-color;
+	background: none;
 	border: none;
 	box-shadow: none;
 }

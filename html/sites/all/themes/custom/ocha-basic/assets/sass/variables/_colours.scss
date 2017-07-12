@@ -16,6 +16,7 @@ $secondary-bg-color: $secondary-color;
 $border-color: $mid-light-grey;
 $highlight-border-color: $secondary-color;
 $error-border-color: $red;
+$light-border-color: $light-grey;
 
 // Text colours
 $body-text-color: $mid-grey;
@@ -26,3 +27,7 @@ $light-text-color: white;
 $link-text-color: $secondary-color;
 $active-link-text-color: $primary-color;
 $error-text-color: $red;
+
+// Header
+$cd-highlight-color: lighten($primary-bg-color,15%) !default;
+$cd-nav-focus-bg: #F6F6F6 !default;
