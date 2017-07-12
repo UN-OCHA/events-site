@@ -55,10 +55,10 @@ else: ?>
 endif;
       ?>
 
-      <div class="cd-site-header__search">
+      <!-- <div class="cd-site-header__search">
         <form role="search" class="cd-header-search">
-          <label for="cd-search" class="sr-only">Search for things</label>
-          <input type="search" placeholder="Search for things" name="cd-search" id="cd-search" class="cd-header-search__input">
+          <label for="cd-search" class="sr-only">Search for Events</label>
+          <input type="search" placeholder="Search for Events" name="cd-search" id="cd-search" class="cd-header-search__input">
           <button type="submit" class="cd-header-search__button">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M6.344 9.344q1.25 0 2.125-0.875t0.875-2.125-0.875-2.125-2.125-0.875-2.125 0.875-0.875 2.125 0.875 2.125 2.125 0.875zM10.344 9.344l3.313 3.313-1 1-3.313-3.313v-0.531l-0.188-0.188q-1.188 1.031-2.813 1.031-1.813 0-3.078-1.25t-1.266-3.063 1.266-3.078 3.078-1.266 3.063 1.266 1.25 3.078q0 1.625-1.031 2.813l0.188 0.188h0.531z"></path>
@@ -67,7 +67,7 @@ endif;
           </button>
           <span class="cd-header-search__active"></span>
         </form>
-      </div>
+      </div> -->
 
     </div>
   </div>
