@@ -206,19 +206,18 @@ NOTE: use percentage font sizes or else old IE chokes
   	border: none;
   	background: transparent;
   	text-transform: uppercase;
-  	color: $link-text-color;
+  	color: $heading-text-color;
   	font-weight: bold;
 
   	&:hover, &:focus {
-  		background: $secondary-bg-color;
-  		color: $light-text-color;
+  		background: none;
+  		color: $active-link-text-color;
   	}
   }
 
   .fc-state-active,
   .fc-state-disabled {
   	color: #333333;
-  	background-color: #e6e6e6;
   }
   .fc-state-down,
   .fc-state-active {
@@ -233,13 +232,39 @@ NOTE: use percentage font sizes or else old IE chokes
   	box-shadow: none;
   }
 
+button.fc-prev-button, button.fc-next-button {
+	background: none;
+	padding: 0;
+	width: $base-unit*4;
+
+	i {
+		@include font-size(24);
+		background: transparent;
+		transition: background 0.3s ease;
+		height: 100%;
+    display: inline-block;
+    line-height: $base-unit*4;
+	}
+
+	&:hover, &:focus {
+		outline: none;
+		color: $link-text-color;
+
+		i {
+			background: lighten($light-bg-color, 4%);
+		}
+	}
+}
+
+button.fc-next-button {
+	margin-left: $base-unit/2!important;
+}
 
 /* Buttons Groups
 --------------------------------------------------------------------------------------------------*/
 
 .fc-button-group {
 	display: inline-block;
-	background: $light-bg-color;
 }
 
 /*
@@ -487,6 +512,11 @@ temporary rendered events).
 
 .fc-scroller {
 	-webkit-overflow-scrolling: touch;
+	min-height: 200px;
+
+	@media (max-width:767px) {
+		height: auto!important;
+	}
 }
 
 /* TODO: move to agenda/basic */
@@ -810,19 +840,14 @@ display: none;
 --------------------------------------------------------------------------------------------------*/
 
 .fc-toolbar {
-	text-align: center;
+	margin-top: $base-unit*4;
 }
 
 .fc-toolbar.fc-header-toolbar {
-	margin-bottom: $base-unit*2;
 	font-family: $heading-font;
 
 	button {
 		font-family: $heading-font;
-	}
-
-	h2 {
-		color: $heading-text-color;
 	}
 }
 
@@ -831,20 +856,33 @@ display: none;
 }
 
 .fc-toolbar .fc-left {
-	margin-bottom: $base-unit;
-	overflow: auto;
+	margin-bottom: $base-unit/2;
+	@include clearfix;
 
 	.fc-button-group {
 		float: left;
+		margin-left: -$base-unit*1.25!important;
 	}
 
 	.fc-today-button {
-		float: right;
+		float: left;
+		margin: 0 0 0 $base-unit;
+    padding: $base-unit*1.25 0 0 0;
+    height: auto;
+    text-transform: none;
+    color: $heading-text-color;
+    font-weight: normal;
+    @include font-size($small-font-size);
+
+    &:hover, &:focus {
+    	background: lighten($light-bg-color, 4%);
+    	color: $link-text-color;
+    }
 	}
 }
 
 .fc-toolbar .fc-right {
-	margin-bottom: $base-unit;
+	display: none;
 
 	.fc-button-group {
 		width: 100%;
@@ -852,15 +890,14 @@ display: none;
 }
 
 .fc-toolbar .fc-center {
-	height: $base-unit*4;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	position: absolute;
+	top: $base-unit/2;
+	left: 0;
+
 }
 
 /* the things within each left/right/center section */
 .fc .fc-toolbar > * > * { /* extra precedence to override button border margins */
-	// float: left;
 	margin-left: .75em;
 }
 
@@ -1459,6 +1496,17 @@ be a descendant of the grid when it is being dragged.
   margin-top: $base-unit*3;
 }
 
+.fc-right {
+
+	.fc-button-group {
+
+	}
+
+	.fc-button {
+		width: 100%;
+	}
+}
+
 
 @include media-query(sm) {
 
@@ -1468,15 +1516,53 @@ be a descendant of the grid when it is being dragged.
 
 }
 
-@include media-query(lg) {
+@include media-query(md) {
 
-	.fc-toolbar.fc-header-toolbar {
-		border-bottom: 1px solid $highlight-border-color;
+	.fc-toolbar {
+		position: relative;
+		margin-top: $base-unit*3;
+
+		.fc-center {
+			top: auto;
+			left: auto;
+			bottom: $base-unit/2;
+			width: 100%;
+			text-align: center;
+			padding: $base-unit*1.5 0;
+		}
+
+		.fc-left {
+			float: left;
+			position: relative;
+			z-index: 1;
+			display: flex;
+			align-items: center;
+
+			.fc-button-group {
+				margin-left: -4px!important;
+			}
+
+			.fc-today-button {
+			 	@include font-size($medium-font-size);
+			 	padding: $base-unit*1.5;
+			 	line-height: 1.2;
+			 	border-bottom: 2px solid transparent;
+			 	transition: all 0.3s ease;
+			 	margin-bottom: -2px;
+
+			 	&:hover, &:focus {
+			 		border-color: $highlight-border-color;
+			 	}
+			 }
+		}
 	}
+
+}
+
+@include media-query(lg) {
 
 	.fc-toolbar .fc-left {
 		float: left;
-		margin-bottom: 0;
 	}
 
 	.fc-toolbar .fc-right {

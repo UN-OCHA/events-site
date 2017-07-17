@@ -28,3 +28,19 @@ button, input[type="submit"] {
 		margin-left: $base-unit;
 	}
 }
+
+
+.btn-icon {
+	padding: 0;
+	@include font-size($small-font-size);
+	text-transform: uppercase;
+	color: $heading-text-color;
+	display: flex;
+	align-items: center;
+	line-height: 22px;
+
+	i {
+		@include font-size(20);
+		margin-right: 2px;
+	}
+}
