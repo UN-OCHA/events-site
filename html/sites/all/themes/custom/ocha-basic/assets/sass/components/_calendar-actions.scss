@@ -14,55 +14,72 @@
 	}
 }
 
-.calendar-filters__current {
-	padding: $base-unit 0;
-	border-bottom: 1px solid $light-border-color;
-
-	.open & {
-		display: none;
-	}
+.calendar-sidebar-btn {
+	position: absolute;
+	right: 0;
+	top: $base-unit*5;
 }
 
-.calendar-filters__clear {
-	color: $heading-text-color;
-	font-weight: 600;
-	font-family: $heading-font;
-	padding: 0;
+.sidebar-underlay {
+	position: fixed;
+  background: rgba(255,255,255,0.8);
+  top: 0;
+  width: 100%;
+  bottom: 0;
+  z-index: 99;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 
-	.icon-cancel {
-		@include font-size(18);
-		vertical-align: sub;
-		color: $body-text-color;
-	}
+  &.hidden {
+  	opacity: 0;
+  	visibility: hidden;
+  	z-index: -1;
+  	display: block;
+  }
 }
 
-.calendar-top {
+.calendar-actions {
+	width: $mobile-sidebar-width;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	background: white;
+	z-index: 100;
+	overflow: scroll;
+	padding: $base-unit*4 $base-unit*2 $base-unit*2 $base-unit*2;
+	transition: transform 0.3s ease, visibility 0.3s ease;
+	transform: translateX(-$mobile-sidebar-width - 10);
+	box-shadow: 4px 0 3px -3px rgba(0,0,0,0.2);
+	visibility: hidden;
+
+	&.active {
+		transform: translateX(0);
+		visibility: visible;
+	}
+
+
 	@include clearfix;
-	margin-bottom: $base-unit*2;
 	font-family: $heading-font;
 
 	.open {
 		.dropdown-menu {
-			max-height: 500px;
 			overflow: visible;
 			border-bottom: 1px solid $light-border-color;
-			z-index: 99;
 		}
 	}
-
 
 	.dropdown-menu {
 		border-radius: 0;
 		border: none;
 		box-shadow: none;
-		display: block;
 		position: static;
-		max-height: 0;
 		overflow: hidden;
 		margin: 0;
 		list-style: none;
 		background: white;
-		transition: max-height 0.3s ease;
+		z-index: 99;
 
 		li {
 			margin: $base-unit 0;
@@ -70,6 +87,19 @@
 
 			button {
 				text-align: left;
+			}
+		}
+
+		.fc-button {
+			text-align: left;
+			text-transform: uppercase;
+
+			&.fc-state-active {
+				color: $heading-text-color;
+
+				&:hover, &:focus {
+					color: $light-text-color;
+				}
 			}
 		}
 
@@ -93,8 +123,14 @@
 
 }
 
-.calendar-export {
-	margin-bottom: $base-unit;
+.calendar-actions__close {
+	position: absolute;
+	right: $base-unit*2;
+	top: $base-unit;
+
+	i {
+		font-weight: bold;
+	}
 }
 
 .calendar-actions__toggle {
@@ -104,24 +140,28 @@
 	border-bottom: 1px solid $light-border-color;
 	position: relative;
 	color: $heading-text-color;
-	font-weight: 600;
 	@include font-size($medium-font-size);
 	font-family: $heading-font;
 	@extend .icon-arrow-down;
+	background: transparent;
+	transition: all 0.3s ease;
 
 	&:before {
 		font-family: 'unocha-icons';
 		font-weight: normal;
 		position: absolute;
 		right: $base-unit/2;
-		top: $base-unit*1.75;
+		top: $base-unit*2;
 		height: $base-unit*2;
 		line-height: $base-unit*2;
 	}
 
-	&:focus {
+	&:hover, &:focus, .open & {
+		color: $link-text-color;
+		background: lighten($light-bg-color, 4%);
+		border-color: $highlight-border-color;
+		padding-left: $base-unit/2;
 		outline: none;
-		color: $active-link-text-color;
 	}
 
 	&[aria-expanded="true"] {
@@ -132,6 +172,8 @@
 }
 
 .calendar-filters__current {
+	padding: $base-unit 0;
+	border-bottom: 1px solid $light-border-color;
 	font-style: italic;
 
 	strong {
@@ -155,14 +197,62 @@
 
 @include media-query(md) {
 
-	.calendar-top {
+	.calendar-actions {
+		position: relative;
+		width: 100%;
+		top: auto;
+		bottom: auto;
+		left: auto;
+		transform: none;
+		box-shadow: none;
+		padding: 0;
+		overflow: visible;
 		border-bottom: 2px solid $light-border-color;
+		visibility: visible;
+
+		display: flex;
+		justify-content: space-between;
+
+		.dropdown-menu {
+			z-index: 110;
+			margin-top: 2px;
+		}
+
+
+		.flexbox & {
+			&:after {
+				content: none;
+			}
+		}
+
+		.no-flexbox & {
+			display: block;
+		}
 	}
 
-	.calendar-settings {
-		width: auto;
-		max-width: 600px;
-		float: left;
+	.calendar-actions--filtered {
+		margin-bottom: $base-unit*6;
+
+		.calendar-view-selector {
+	 		bottom: -93px;
+		}
+	}
+
+	.calendar-actions__close, .calendar-sidebar-btn, .sidebar-underlay {
+		display: none;
+	}
+
+	.calendar-actions__toggle {
+		border-bottom: 2px solid transparent;
+		margin-bottom: -2px;
+		padding: $base-unit $base-unit*3 $base-unit $base-unit/2;
+		z-index: 100;
+
+		&:before {
+			top: 13px;
+			right: $base-unit/2;
+		}
+
 	}
 
 	.calendar-export {
@@ -175,13 +265,21 @@
 
 			li {
 				margin: 0;
-				padding: $base-unit;
 				border-bottom: 1px solid $light-border-color;
+			}
+
+			button {
+				padding: $base-unit*1.5 $base-unit;
 			}
 		}
 	}
 
 	.calendar-settings {
+		width: auto;
+		max-width: 420px;
+		float: left;
+		margin-right: $base-unit*2;
+
 		.dropdown-menu {
 			padding: 0 $base-unit;
 
@@ -203,119 +301,66 @@
 	.calendar-settings, .calendar-export {
 		position: relative;
 
-		.calendar-actions__toggle {
-			border-bottom: 2px solid transparent;
-			padding: $base-unit $base-unit*2.5 $base-unit 0;
-			margin-bottom: -2px;
-			transition: border 0.3s ease;
-			z-index: 100;
-
-			&:before {
-				top: 13px;
-				right: 0;
-			}
-		}
-
 		.dropdown-menu {
+			position: absolute;
 			box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
 		}
 
 		&.open {
 			.calendar-actions__toggle {
-				border-color: $primary-color;
+				border-color: $highlight-border-color;
 			}
 
 			.dropdown-menu {
 				position: absolute;
 				width: 100%;
-				max-height: none;
 				border: none;
 			}
 		}
 	}
 
-	.calendar-filters {
-		margin-bottom: $base-unit;
-		border-bottom: 2px solid $light-border-color;
+	.calendar-view-selector {
+		width: 124px;
+    position: absolute;
+    right: 0;
+    bottom: -69px;
 
-		.calendar-actions__toggle {
-			border: none;
-		}
+    &.open {
+    	position: absolute;
+    }
 
-		&.open {
-			.dropdown-menu {
-				border: none;
+    .calendar-actions__toggle {
+    	font-weight: normal;
+    	padding-top: $base-unit*1.5;
+    	padding-bottom: $base-unit*1.5;
+    	line-height: 1.2;
+    }
+
+		.dropdown-menu {
+			position: absolute;
+			box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+
+			button {
+				padding: $base-unit*1.5 $base-unit;
+				border-bottom: 1px solid $light-border-color;
+
+				&:last-of-type {
+					border-bottom: none;
+				}
 			}
 		}
 	}
 
-	.calendar-filters__current {
-		position: relative;
-		padding-right: $base-unit*12;
-		border-bottom: none;
-
-		p {
-			margin: 0;
-		}
-	}
-
-	.calendar-filters__clear {
-		position: absolute;
-		top: $base-unit;
-		right: 0;
-	}
-}
-
-@include media-query(lg) {
-
-	.block-views {
-		margin: $base-unit 0 $base-unit*2 0;
-	}
-
-	.calendar-top {
-		display: flex;
-		justify-content: space-between;
-		position: relative;
-		margin-bottom: $base-unit*5;
-
-		.flexbox & {
-			&:after {
-				content: none;
-			}
-		}
-
-		.no-flexbox & {
-			display: block;
-		}
-	}
-
-	.calendar-top--filtered {
-		margin-bottom: $base-unit*8;
-	}
-
 	.calendar-filters {
-		width: 116px;
-		margin: 0;
-		border-bottom: none;
+		width: 120px;
 
 		.no-flexbox & {
 			float: left;
 		}
 
-		.calendar-actions__toggle {
-			border-bottom: 2px solid transparent;
-			padding: $base-unit $base-unit*2.5 $base-unit 0;
-			margin-bottom: -2px;
-			transition: border 0.3s ease;
-
-			&:before {
-				right: 0;
-				top: 13px;
-			}
-		}
-
 		.dropdown-menu {
-			width: 993px;
+			width: 736px;
+			margin-top: 0;
 		}
 
 		&.open {
@@ -326,18 +371,12 @@
 				border-bottom: none;
 			}
 
-			.calendar-actions__toggle {
-				border-color: $primary-color;
-			}
-
-			.calendar-filters__current {
-				display: block;
-			}
 		}
 	}
 
 	.calendar-filters__current {
-		width: 993px;
+		border-bottom: none;
+		width: 736px;
 		position: absolute;
 		padding: $base-unit*1.5 0;
 
@@ -346,21 +385,20 @@
 	    overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
+			margin: 0;
 		}
 	}
 
 	.calendar-filters__clear {
+		position: absolute;
+		right: 0;
 		top: $base-unit*1.5;
-
-		.open & {
-			display: none;
-		}
 	}
 
-	.calendar-top--filtered {
+	.calendar-actions--filtered {
 		.open {
 			.calendar-filters__clear {
-				display: block;
+				display: flex;
 			}
 		}
 	}
@@ -370,10 +408,26 @@
 			float: right;
 		}
 	}
+}
 
+@include media-query(lg) {
+
+	.block-views {
+		margin: $base-unit/2 0 $base-unit 0;
+	}
 
 	.calendar-settings {
-		margin-right: $base-unit*2;
+		max-width: 600px;
+	}
+
+	.calendar-filters {
+		.dropdown-menu {
+			width: 993px;
+		}
+	}
+
+	.calendar-filters__current {
+		width: 993px;
 	}
 
 }
