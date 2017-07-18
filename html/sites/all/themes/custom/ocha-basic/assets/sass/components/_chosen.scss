@@ -30,6 +30,12 @@
 
 }
 
+.chosen-container-single .chosen-search input[type="text"] {
+	@include font-size($medium-font-size);
+	font-weight: 300;
+	color: $body-text-color;
+}
+
 .chosen-container-active.chosen-with-drop {
 	border-color: #ddd;
 

@@ -83,6 +83,10 @@
     outline: none;
     background: darken($primary-bg-color, 10%);
   }
+
+  &.active {
+    color: $light-text-color;
+  }
 }
 
 .cd-nav--secondary {
