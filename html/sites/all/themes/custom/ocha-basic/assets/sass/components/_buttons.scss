@@ -20,7 +20,6 @@ button, input[type="submit"] {
 	}
 }
 
-
 .form-submit {
 	@extend .btn-primary;
 
@@ -28,7 +27,6 @@ button, input[type="submit"] {
 		margin-left: $base-unit;
 	}
 }
-
 
 .btn-icon {
 	padding: 0;
@@ -38,6 +36,7 @@ button, input[type="submit"] {
 	display: flex;
 	align-items: center;
 	line-height: 22px;
+	cursor: pointer;
 
 	i {
 		@include font-size(20);
