@@ -119,7 +119,7 @@ var evExports = function ($) {
     var titleSelector = eventsType === 'list' ? '.fc-list-item-title a' : '.fc-title';
 
     for (var i=0; i < eventsLength; i++) {
-      event = events[i];
+      var event = events[i];
       var start = moment($(event).data('start'));
       var startDate = start.format('DD MMMM YYYY');
       var locationString = '';
@@ -229,7 +229,7 @@ var evFilters = function ($) {
 
       var filter = $('<div class="calendar-filters--' + f + ' processed block-views"></div>');
       var newLabel = $('<label for="filter-' + filterCount + '">' + facet.label + '</label>');
-      var newSelect = $('<select class="chosen-enable" id="filter-' + filterCount + '"></select>');
+      var newSelect = $('<select class="chosen-enable" data-type="' + f + '" id="filter-' + filterCount + '"></select>');
       var emptyOption = $('<option value="' + f + '">' + Drupal.t('- Any -') + '</option>');
       newSelect.append(emptyOption);
 
@@ -285,14 +285,18 @@ var evFilters = function ($) {
         settings.eventFilters[parts[0]] = '';
       }
 
-      evCalendar.updateState();
+      evCalendar.updateState(true);
       evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
     }
   }
 
   function _clearFilters () {
+    for (var f in settings.defaultFilters) {
+      settings.defaultFilters[f] = '';
+    }
     $('select.chosen-enable').find('option:first-child').prop('selected', true).end().trigger('chosen:updated');
     _update(settings.defaultFilters);
+    evCalendar.updateState(true);
     _updateCurrentFilters();
     evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
   }
@@ -359,6 +363,7 @@ var evFilters = function ($) {
     $.getJSON(baseUrl + _getFacetsUrl(), function(facets) {
       _buildAllFilters(facets);
       _update($.extend(settings.eventFilters, settings.defaultFilters));
+      _updateFilterSelects();
       evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
     });
 
@@ -396,11 +401,21 @@ var evFilters = function ($) {
     $('.calendar-actions').addClass('calendar-actions--filtered');
   }
 
+  function _updateFilterSelects () {
+    for (var f in settings.eventFilters) {
+      if (settings.eventFilters[f]) {
+        $('[data-type="' + f + '"]').val(f + ':' + settings.eventFilters[f]).trigger('chosen:updated');
+      }
+    }
+    _updateCurrentFilters();
+  }
+
   return {
     getCurrentFilters: _getCurrentFilters,
     settings: settings,
     init: _init,
     update: _update,
+    updateFilterSelects: _updateFilterSelects
   };
 
 }(jQuery);
@@ -413,7 +428,7 @@ var evCalendar = function ($) {
 
   var settings = {};
 
-  function _addEventDetails (view) {
+  function _addEventDetails (event, element, view) {
     // Add location.
     if (event.location) {
       if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
@@ -540,7 +555,7 @@ var evCalendar = function ($) {
             return false;
           }
         }
-        _addEventDetails(view);
+        _addEventDetails(event, element, view);
         return true;
       },
       height: 'auto',
@@ -613,14 +628,35 @@ var evCalendar = function ($) {
     _buildHTML();
   }
 
+  function _parseQuery(qstr) {
+    var query = {};
+    var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
+    for (var i = 0; i < a.length; i++) {
+        var b = a[i].split('=');
+        query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+    }
+    return query;
+  }
+
   function _updateViewSettings (viewName) {
     $('.calendar-view-selector .fc-button').removeClass('fc-state-active');
     $('.calendar-view-selector .fc-' + viewName + '-button').addClass('fc-state-active');
     $('.fc-toolbar .fc-center h2').html('<span>Showing: </span>' + $('.fc-center').text());
   }
 
-  function _updateState () {
-    $.extend(settings.state, evFilters.settings.eventFilters);
+  function _updateState (isFiltering) {
+    var currentFilters = evFilters.settings.eventFilters ? evFilters.settings.eventFilters : {};
+
+    if (!isFiltering) {
+      var qsObj = _parseQuery(window.location.search);
+      for (var p in Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters) {
+        if (qsObj.hasOwnProperty(p)) {
+          currentFilters[p] = qsObj[p];
+        }
+      }
+      evFilters.update(currentFilters);
+    }
+    $.extend(settings.state, currentFilters);
     var path = '?';
     for (var f in settings.state) {
       if (settings.state.hasOwnProperty(f) && typeof settings.state[f] !== 'undefined' && settings.state[f] !== '') {
@@ -657,7 +693,6 @@ var evTimeZone = function ($) {
   var settings = {};
 
   function _buildHTML () {
-    var container = $('<div class="calendar-settings"></div>');
     var toggle = $('<button type="button id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone: ') +'</button>');
     var dropdown = $('<div class="calendar-settings__tz-dropdown dropdown-menu" aria-labelledby="timezone-dropdown"></div>');
     var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone') + '</label>');
@@ -665,10 +700,7 @@ var evTimeZone = function ($) {
     toggle.attr('data-toggle', 'dropdown');
     toggle.attr('aria-haspopup', 'true');
     toggle.attr('aria-expanded', 'false');
-
-    // settings.container = container;
     settings.toggle = toggle;
-
     evCalendar.settings.timeZoneContainer.append(toggle).append(dropdown);
     dropdown.append(label).append(select);
   }
