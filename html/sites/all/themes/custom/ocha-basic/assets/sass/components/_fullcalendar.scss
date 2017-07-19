@@ -1502,6 +1502,10 @@ be a descendant of the grid when it is being dragged.
 	}
 }
 
+.ev-files a {
+	word-break: break-word;
+}
+
 // mobile overrides
 .fc-list-table td {
 	display: block;
