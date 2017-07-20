@@ -559,6 +559,13 @@ var evCalendar = function ($) {
         return true;
       },
       height: 'auto',
+      titleFormat: 'DD MMM YYYY',
+      listDayFormat: 'DD MMMM YYYY',
+      views: {
+        week: {
+          columnFormat: 'ddd DD/MM'
+        }
+      },
       viewRender: function(view) {
         // Store view.name, view.start and view.end
         settings.state.view = view.name;
