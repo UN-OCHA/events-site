@@ -460,6 +460,25 @@ var evCalendar = function ($) {
     }
   }
 
+  function _formatControls () {
+    settings.calendarControls = $('.fc-toolbar .fc-left .fc-button-group');
+    settings.calendarControls.addClass('fc-toolbar-controls');
+    settings.calendarControls.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
+      .addClass('sr-only')
+      .text('Previous')
+      .after('<i class="icon-arrow-left"></i>');
+    settings.calendarControls.find('.fc-next-button span').removeClass('fc-icon fc-icon-right-single-arrow')
+      .addClass('sr-only')
+      .text('Next')
+      .after('<i class="icon-arrow-right"></i>');
+
+    $('.fc-center').prepend(settings.calendarControls);
+
+    $('.fc-toolbar .fc-today-button').html('<span>Go to </span>' + $('.fc-today-button').text());
+    _formatViewSettings();
+
+  }
+
   function _buildHTML () {
     settings.actionsContainer = $('<div class="calendar-actions"></div>');
     settings.filtersContainer = $('<div class="calendar-filters"></div>');
@@ -469,41 +488,26 @@ var evCalendar = function ($) {
     $('#block-system-main').prepend(settings.actionsContainer);
     $('.calendar-export, .calendar-settings').wrapAll('<div />');
 
-    _cloneViewSettings();
-
     var sidebarBtn = '<button type="button" class="calendar-sidebar-btn btn-icon "><i class="icon-settings"></i><span>' + Drupal.t('Options') + '</span></button>';
     var closeBtn = '<button type="button" class="calendar-actions__close btn-icon "><i class="icon-cancel"></i><span>' + Drupal.t('Close') + '</span></button>';
     $('.calendar-actions').append(closeBtn).before(sidebarBtn);
     $('body').append('<div class="sidebar-underlay hidden"></div>');
     $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);
-    $('.sidebar-underlay').on('click', _toggleSidebar); // seperate click event for underlay to make it work in mobile safari.
+    $('.sidebar-underlay').on('click', _toggleSidebar); // separate click event for underlay to make it work in mobile safari.
 
-    $('.fc-toolbar .fc-today-button').html('<span>Go to </span>' + $('.fc-today-button').text());
-
-    $('.fc-toolbar .fc-left .fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
-      .addClass('sr-only')
-      .text('Previous')
-      .after('<i class="icon-arrow-left"></i>');
-
-    $('.fc-toolbar .fc-left .fc-next-button span').removeClass('fc-icon fc-icon-right-single-arrow')
-      .addClass('sr-only')
-      .text('Next')
-      .after('<i class="icon-arrow-right"></i>');
+    settings.viewToggleContainer = $('<div class="calendar-view-selector"></div>');
+    settings.viewToggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown"/>');
+    settings.viewToggle.html(Drupal.t('Showing: ') + '<span></span>');
+    settings.viewToggle.attr('aria-haspopup', 'true');
+    settings.viewToggle.attr('aria-expanded', 'false');
   }
 
-  function _cloneViewSettings () {
-    var container = $('<div class="calendar-view-selector"></div>');
-    var toggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown">' + Drupal.t('Change view') + '</button>');
-    var content = $('.fc-toolbar .fc-right .fc-button-group').clone(true);
+  function _formatViewSettings () {
+    var content = $('.fc-toolbar .fc-right .fc-button-group');
     content.removeClass('fc-button-group').addClass('dropdown-menu').attr('aria-labelledby', 'viewSelector');
     content.find('button').removeClass('fc-state-default');
-
-    toggle.attr('aria-haspopup', 'true');
-    toggle.attr('aria-expanded', 'false');
-
-    container.append(toggle).append(content);
-
-    settings.actionsContainer.append(container);
+    settings.viewToggleContainer.append(settings.viewToggle).append(content);
+    settings.actionsContainer.append(settings.viewToggleContainer);
   }
 
   function _init () {
@@ -519,6 +523,8 @@ var evCalendar = function ($) {
     };
 
     settings.$settings = Drupal.settings.fullcalendar_api.calendarSettings;
+
+    _buildHTML();
 
     // Needed to fix navigation problem on past events.
     var alreadyTrigger = false;
@@ -572,7 +578,7 @@ var evCalendar = function ($) {
         settings.state.view = view.name;
         settings.state.date = settings.$calendar.fullCalendar('getDate').toISOString();
         _updateState();
-        _updateViewSettings(view.name);
+        _updateViewSettings();
 
         if (view.name === 'upcoming') {
           if (settings.$calendar.fullCalendar('getDate').unix() < moment().add(-1, 'days').unix()) {
@@ -633,7 +639,8 @@ var evCalendar = function ($) {
 
     settings.$calendar.fullCalendar(settings.$settings);
 
-    _buildHTML();
+    _formatControls();
+    _updateViewSettings();
   }
 
   function _parseQuery(qstr) {
@@ -647,18 +654,11 @@ var evCalendar = function ($) {
   }
 
   function _toggleSidebar () {
-    console.log('_toggleSidebar')
     if (!settings.actionsContainer.hasClass('active')) {
       settings.actionsContainer.find('button').first().focus();
     }
     settings.actionsContainer.toggleClass('active');
     $('.sidebar-underlay').toggleClass('hidden');
-  }
-
-  function _updateViewSettings (viewName) {
-    $('.calendar-view-selector .fc-button').removeClass('fc-state-active');
-    $('.calendar-view-selector .fc-' + viewName + '-button').addClass('fc-state-active');
-    $('.fc-toolbar .fc-center h2').html('<span>Showing: </span>' + $('.fc-center').text());
   }
 
   function _updateState (isFiltering) {
@@ -683,6 +683,14 @@ var evCalendar = function ($) {
     if (history.replaceState) {
       history.replaceState(settings.state, '', path);
     }
+  }
+
+  function _updateViewSettings () {
+    $('.calendar-view-selector .fc-button').removeClass('fc-state-active');
+    var selected = $('.calendar-view-selector .fc-' + settings.state.view + '-button');
+    selected.addClass('fc-state-active');
+    var label = selected.text() ? selected.text() : settings.state.view;
+    settings.viewToggle.find('span').text(label);
   }
 
   return {
