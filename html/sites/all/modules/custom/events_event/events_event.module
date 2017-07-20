@@ -926,7 +926,7 @@ function events_event_system_time_zones() {
     if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
       $timezones[$zone] = t('@zone: @date', array(
         '@zone' => t(str_replace(array('_', '/'), array(' ', ' - '), $zone)),
-        '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone),
+        '@date' => format_date(REQUEST_TIME, 'custom', 'l d F Y - H:i' . ' O', $zone),
       ));
     }
   }
