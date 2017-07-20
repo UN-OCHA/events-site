@@ -494,7 +494,7 @@ var evCalendar = function ($) {
     $('body').append('<div class="sidebar-underlay hidden"></div>');
     $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);
     $('.sidebar-underlay').on('click', _toggleSidebar); // separate click event for underlay to make it work in mobile safari.
-
+    settings.sidebarOpen = false;
     settings.viewToggleContainer = $('<div class="calendar-view-selector"></div>');
     settings.viewToggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown"/>');
     settings.viewToggle.html(Drupal.t('Showing: ') + '<span></span>');
@@ -641,6 +641,7 @@ var evCalendar = function ($) {
 
     _formatControls();
     _updateViewSettings();
+    _sidebarSwipe();
   }
 
   function _parseQuery(qstr) {
@@ -653,12 +654,28 @@ var evCalendar = function ($) {
     return query;
   }
 
+  function _sidebarSwipe () {
+    var startX = 0;
+    var endX = 0;
+    document.querySelector('body').addEventListener("touchstart", function (e) {
+      startX = e.targetTouches[0].pageX;
+    }, false);
+    document.querySelector('body').addEventListener("touchend", function (e) {
+      endX = e.changedTouches[0].pageX;
+      if (settings.sidebarOpen && endX < startX) {
+        _toggleSidebar();
+      }
+    }, false);
+  }
+
   function _toggleSidebar () {
     if (!settings.actionsContainer.hasClass('active')) {
       settings.actionsContainer.find('button').first().focus();
     }
     settings.actionsContainer.toggleClass('active');
     $('.sidebar-underlay').toggleClass('hidden');
+    $('body').toggleClass('no-scroll');
+    settings.sidebarOpen = !settings.sidebarOpen;
   }
 
   function _updateState (isFiltering) {
