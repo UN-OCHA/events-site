@@ -868,8 +868,8 @@ display: none;
 
 	.fc-today-button {
 		margin: 0 0 0 $base-unit*8 !important;
-    padding: $base-unit*1.25 0 0 0;
-    height: auto;
+    padding: 0 $base-unit/2;
+    height: $base-unit*4;
     text-transform: none;
     color: $heading-text-color;
     font-weight: normal;
