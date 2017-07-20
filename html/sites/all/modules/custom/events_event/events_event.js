@@ -662,7 +662,7 @@ var evCalendar = function ($) {
     }, false);
     document.querySelector('body').addEventListener("touchend", function (e) {
       endX = e.changedTouches[0].pageX;
-      if (settings.sidebarOpen && endX < startX) {
+      if (settings.sidebarOpen && endX < startX - 120) { // arbitrary distance to swipe to trigger close
         _toggleSidebar();
       }
     }, false);
