@@ -17,12 +17,13 @@
 .calendar-sidebar-btn {
 	position: absolute;
 	right: 0;
-	top: $base-unit*5;
+	top: $base-unit*4.25;
+	height: $base-unit*4;
 }
 
 .sidebar-underlay {
 	position: fixed;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.5);
   top: 0;
   width: 100%;
   bottom: 0;
@@ -38,7 +39,8 @@
 }
 
 .calendar-actions {
-	width: $mobile-sidebar-width;
+	width: 90%;
+	max-width: $mobile-sidebar-width;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -46,7 +48,7 @@
 	background: white;
 	z-index: 100;
 	overflow: scroll;
-	padding: $base-unit*4 $base-unit*2 $base-unit*2 $base-unit*2;
+	padding: $base-unit*4 $base-unit*2.5 $base-unit*2 $base-unit*2.5;
 	transition: transform 0.3s ease, visibility 0.3s ease;
 	transform: translateX(-$mobile-sidebar-width - 10);
 	box-shadow: 4px 0 3px -3px rgba(0,0,0,0.2);
@@ -198,6 +200,7 @@
 
 	.calendar-actions {
 		position: relative;
+		max-width: none;
 		width: 100%;
 		top: auto;
 		bottom: auto;

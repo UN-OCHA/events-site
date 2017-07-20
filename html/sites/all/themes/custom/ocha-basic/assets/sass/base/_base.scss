@@ -25,6 +25,10 @@ body {
   color: $body-text-color;
   line-height: 1.5;
   background: white;
+
+  &.no-scroll {
+    overflow: hidden;
+  }
 }
 
 strong {
