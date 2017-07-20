@@ -168,6 +168,10 @@
 			transform: rotate(180deg);
 		}
 	}
+
+	span {
+		text-transform: capitalize;
+	}
 }
 
 .calendar-filters__current {
@@ -323,7 +327,6 @@
 	}
 
 	.calendar-view-selector {
-		width: 124px;
     position: absolute;
     right: 0;
     bottom: -69px;
