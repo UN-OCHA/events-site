@@ -730,6 +730,7 @@ var evTimeZone = function ($) {
       evFilters.update(filters);
       settings.toggle.text('Time zone: ' + $(e.target).find('option:selected').text());
       evCalendar.settings.$calendar.fullCalendar('option', 'timezone', data);
+      $('.calendar-settings__tz-button').click();
     }
   }
 
@@ -794,7 +795,7 @@ var evTimeZone = function ($) {
       evExports.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', 'body .dropdown-menu', function (e) {
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu', function (e) {
         e.stopPropagation();
       });
     }
