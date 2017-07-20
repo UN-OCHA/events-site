@@ -27,8 +27,6 @@
   width: 100%;
   bottom: 0;
   z-index: 99;
-  opacity: 1;
-  visibility: visible;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 
   &.hidden {

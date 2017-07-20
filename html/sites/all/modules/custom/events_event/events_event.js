@@ -475,7 +475,8 @@ var evCalendar = function ($) {
     var closeBtn = '<button type="button" class="calendar-actions__close btn-icon "><i class="icon-cancel"></i><span>' + Drupal.t('Close') + '</span></button>';
     $('.calendar-actions').append(closeBtn).before(sidebarBtn);
     $('body').append('<div class="sidebar-underlay hidden"></div>');
-    $(document).on('click', '.calendar-sidebar-btn, .sidebar-underlay, .calendar-actions__close', _toggleSidebar);
+    $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);
+    $('.sidebar-underlay').on('click', _toggleSidebar); // seperate click event for underlay to make it work in mobile safari.
 
     $('.fc-toolbar .fc-today-button').html('<span>Go to </span>' + $('.fc-today-button').text());
 
@@ -645,6 +646,15 @@ var evCalendar = function ($) {
     return query;
   }
 
+  function _toggleSidebar () {
+    console.log('_toggleSidebar')
+    if (!settings.actionsContainer.hasClass('active')) {
+      settings.actionsContainer.find('button').first().focus();
+    }
+    settings.actionsContainer.toggleClass('active');
+    $('.sidebar-underlay').toggleClass('hidden');
+  }
+
   function _updateViewSettings (viewName) {
     $('.calendar-view-selector .fc-button').removeClass('fc-state-active');
     $('.calendar-view-selector .fc-' + viewName + '-button').addClass('fc-state-active');
@@ -673,14 +683,6 @@ var evCalendar = function ($) {
     if (history.replaceState) {
       history.replaceState(settings.state, '', path);
     }
-  }
-
-  function _toggleSidebar () {
-    if (!settings.actionsContainer.hasClass('active')) {
-      settings.actionsContainer.find('button').first().focus();
-    }
-    settings.actionsContainer.toggleClass('active');
-    $('.sidebar-underlay').toggleClass('hidden');
   }
 
   return {
