@@ -377,6 +377,9 @@ var evFilters = function ($) {
       Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
       newSelect.chosen().change(function(e) {
         _changeFilter(e);
+        setTimeout(function () {
+          document.activeElement.blur();
+        },100);
       }).on('chosen:showing_dropdown', function (e, theChosen) {
         _addFilterLegend($(this), theChosen.chosen, Drupal.settings.fullcalendar_api.calendarSettings.categories);
       });
