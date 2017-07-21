@@ -27,13 +27,13 @@
   top: 0;
   width: 100%;
   bottom: 0;
-  z-index: 99;
+  z-index: map-get($zindex, sidebar-underlay);
   transition: opacity 0.3s ease, visibility 0.3s ease;
 
   &.hidden {
   	opacity: 0;
   	visibility: hidden;
-  	z-index: -1;
+  	z-index: map-get($zindex, hidden);
   	display: block;
   }
 }
@@ -46,7 +46,7 @@
 	bottom: 0;
 	left: 0;
 	background: white;
-	z-index: 100;
+	z-index: map-get($zindex, sidebar);
 	overflow: scroll;
 	padding: $base-unit*4 $base-unit*2.5 $base-unit*2 $base-unit*2.5;
 	transition: transform 0.3s ease, visibility 0.3s ease;
@@ -79,7 +79,6 @@
 		margin: 0;
 		list-style: none;
 		background: white;
-		z-index: 99;
 
 		li {
 			margin: $base-unit 0;
@@ -216,7 +215,6 @@
 		justify-content: space-between;
 
 		.dropdown-menu {
-			z-index: 110;
 			margin-top: 2px;
 		}
 
@@ -248,7 +246,6 @@
 		border-bottom: 2px solid transparent;
 		margin-bottom: -2px;
 		padding: $base-unit $base-unit*3 $base-unit $base-unit/2;
-		z-index: 100;
 
 		&:before {
 			top: 13px;
