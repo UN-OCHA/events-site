@@ -228,7 +228,7 @@ NOTE: use percentage font sizes or else old IE chokes
   .fc-state-disabled {
   	cursor: default;
   	background-image: none;
-  	opacity: 0.65;
+  	opacity: 0.5;
   	box-shadow: none;
   }
 
@@ -253,6 +253,10 @@ button.fc-prev-button, button.fc-next-button {
 		i {
 			background: lighten($light-bg-color, 4%);
 		}
+	}
+
+	&.fc-state-disabled {
+		display: none;
 	}
 }
 
@@ -1625,13 +1629,15 @@ td.fc-list-item-title {
 		}
 	}
 
+	button.fc-prev-button, button.fc-next-button {
+		&.fc-state-disabled {
+			display: block;
+		}
+	}
+
 }
 
 @include media-query(lg) {
-
-	.fc-toolbar .fc-left {
-		// float: left;
-	}
 
 	.fc-toolbar .fc-right {
 		float: right;
