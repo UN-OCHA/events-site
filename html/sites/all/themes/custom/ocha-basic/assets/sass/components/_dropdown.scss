@@ -6,7 +6,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: map-get($zindex, dropdown);;
   display: none;
   min-width: $base-unit*12;
   margin: 2px 0 0;

@@ -274,7 +274,6 @@ input.cd-header-search__input:focus + * + .cd-header-search__active {
     width: auto;
     max-width: none;
     background: none;
-    z-index: auto;
 
     .no-flexbox & {
       float: right;
