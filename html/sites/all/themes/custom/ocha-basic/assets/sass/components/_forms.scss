@@ -52,7 +52,7 @@ form {
 		padding: 0 $base-unit/2;
 		margin: $base-unit*1.5 0 $base-unit*2;
 		position: relative;
-		z-index: 1;
+		z-index: map-get($zindex, default);
 	}
 
 	&:before {
