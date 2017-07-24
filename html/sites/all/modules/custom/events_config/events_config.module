@@ -99,8 +99,8 @@ function events_config_hybridauth_user_login($account, $data) {
 
   // IMO.
   $is_imo = FALSE;
-  if (isset($data->functional_roles) && is_array($data->functional_roles)) {
-    foreach ($data->functional_roles as $functional_role) {
+  if (isset($data['functional_roles']) && is_array($data['functional_roles'])) {
+    foreach ($data['functional_roles'] as $functional_role) {
       if ($functional_role->list == variable_get('evens_config_imo_list_id', '58e39c4eab77c100ae461bb4')) {
         $is_imo = TRUE;
         break;
