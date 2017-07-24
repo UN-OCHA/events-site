@@ -15,6 +15,7 @@ function events_event_user_default_permissions() {
     'name' => 'create ev_event content',
     'roles' => array(
       'HID verified' => 'HID verified',
+      'IMO' => 'IMO',
     ),
     'module' => 'node',
   );
@@ -24,6 +25,16 @@ function events_event_user_default_permissions() {
     'name' => 'delete own ev_event content',
     'roles' => array(
       'HID verified' => 'HID verified',
+      'IMO' => 'IMO',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any ev_event content'.
+  $permissions['edit any ev_event content'] = array(
+    'name' => 'edit any ev_event content',
+    'roles' => array(
+      'IMO' => 'IMO',
     ),
     'module' => 'node',
   );
@@ -33,6 +44,7 @@ function events_event_user_default_permissions() {
     'name' => 'edit own ev_event content',
     'roles' => array(
       'HID verified' => 'HID verified',
+      'IMO' => 'IMO',
     ),
     'module' => 'node',
   );
@@ -42,6 +54,7 @@ function events_event_user_default_permissions() {
     'name' => 'view own unpublished content',
     'roles' => array(
       'HID verified' => 'HID verified',
+      'IMO' => 'IMO',
       'administrator' => 'administrator',
     ),
     'module' => 'node',

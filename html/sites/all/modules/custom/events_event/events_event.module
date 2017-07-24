@@ -1418,3 +1418,82 @@ function events_event_features_post_restore($op, $items) {
     _events_event_default_terms();
   }
 }
+
+/**
+ * Implements hook_node_presave().
+ */
+function events_event_node_presave($node) {
+  if (!$node->is_new && $node->type == 'ev_event') {
+    global $user;
+    if ($node->uid == $user->uid) {
+      return;
+    }
+
+    // Enable revisions.
+    $node->revision = TRUE;
+    $node->log = t('Event updated by IMO');
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function events_event_node_update($node) {
+  if (!$node->is_new && $node->type == 'ev_event') {
+    global $user;
+    if ($node->uid == $user->uid) {
+      return;
+    }
+
+    $recipient = user_load($node->uid);
+
+    $date_start = new DateTime($node->field_event_date['und'][0]['value'], timezone_open($node->field_event_date['und'][0]['timezone_db']));
+    $date_end = new DateTime($node->field_event_date['und'][0]['value2'], timezone_open($node->field_event_date['und'][0]['timezone_db']));
+
+    // Sent email.
+    $subject = t('Your Event was Edited');
+    $body = t('Dear @user_name,
+
+We wanted to let you know that your event has been updated by @user_edit.
+
+The new event details are as follows:
+
+@node_title
+
+@node_field_event_info
+
+Start: @node_field_event_date_value_start
+Finish: @node_field_event_date_value_end
+Timezone: @node_field_event_date_tz
+
+Please review the complete event details and make sure they are correct.
+
+Event page: @node_url
+
+--
+Humanitarian Events
+A service powered by OCHA
+https://events.rwlabs.org
+
+    ', array(
+      '@user_name' => $recipient->name,
+      '@user_edit' => $user->name,
+      '@node_title' => $node->title,
+      '@node_field_event_info' => isset($node->field_event_info['und'][0]['safe_value']) ? $node->field_event_info['und'][0]['safe_value'] : '',
+      '@node_field_event_date_value_start' => $date_start->format('l d F Y - H:i'),
+      '@node_field_event_date_value_end' => $date_end->format('l d F Y - H:i'),
+      '@node_field_event_date_tz' => $node->field_event_date['und'][0]['timezone_db'],
+      '@node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+    ));
+
+    $context = array(
+      'recipient' => $recipient->mail,
+      'subject' => $subject,
+      'message' => $body,
+      'node' => $node,
+      'user' => $user,
+    );
+
+    system_send_email_action($node, $context);
+  }
+}
