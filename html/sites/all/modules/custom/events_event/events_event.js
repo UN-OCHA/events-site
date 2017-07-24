@@ -379,10 +379,14 @@ var evFilters = function ($) {
         _changeFilter(e);
         setTimeout(function () {
           document.activeElement.blur();
+          newSelect.trigger('chosen:close');
         },100);
       }).on('chosen:showing_dropdown', function (e, theChosen) {
         _addFilterLegend($(this), theChosen.chosen, Drupal.settings.fullcalendar_api.calendarSettings.categories);
       });
+
+      // unbind touchstart event so can scroll filters on mobile without triggering them
+      newSelect.next('.chosen-container').off('touchstart.chosen');
     }
   }
 
