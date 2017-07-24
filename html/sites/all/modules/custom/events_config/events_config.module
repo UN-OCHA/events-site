@@ -78,12 +78,43 @@ function events_config_hybridauth_user_login($account, $data) {
     }
   }
 
+  // HID verified.
   $role = user_role_load_by_name('HID verified');
   if ($data['verified']) {
     // Make sure $user->roles is an array.
     if (!isset($account->roles) || !is_array($account->roles)) {
       $account->roles = array();
     }
+    if (!isset($account->roles[$role->rid])) {
+      $account->roles = $account->roles + array($role->rid => $role->name);
+      $needs_update = TRUE;
+    }
+  }
+  else {
+    if (isset($account->roles) && isset($account->roles[$role->rid])) {
+      unset($account->roles[$role->rid]);
+      $needs_update = TRUE;
+    }
+  }
+
+  // IMO.
+  $is_imo = FALSE;
+  if (isset($data->functional_roles) && is_array($data->functional_roles)) {
+    foreach ($data->functional_roles as $functional_role) {
+      if ($functional_role->list == variable_get('evens_config_imo_list_id', '58e39c4eab77c100ae461bb4')) {
+        $is_imo = TRUE;
+        break;
+      }
+    }
+  }
+
+  $role = user_role_load_by_name('IMO');
+  if ($is_imo) {
+    // Make sure $user->roles is an array.
+    if (!isset($account->roles) || !is_array($account->roles)) {
+      $account->roles = array();
+    }
+
     if (!isset($account->roles[$role->rid])) {
       $account->roles = $account->roles + array($role->rid => $role->name);
       $needs_update = TRUE;
