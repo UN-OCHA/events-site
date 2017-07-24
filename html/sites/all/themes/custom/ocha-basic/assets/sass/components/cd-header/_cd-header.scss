@@ -53,7 +53,7 @@
 
 .cd-dropdown-menu {
   position: absolute;
-  z-index: 99;
+  z-index: map-get($zindex, dropdown);
   background: white;
   min-width: 212px;
   width: 100%;

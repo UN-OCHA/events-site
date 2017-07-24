@@ -377,9 +377,16 @@ var evFilters = function ($) {
       Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
       newSelect.chosen().change(function(e) {
         _changeFilter(e);
+        setTimeout(function () {
+          document.activeElement.blur();
+          newSelect.trigger('chosen:close');
+        },100);
       }).on('chosen:showing_dropdown', function (e, theChosen) {
         _addFilterLegend($(this), theChosen.chosen, Drupal.settings.fullcalendar_api.calendarSettings.categories);
       });
+
+      // unbind touchstart event so can scroll filters on mobile without triggering them
+      newSelect.next('.chosen-container').off('touchstart.chosen');
     }
   }
 
@@ -727,7 +734,7 @@ var evTimeZone = function ($) {
   var settings = {};
 
   function _buildHTML () {
-    var toggle = $('<button type="button id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone: ') +'</button>');
+    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone: ') +'</button>');
     var dropdown = $('<div class="calendar-settings__tz-dropdown dropdown-menu" aria-labelledby="timezone-dropdown"></div>');
     var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone') + '</label>');
     var select = $('<select id="timezone-selector"></select>');
