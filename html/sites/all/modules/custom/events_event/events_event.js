@@ -734,7 +734,7 @@ var evTimeZone = function ($) {
   var settings = {};
 
   function _buildHTML () {
-    var toggle = $('<button type="button id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone: ') +'</button>');
+    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone: ') +'</button>');
     var dropdown = $('<div class="calendar-settings__tz-dropdown dropdown-menu" aria-labelledby="timezone-dropdown"></div>');
     var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone') + '</label>');
     var select = $('<select id="timezone-selector"></select>');
