@@ -359,11 +359,11 @@ function events_config_get_user_data($account = NULL) {
     // HID verified.
     $role = user_role_load_by_name('HID verified');
     if (isset($data->verified) && $data->verified) {
-      $user->roles = $user->roles + array($role->rid => $role->name);
+      $account->roles = $account->roles + array($role->rid => $role->name);
     }
     else {
-      if (isset($user->roles[$role->rid])) {
-        unset($user->roles[$role->rid]);
+      if (isset($account->roles[$role->rid])) {
+        unset($account->roles[$role->rid]);
       }
     }
 
@@ -380,11 +380,11 @@ function events_config_get_user_data($account = NULL) {
 
     $role = user_role_load_by_name('IMO');
     if ($is_imo) {
-      $user->roles = $user->roles + array($role->rid => $role->name);
+      $account->roles = $account->roles + array($role->rid => $role->name);
     }
     else {
-      if (isset($user->roles[$role->rid])) {
-        unset($user->roles[$role->rid]);
+      if (isset($account->roles[$role->rid])) {
+        unset($account->roles[$role->rid]);
       }
     }
 
