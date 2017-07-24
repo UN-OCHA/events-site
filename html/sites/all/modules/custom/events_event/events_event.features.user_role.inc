@@ -16,5 +16,11 @@ function events_event_user_default_roles() {
     'weight' => 3,
   );
 
+  // Exported role: IMO.
+  $roles['IMO'] = array(
+    'name' => 'IMO',
+    'weight' => 4,
+  );
+
   return $roles;
 }
