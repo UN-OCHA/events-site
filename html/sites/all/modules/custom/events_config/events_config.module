@@ -342,10 +342,12 @@ function events_config_get_user_data($account = NULL) {
   if ($response->data) {
     $data = json_decode($response->data);
     $tids = array();
-    foreach ($data->organizations as $organization) {
-      $term = events_config_get_organisation_term($organization->name);
-      $tids[] = $term->tid;
-      $organisations[$term->tid] = $term->name;
+    if (isset($data->organizations)) {
+      foreach ($data->organizations as $organization) {
+        $term = events_config_get_organisation_term($organization->name);
+        $tids[] = $term->tid;
+        $organisations[$term->tid] = $term->name;
+      }
     }
 
     // Update user data.
@@ -354,8 +356,30 @@ function events_config_get_user_data($account = NULL) {
     $user_data['hid_last_update'] = REQUEST_TIME;
     $account->data['hid_last_update'] = $user_data['hid_last_update'];
 
+    // HID verified.
     $role = user_role_load_by_name('HID verified');
-    if ($data->verified) {
+    if (isset($data->verified) && $data->verified) {
+      $user->roles = $user->roles + array($role->rid => $role->name);
+    }
+    else {
+      if (isset($user->roles[$role->rid])) {
+        unset($user->roles[$role->rid]);
+      }
+    }
+
+    // IMO.
+    $is_imo = FALSE;
+    if (isset($data->functional_roles) && is_array($data->functional_roles)) {
+      foreach ($data->functional_roles as $functional_role) {
+        if ($functional_role->list == variable_get('evens_config_imo_list_id', '58e39c4eab77c100ae461bb4')) {
+          $is_imo = TRUE;
+          break;
+        }
+      }
+    }
+
+    $role = user_role_load_by_name('IMO');
+    if ($is_imo) {
       $user->roles = $user->roles + array($role->rid => $role->name);
     }
     else {
