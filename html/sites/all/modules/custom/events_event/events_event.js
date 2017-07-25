@@ -212,6 +212,54 @@ var evFilters = function ($) {
     }
   }
 
+  function _buildFilter (f, filterCount, facet) {
+    var filter = $('<div class="calendar-filters--' + f + ' processed block-views"></div>');
+    var filterContainer = $('<div class="calendar-actions__section" />');
+    var filterButton = $('<button type="button" class="calendar-filters__button">' + facet.label + '</button>');
+    var backButton = $('<button type="button" class="calendar-actions__btn">' + Drupal.t('Back') + '</button>');
+
+    var newLabel = $('<label for="filter-' + filterCount + '">' + facet.label + '</label>');
+    var newSelect = $('<select class="chosen-enable" data-type="' + f + '" id="filter-' + filterCount + '"></select>');
+    var emptyOption = $('<option value="' + f + '">' + Drupal.t('- Any -') + '</option>');
+    newSelect.append(emptyOption);
+
+    // Flip key and value.
+    var flipped = [];
+    for (var key in facet.values) {
+      flipped.push({
+        'key': key,
+        'label': facet.values[key]
+      });
+    }
+
+    // Sort by label.
+    flipped.sort(function(a, b) {
+      return a.label.localeCompare(b.label);
+    });
+
+    // Add options.
+    for (var o = 0; o < flipped.length; o++) {
+      var option = flipped[o];
+      var newOption = $('<option value="' + f + ':' + option.key + '">' + option.label + '</option>');
+      if (settings.defaultFilters[f] && settings.defaultFilters[f] == o.key) {
+        newOption.selected = 'selected';
+      }
+      newSelect.append(newOption);
+    }
+
+    filterButton.on('click', openFilter);
+    backButton.on('click', function () {
+      $(this).parent('.calendar-actions__section').removeClass('active');
+    });
+
+    filterContainer.append(backButton).append(newLabel).append(newSelect);
+    filter.append(filterButton).append(filterContainer);
+    settings.filtersWrapperInner.append(filter);
+
+    _registerChosenEvents(newSelect);
+
+  }
+
   function _buildAllFilters (facets) {
     var filterCount = 0;
 
@@ -224,44 +272,16 @@ var evFilters = function ($) {
       if (typeof settings.eventFilters[f] === 'undefined') {
         continue;
       }
-
       filterCount++;
-
-      var filter = $('<div class="calendar-filters--' + f + ' processed block-views"></div>');
-      var newLabel = $('<label for="filter-' + filterCount + '">' + facet.label + '</label>');
-      var newSelect = $('<select class="chosen-enable" data-type="' + f + '" id="filter-' + filterCount + '"></select>');
-      var emptyOption = $('<option value="' + f + '">' + Drupal.t('- Any -') + '</option>');
-      newSelect.append(emptyOption);
-
-      // Flip key and value.
-      var flipped = [];
-      for (var key in facet.values) {
-        flipped.push({
-          'key': key,
-          'label': facet.values[key]
-        });
-      }
-
-      // Sort by label.
-      flipped.sort(function(a, b) {
-        return a.label.localeCompare(b.label);
-      });
-
-      // Add options.
-      for (var o = 0; o < flipped.length; o++) {
-        var option = flipped[o];
-        var newOption = $('<option value="' + f + ':' + option.key + '">' + option.label + '</option>');
-        if (settings.defaultFilters[f] && settings.defaultFilters[f] == o.key) {
-          newOption.selected = 'selected';
-        }
-        newSelect.append(newOption);
-      }
-
-      filter.append(newLabel).append(newSelect);
-      settings.filtersWrapperInner.append(filter);
-
-      _registerChosenEvents(newSelect);
+      _buildFilter(f, filterCount, facet);
     }
+  }
+
+  function openFilter (e) {
+    var section = $(e.target).next('.calendar-actions__section');
+    section.addClass('active')
+      .find('.chosen-container')
+      .mousedown();
   }
 
   function _buildHTML () {
@@ -375,7 +395,7 @@ var evFilters = function ($) {
   function _registerChosenEvents (newSelect) {
     if (Drupal.behaviors && Drupal.behaviors.chosen) {
       Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
-      newSelect.chosen().change(function(e) {
+      newSelect.change(function(e) {
         _changeFilter(e);
         setTimeout(function () {
           document.activeElement.blur();
@@ -383,7 +403,10 @@ var evFilters = function ($) {
         },100);
       }).on('chosen:showing_dropdown', function (e, theChosen) {
         _addFilterLegend($(this), theChosen.chosen, Drupal.settings.fullcalendar_api.calendarSettings.categories);
+      }).on('chosen:close', function () {
+        newSelect.parent('.calendar-actions__section').removeClass('active');
       });
+      newSelect.chosen();
 
       // unbind touchstart event so can scroll filters on mobile without triggering them
       newSelect.next('.chosen-container').off('touchstart.chosen');
@@ -491,16 +514,20 @@ var evCalendar = function ($) {
     settings.filtersContainer = $('<div class="calendar-filters"></div>');
     settings.exportContainer = $('<div class="calendar-export"></div>');
     settings.timeZoneContainer = $('<div class="calendar-settings"></div>');
-    settings.actionsContainer.append(settings.filtersContainer).append(settings.timeZoneContainer).append(settings.exportContainer);
+    var sidebarBtn = '<button type="button" class="calendar-sidebar-btn btn-icon "><i class="icon-settings"></i><span>' + Drupal.t('Options') + '</span></button>';
+    var closeBtn = '<button type="button" class="calendar-actions__close calendar-actions__btn">' + Drupal.t('Done') + '</span></button>';
+
+    settings.actionsContainer
+      .append(closeBtn)
+      .append(settings.filtersContainer)
+      .append(settings.timeZoneContainer)
+      .append(settings.exportContainer);
+
     $('#block-system-main').prepend(settings.actionsContainer);
     $('.calendar-export, .calendar-settings').wrapAll('<div />');
 
-    var sidebarBtn = '<button type="button" class="calendar-sidebar-btn btn-icon "><i class="icon-settings"></i><span>' + Drupal.t('Options') + '</span></button>';
-    var closeBtn = '<button type="button" class="calendar-actions__close btn-icon "><i class="icon-cancel"></i><span>' + Drupal.t('Close') + '</span></button>';
-    $('.calendar-actions').append(closeBtn).before(sidebarBtn);
-    $('body').append('<div class="sidebar-underlay hidden"></div>');
+    settings.actionsContainer.before(sidebarBtn);
     $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);
-    $('.sidebar-underlay').on('click', _toggleSidebar); // separate click event for underlay to make it work in mobile safari.
     settings.sidebarOpen = false;
     settings.viewToggleContainer = $('<div class="calendar-view-selector"></div>');
     settings.viewToggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown"/>');
@@ -648,7 +675,6 @@ var evCalendar = function ($) {
 
     _formatControls();
     _updateViewSettings();
-    _sidebarSwipe();
   }
 
   function _parseQuery(qstr) {
@@ -661,26 +687,11 @@ var evCalendar = function ($) {
     return query;
   }
 
-  function _sidebarSwipe () {
-    var startX = 0;
-    var endX = 0;
-    document.querySelector('body').addEventListener("touchstart", function (e) {
-      startX = e.targetTouches[0].pageX;
-    }, false);
-    document.querySelector('body').addEventListener("touchend", function (e) {
-      endX = e.changedTouches[0].pageX;
-      if (settings.sidebarOpen && endX < startX - 120) { // arbitrary distance to swipe to trigger close
-        _toggleSidebar();
-      }
-    }, false);
-  }
-
   function _toggleSidebar () {
     if (!settings.actionsContainer.hasClass('active')) {
-      settings.actionsContainer.find('button').first().focus();
+      settings.actionsContainer.find('button').not('.calendar-actions__close').first().focus();
     }
     settings.actionsContainer.toggleClass('active');
-    $('.sidebar-underlay').toggleClass('hidden');
     $('body').toggleClass('no-scroll');
     settings.sidebarOpen = !settings.sidebarOpen;
   }
@@ -823,7 +834,6 @@ var evTimeZone = function ($) {
         e.stopPropagation();
       });
     }
-
 
   };
 })(jQuery);

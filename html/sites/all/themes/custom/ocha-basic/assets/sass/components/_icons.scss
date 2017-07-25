@@ -24,9 +24,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-settings:before {
-  content: "\e904";
-}
 .icon-document:before {
   content: "\e902";
 }
@@ -59,6 +56,12 @@
 }
 .icon-cancel:before {
   content: "\e94a";
+}
+.icon-search:before {
+  content: "\e919";
+}
+.icon-settings:before {
+  content: "\e904";
 }
 .icon-creative-commons:before {
   content: "\e901";

@@ -1,17 +1,22 @@
 .chosen-container {
 	width: 100%!important; //over ride chosen's inline style
-	max-width: 300px;
 	@include font-size($base-font-size);
 	background: white;
 
 	.chosen-drop {
 		box-shadow: none;
 		border-radius: 0;
-		border-color: #ddd;
-		@include font-size($small-font-size);
+		border: 1px solid #ddd;
+		border-top: none;
+		@include font-size($base-font-size);
 	}
 
 	.chosen-results {
+		max-height: 240px;
+
+		li {
+			padding: $base-unit;
+		}
 
 		li.active-result {
 			&.highlighted {
@@ -30,14 +35,29 @@
 
 }
 
-.chosen-container-single .chosen-search input[type="text"] {
-	@include font-size($medium-font-size);
-	font-weight: 300;
-	color: $body-text-color;
+.chosen-container-single .chosen-search {
+
+	&:after {
+		content: "\e919";
+		font-family: 'unocha-icons' !important;
+		position: absolute;
+    right: $base-unit*.75;
+    @include font-size(24);
+    margin-top: $base-unit*.25;
+	}
+
+	input[type="text"] {
+		@include font-size($medium-font-size);
+		font-weight: 300;
+		color: $body-text-color;
+		padding: $base-unit $base-unit*4 $base-unit $base-unit;
+		background: none!important;
+	}
+
+
 }
 
 .chosen-container-active.chosen-with-drop {
-	border-color: #ddd;
 
 	.chosen-single {
 		border-color: #ddd;
@@ -58,8 +78,6 @@
 		height: auto;
 		padding: $base-unit/2 $base-unit;
 		line-height: $base-unit*3;
-
-
 	}
 
 	.chosen-single {
@@ -79,7 +97,16 @@
 
 .chosen-legend {
 	display: inline-block;
-	width: $base-unit;
-	height: $base-unit;
+	width: $base-unit*1.5;
+	height: $base-unit*1.5;
 	margin-right: $base-unit;
+}
+
+@include media-query(md) {
+
+	.chosen-legend {
+		width: $base-unit;
+		height: $base-unit;
+	}
+
 }
