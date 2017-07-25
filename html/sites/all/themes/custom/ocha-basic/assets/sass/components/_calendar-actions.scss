@@ -21,26 +21,8 @@
 	height: $base-unit*4;
 }
 
-.sidebar-underlay {
-	position: fixed;
-  background: rgba(255,255,255,0.5);
-  top: 0;
-  width: 100%;
-  bottom: 0;
-  z-index: map-get($zindex, sidebar-underlay);
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-
-  &.hidden {
-  	opacity: 0;
-  	visibility: hidden;
-  	z-index: map-get($zindex, hidden);
-  	display: block;
-  }
-}
-
-.calendar-actions {
-	width: 90%;
-	max-width: $mobile-sidebar-width;
+.calendar-actions, .calendar-actions__section {
+	width: 100%;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -48,18 +30,17 @@
 	background: white;
 	z-index: map-get($zindex, sidebar);
 	overflow: scroll;
-	padding: $base-unit*4 $base-unit*2.5 $base-unit*2 $base-unit*2.5;
+	padding: $base-unit*5 $base-unit*2 $base-unit*2 $base-unit*2;
 	transition: transform 0.3s ease, visibility 0.3s ease;
-	transform: translateX(-$mobile-sidebar-width - 10);
-	box-shadow: 4px 0 3px -3px rgba(0,0,0,0.2);
-	visibility: hidden;
+	transform: translateX(-100% - 10);
 
 	&.active {
 		transform: translateX(0);
 		visibility: visible;
 	}
+}
 
-
+.calendar-actions {
 	@include clearfix;
 	font-family: $heading-font;
 
@@ -107,9 +88,6 @@
 			margin: $base-unit 0;
 		}
 
-		.chosen-container {
-			margin-bottom: $base-unit;
-		}
 
 		a {
 			&:hover, &:focus {
@@ -126,13 +104,18 @@
 
 }
 
-.calendar-actions__close {
+.calendar-actions__btn {
 	position: absolute;
-	right: $base-unit*2;
-	top: $base-unit;
+	right: $base-unit*1.25;
+	top: $base-unit/2;
+	color: $heading-text-color;
+	text-transform: uppercase;
+	padding: $base-unit;
 
-	i {
-		font-weight: bold;
+	.dropdown-menu & {
+		height: auto;
+		width: auto;
+		padding: $base-unit;
 	}
 }
 
@@ -179,6 +162,51 @@
 	}
 }
 
+.calendar-filters__inner {
+
+	.chosen-container {
+		height: calc(100% - 40px);
+
+		.chosen-single {
+			border: none!important;
+
+			span {
+				display: none;
+			}
+		}
+
+		.chosen-drop {
+			position: relative;
+			height: 100%;
+			top: 0;
+			border: none;
+		}
+
+		.chosen-results {
+			max-height: none;
+			height: calc(100% - 40px);
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.chosen-container-active.chosen-with-drop {
+		border: none;
+		.chosen-single {
+			border: none;
+		}
+	}
+
+	.chosen-container-single .chosen-search {
+		padding: 0;
+	}
+}
+
+.calendar-filters__button {
+	text-transform: uppercase;
+	text-align: left;
+}
+
 .calendar-filters__current {
 	padding: $base-unit 0;
 	border-bottom: 1px solid $light-border-color;
@@ -186,6 +214,16 @@
 
 	strong {
 		font-style: normal;
+	}
+}
+
+.calendar-settings__tz-dropdown {
+	padding: $base-unit/2 0 $base-unit*1.5 0;
+}
+
+.calendar-view-selector {
+	.dropdown-menu {
+		padding: $base-unit/2 0;
 	}
 }
 
@@ -242,8 +280,18 @@
 		}
 	}
 
-	.calendar-actions__close, .calendar-sidebar-btn, .sidebar-underlay {
+	.calendar-actions__close, .calendar-sidebar-btn, .calendar-actions__btn, .calendar-filters__button {
 		display: none;
+	}
+
+	.calendar-actions__section {
+		position: static;
+    transform: none;
+    width: auto;
+    top: auto;
+    left: auto;
+    padding: 0;
+    overflow: visible;
 	}
 
 	.calendar-actions__toggle {
@@ -395,6 +443,7 @@
 			}
 
 		}
+
 	}
 
 	.calendar-filters__current {
@@ -431,12 +480,54 @@
 			float: right;
 		}
 	}
+
+	.calendar-filters__inner {
+
+		.chosen-container {
+			max-width: 300px;
+			height: auto;
+
+			.chosen-single {
+				border: 1px solid #ddd !important;
+
+				span {
+					display: block;
+				}
+			}
+
+			.chosen-drop {
+				border: 1px solid #ddd;
+				border-top: none;
+				position: absolute;
+				height: auto;
+				top: auto;
+			}
+
+			.chosen-results {
+				max-height: 240px;
+				height: auto;
+				margin: 0 4px 4px 0;
+				padding: 0 0 0 4px;
+			}
+		}
+
+		.chosen-container-active.chosen-with-drop {
+			.chosen-single {
+				border: 1px solid #ddd;
+			}
+		}
+
+		.chosen-container-single .chosen-search {
+			padding: 3px 4px;
+		}
+	}
+
 }
 
 @include media-query(lg) {
 
 	.block-views {
-		margin: $base-unit/2 0 $base-unit 0;
+		margin: $base-unit/2 0 $base-unit*1.5 0;
 	}
 
 	.calendar-settings {
