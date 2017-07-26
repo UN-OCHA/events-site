@@ -1621,6 +1621,7 @@ td.fc-list-item-title {
 			 	border-bottom: 2px solid transparent;
 			 	transition: all 0.3s ease;
 			 	margin: 0 $base-unit*1.5 -2px 0 !important;
+			 	height: auto;
 
 			 	&:hover, &:focus {
 			 		border-color: $highlight-border-color;
