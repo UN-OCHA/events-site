@@ -1460,7 +1460,7 @@ The new event details are as follows:
 
 @node_title
 
-@node_field_event_info
+!node_field_event_info
 
 Start: @node_field_event_date_value_start
 Finish: @node_field_event_date_value_end
@@ -1479,7 +1479,7 @@ https://events.rwlabs.org
       '@user_name' => $recipient->name,
       '@user_edit' => $user->name,
       '@node_title' => $node->title,
-      '@node_field_event_info' => isset($node->field_event_info['und'][0]['safe_value']) ? $node->field_event_info['und'][0]['safe_value'] : '',
+      '!node_field_event_info' => isset($node->field_event_info['und'][0]['safe_value']) ? $node->field_event_info['und'][0]['safe_value'] : '',
       '@node_field_event_date_value_start' => $date_start->format('l d F Y - H:i'),
       '@node_field_event_date_value_end' => $date_end->format('l d F Y - H:i'),
       '@node_field_event_date_tz' => $node->field_event_date['und'][0]['timezone_db'],
