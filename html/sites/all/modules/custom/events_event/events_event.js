@@ -524,7 +524,7 @@ var evCalendar = function ($) {
       .append(settings.exportContainer);
 
     $('#block-system-main').prepend(settings.actionsContainer);
-    $('.calendar-export, .calendar-settings').wrapAll('<div />');
+    $('.calendar-export, .calendar-settings').wrapAll('<div class="calendar-actions__secondary" />');
 
     settings.actionsContainer.before(sidebarBtn);
     $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);

@@ -233,6 +233,7 @@
 		width: 25%;
 		float: left;
 		padding-right: $base-unit;
+		margin: $base-unit/2 0 $base-unit*1.5 0;
 
 		&:nth-child(4n) {
 			padding: 0;
@@ -250,16 +251,13 @@
 		box-shadow: none;
 		padding: 0;
 		overflow: visible;
-		border-bottom: 2px solid $light-border-color;
 		visibility: visible;
-
 		display: flex;
 		justify-content: space-between;
 
 		.dropdown-menu {
 			margin-top: 2px;
 		}
-
 
 		.flexbox & {
 			&:after {
@@ -269,14 +267,6 @@
 
 		.no-flexbox & {
 			display: block;
-		}
-	}
-
-	.calendar-actions--filtered {
-		margin-bottom: $base-unit*6;
-
-		.calendar-view-selector {
-	 		bottom: -93px;
 		}
 	}
 
@@ -385,7 +375,7 @@
 	.calendar-view-selector {
     position: absolute;
     right: 0;
-    bottom: -69px;
+    bottom: -67px;
 
     &.open {
     	position: absolute;
@@ -413,33 +403,36 @@
 		}
 	}
 
-	.calendar-filters {
-		width: 120px;
+	.calendar-actions__secondary {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
 
-		.no-flexbox & {
-			float: left;
+	.calendar-filters {
+		width: 100%;
+		border-bottom: 2px solid $light-border-color;
+
+		.calendar-actions--filtered & {
+			border-bottom: none;
+		}
+
+		.calendar-actions__toggle {
+			width: 120px;
+			z-index: map-get($zindex, default);
 		}
 
 		.dropdown-menu {
-			width: 736px;
+			width: 100%;
 			margin-top: 0;
 		}
 
 		&.open {
 			position: static;
-
-			&:before {
-				content: "";
-				display: block;
-				position: absolute;
-				width: 100%;
-				height: 0px;
-				border-bottom: 2px solid $light-border-color;
-				top: ($base-unit*5) - 2;
-			}
+			border-bottom: none;
 
 			.dropdown-menu {
-				border-bottom: none;
+				border-width: 2px;
 			}
 
 		}
@@ -447,10 +440,11 @@
 	}
 
 	.calendar-filters__current {
+		border-top: 2px solid $light-border-color;
 		border-bottom: none;
-		width: 736px;
-		position: absolute;
-		padding: $base-unit*1.5 110px $base-unit*1.5 0;
+		width: 100%;
+		position: relative;
+		padding: $base-unit*1.5 110px 0 0;
 
 		p {
 	    height: $base-unit*3;
@@ -472,16 +466,25 @@
 			.calendar-filters__clear {
 				display: flex;
 			}
-		}
-	}
 
-	.calendar-filters + div {
-		.no-flexbox & {
-			float: right;
+			.calendar-filters__current {
+				border-top: none;
+			}
 		}
 	}
 
 	.calendar-filters__inner {
+
+
+		&.dropdown-menu {
+			background: lighten($light-bg-color, 4%);
+			border: 2px solid $light-border-color;
+			padding: 0 $base-unit;
+		}
+
+		.calendar-actions__section {
+			background: none;
+		}
 
 		.chosen-container {
 			max-width: 300px;
@@ -526,39 +529,12 @@
 
 @include media-query(lg) {
 
-	.block-views {
-		margin: $base-unit/2 0 $base-unit*1.5 0;
-	}
-
 	.calendar-settings {
 		max-width: 600px;
 	}
 
-	.calendar-filters {
-		.dropdown-menu {
-			width: 993px;
-		}
-	}
-
-	.calendar-filters__current {
-		width: 993px;
-	}
-
 }
 
-@include media-query(xl) {
-
-	.calendar-filters {
-			.dropdown-menu {
-				width: 1120px;
-			}
-	}
-
-	.calendar-filters__current {
-		width: 1120px;
-	}
-
-}
 
 @media print {
 
