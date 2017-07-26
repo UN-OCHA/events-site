@@ -1431,7 +1431,12 @@ function events_event_node_presave($node) {
 
     // Enable revisions.
     $node->revision = TRUE;
-    $node->log = t('Event updated by IMO');
+    if (empty($node->log)) {
+      $node->log = t('Event updated by IMO');
+    }
+    else {
+      $node->log .= "\n\n" . t('Event updated by IMO');
+    }
   }
 }
 
