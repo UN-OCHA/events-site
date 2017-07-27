@@ -408,6 +408,9 @@ var evFilters = function ($) {
       });
       newSelect.chosen();
 
+      var inputLabel = Drupal.t('Search ') + newSelect.prev('label').text();
+      chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
+
       // unbind touchstart event so can scroll filters on mobile without triggering them
       newSelect.next('.chosen-container').off('touchstart.chosen');
     }
@@ -799,6 +802,7 @@ var evTimeZone = function ($) {
         $tz.chosen().change(function(e) {
           _changeTimezone(e);
         });
+        chosenA11y($tz, 'timezone-search', 'Search timezones');
       }
     });
 
@@ -814,6 +818,13 @@ var evTimeZone = function ($) {
   };
 
 }(jQuery);
+
+/* Adds labels, names & ids to Chosen search inputs */
+function chosenA11y (select, name, label) {
+  var input = select.next('.chosen-container').find('.chosen-search-input');
+  input.attr({name: name, id: name});
+  input.before('<label for="' + name + '" class="sr-only">' + Drupal.t(label) + '</label>');
+}
 
 (function($) {
   Drupal.behaviors.eventsEvent = {
