@@ -526,6 +526,12 @@ var evCalendar = function ($) {
       .append(settings.timeZoneContainer)
       .append(settings.exportContainer);
 
+    settings.actionsContainer
+      .append(closeBtn)
+      .append(settings.filtersContainer)
+      .append(settings.timeZoneContainer)
+      .append(settings.exportContainer);
+
     $('#block-system-main').prepend(settings.actionsContainer);
     $('.calendar-export, .calendar-settings').wrapAll('<div class="calendar-actions__secondary" />');
 
