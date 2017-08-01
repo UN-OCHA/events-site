@@ -408,7 +408,7 @@ var evFilters = function ($) {
       });
       newSelect.chosen();
 
-      var inputLabel = Drupal.t('Search ') + newSelect.prev('label').text();
+      var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
       chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
 
       // unbind touchstart event so can scroll filters on mobile without triggering them
@@ -802,7 +802,7 @@ var evTimeZone = function ($) {
         $tz.chosen().change(function(e) {
           _changeTimezone(e);
         });
-        chosenA11y($tz, 'timezone-search', 'Search timezones');
+        chosenA11y($tz, 'timezone-search', Drupal.t('Search timezones'));
       }
     });
 
