@@ -107,6 +107,16 @@ function events_event_menu() {
 }
 
 /**
+ * Implements hook_menu_link_alter().
+ */
+function events_event_menu_link_alter(&$item) {
+  if ($item['link_path'] == 'login') {
+    $destination = drupal_get_destination();
+    $item['localized_options']['query'] = array('destination' => $destination);
+  }
+}
+
+/**
  * List of exported term fields.
  */
 function events_event_exported_term_fields() {

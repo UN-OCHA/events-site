@@ -25,7 +25,7 @@ function events_config_menu() {
  */
 function events_config_login_redirect() {
   drupal_goto('hybridauth/window/HumanitarianId', array(
-    'destination' => 'events',
+    'destination' => drupal_get_destination(),
     'destination_error' => 'events',
   ));
 }
