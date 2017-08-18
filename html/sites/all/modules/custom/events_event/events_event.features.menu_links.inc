@@ -21,6 +21,7 @@ function events_event_menu_default_menu_links() {
         'title' => '',
       ),
       'identifier' => 'user-menu_add-event:node/add/ev-event',
+      'alter' => TRUE,
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -29,6 +30,8 @@ function events_event_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -50,
     'customized' => 1,
+    'language' => 'en',
+    'menu_links_customized' => 1,
   );
   // Exported menu link: user-menu_log-out:user/logout.
   $menu_links['user-menu_log-out:user/logout'] = array(
@@ -38,6 +41,10 @@ function events_event_menu_default_menu_links() {
     'link_title' => 'Log out',
     'options' => array(
       'identifier' => 'user-menu_log-out:user/logout',
+      'attributes' => array(
+        'title' => '',
+      ),
+      'alter' => TRUE,
     ),
     'module' => 'system',
     'hidden' => 0,
@@ -46,6 +53,8 @@ function events_event_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -47,
     'customized' => 1,
+    'language' => 'en',
+    'menu_links_customized' => 1,
   );
   // Exported menu link: user-menu_login:login.
   $menu_links['user-menu_login:login'] = array(
@@ -58,6 +67,7 @@ function events_event_menu_default_menu_links() {
         'title' => '',
       ),
       'identifier' => 'user-menu_login:login',
+      'alter' => TRUE,
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -66,6 +76,8 @@ function events_event_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -46,
     'customized' => 1,
+    'language' => 'en',
+    'menu_links_customized' => 1,
   );
 
   // Translatables

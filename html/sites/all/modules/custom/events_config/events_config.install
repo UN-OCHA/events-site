@@ -32,3 +32,10 @@ function events_config_update_7003() {
 function events_config_update_7004() {
   features_revert_module('events_config');
 }
+
+/**
+ * Enable l10n_update, run using drush.
+ */
+function events_config_update_7005() {
+  module_enable(array('l10n_update'));
+}
