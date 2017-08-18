@@ -112,7 +112,7 @@ function events_event_menu() {
 function events_event_exported_term_fields() {
   return array(
     'field_event_coordination_hub' => array(
-      'label' => t('Coordination Hubs'),
+      'label' => t('Coordination Hubs', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'hub',
       'value_key' => '',
@@ -120,7 +120,7 @@ function events_event_exported_term_fields() {
       'exposed' => FALSE,
     ),
     'field_event_cluster' => array(
-      'label' => t('Clusters'),
+      'label' => t('Clusters', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'clu',
       'value_key' => '',
@@ -128,7 +128,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_category' => array(
-      'label' => t('Categories'),
+      'label' => t('Categories', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'cat',
       'value_key' => '',
@@ -136,7 +136,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_organization' => array(
-      'label' => t('Organizations'),
+      'label' => t('Organizations', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'org',
       'value_key' => '',
@@ -144,7 +144,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_location' => array(
-      'label' => t('Location of Event'),
+      'label' => t('Location of Event', array(), array('context' => 'events')),
       'has_parents' => TRUE,
       'short_key' => 'loc',
       'value_key' => 'vloc',
@@ -152,7 +152,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_disasters' => array(
-      'label' => t('Disasters'),
+      'label' => t('Disasters', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'dis',
       'value_key' => '',
@@ -160,7 +160,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_theme' => array(
-      'label' => t('Themes'),
+      'label' => t('Themes', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'the',
       'value_key' => '',
@@ -168,7 +168,7 @@ function events_event_exported_term_fields() {
       'exposed' => TRUE,
     ),
     'field_event_documents:field_document_type' => array(
-      'label' => t('Document type'),
+      'label' => t('Document type', array(), array('context' => 'events')),
       'has_parents' => FALSE,
       'short_key' => 'doct',
       'value_key' => '',
@@ -200,7 +200,7 @@ function events_event_calendar() {
     'timezone' => drupal_get_user_timezone(),
     'views' => array(
       'listYear' => array(
-        'buttonText' => 'Year',
+        'buttonText' => t('Year', array(), array('context' => 'events')),
       ),
       'upcoming' => array(),
       'past' => array(),
@@ -927,7 +927,7 @@ function events_event_system_time_zones() {
       $timezones[$zone] = t('@zone: @date', array(
         '@zone' => t(str_replace(array('_', '/'), array(' ', ' - '), $zone)),
         '@date' => format_date(REQUEST_TIME, 'custom', 'l d F Y - H:i' . ' O', $zone),
-      ));
+      ), array('context' => 'events'));
     }
   }
   // Sort the translated time zones alphabetically.
@@ -1044,23 +1044,23 @@ function events_event_date_timezone_process_alter(&$element, &$form_state, $cont
  */
 function events_event_field_extra_fields() {
   $extra['node']['ev_event']['display']['ev_local_time'] = array(
-    'label' => t('Display date in local time'),
-    'description' => t('Display date in local time (as entered by the user).'),
+    'label' => t('Display date in local time', array(), array('context' => 'events')),
+    'description' => t('Display date in local time (as entered by the user).', array(), array('context' => 'events')),
     'weight' => 2,
   );
   $extra['node']['ev_event']['display']['ev_user_time'] = array(
-    'label' => t('Display date in user time'),
-    'description' => t('Display date in user time (as defined on profile).'),
+    'label' => t('Display date in user time', array(), array('context' => 'events')),
+    'description' => t('Display date in user time (as defined on profile).', array(), array('context' => 'events')),
     'weight' => 2,
   );
   $extra['node']['ev_event']['display']['ev_display_date_time'] = array(
-    'label' => t('Display date in user and local time'),
-    'description' => t('Display datein user (as defined on profile) and local time  (as entered by the user).'),
+    'label' => t('Display date in user and local time', array(), array('context' => 'events')),
+    'description' => t('Display datein user (as defined on profile) and local time  (as entered by the user).', array(), array('context' => 'events')),
     'weight' => 2,
   );
   $extra['node']['ev_event']['display']['ev_page_heading'] = array(
-    'label' => t('Display date and title in heading'),
-    'description' => t('Display date and event title in page heading.'),
+    'label' => t('Display date and title in heading', array(), array('context' => 'events')),
+    'description' => t('Display date and event title in page heading.', array(), array('context' => 'events')),
     'weight' => 2,
   );
 
@@ -1133,11 +1133,11 @@ function _events_event_ev_page_heading($node, $view_mode, $langcode) {
 function _events_event_ev_display_date_time($node, $view_mode, $langcode) {
   $local = _events_event_ev_local_time($node, $view_mode, $langcode);
   $user = _events_event_ev_user_time($node, $view_mode, $langcode);
-  $local_html = '<p><strong>Local time:</strong><br>' . $local . '</p>';
-  $user_html = '<p><strong>Your time:</strong><br>' . $user . '</p>';
+  $local_html = '<p><strong>' . t('Local time', array(), array('context' => 'events')) . ':</strong><br>' . $local . '</p>';
+  $user_html = '<p><strong>' . t('Your time', array(), array('context' => 'events')) . ':</strong><br>' . $user . '</p>';
 
   return array(
-    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">Date & time </div><div class="field-items">' . $local_html . $user_html . '</div></div>',
+    '#markup' => '<div class="field field-type-date field-type-date-user"><div class="field-label">' . t('Date & time', array(), array('context' => 'events')) . ' </div><div class="field-items">' . $local_html . $user_html . '</div></div>',
   );
 
 }
@@ -1432,10 +1432,10 @@ function events_event_node_presave($node) {
     // Enable revisions.
     $node->revision = TRUE;
     if (empty($node->log)) {
-      $node->log = t('Event updated by IMO');
+      $node->log = t('Event updated by IMO', array(), array('context' => 'events'));
     }
     else {
-      $node->log .= "\n\n" . t('Event updated by IMO');
+      $node->log .= "\n\n" . t('Event updated by IMO', array(), array('context' => 'events'));
     }
   }
 }
@@ -1456,7 +1456,7 @@ function events_event_node_update($node) {
     $date_end = new DateTime($node->field_event_date['und'][0]['value2'], timezone_open($node->field_event_date['und'][0]['timezone_db']));
 
     // Sent email.
-    $subject = t('Your Event was Edited');
+    $subject = t('Your Event was Edited', array(), array('context' => 'events'));
     $body = t('Dear @user_name,
 
 We wanted to let you know that your event has been updated by @user_edit.
@@ -1489,7 +1489,7 @@ https://events.rwlabs.org
       '@node_field_event_date_value_end' => $date_end->format('l d F Y - H:i'),
       '@node_field_event_date_tz' => $node->field_event_date['und'][0]['timezone_db'],
       '@node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
-    ));
+    ), array('context' => 'events'));
 
     $context = array(
       'recipient' => $recipient->mail,

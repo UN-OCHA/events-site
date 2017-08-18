@@ -38,7 +38,7 @@ function events_config_hybridauth_user_login($account, $data) {
   $user_data = array();
 
   if (isset($data['locale'])) {
-    if (in_array($data['locale'], array('en', 'fr'))) {
+    if (in_array($data['locale'], array('en', 'fr', 'es'))) {
       if ($account->language != $data['locale']) {
         $account->language = $data['locale'];
         $needs_update = TRUE;
