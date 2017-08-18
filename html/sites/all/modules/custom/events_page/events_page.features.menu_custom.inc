@@ -15,6 +15,8 @@ function events_page_menu_default_menu_custom() {
     'menu_name' => 'menu-footer-menu',
     'title' => 'Footer menu',
     'description' => '',
+    'language' => 'und',
+    'i18n_mode' => 5,
   );
   // Translatables
   // Included for use with string extractors like potx.
