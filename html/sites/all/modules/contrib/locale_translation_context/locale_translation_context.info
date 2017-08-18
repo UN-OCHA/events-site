@@ -1,0 +1,15 @@
+name = Locale Translation Context
+core = 7.x
+package = Multilingual - Internationalization
+project = locale_translation_context
+description = "Add context filtering capabilities to the translation interface."
+version = "7.x-1.0"
+
+dependencies[] = locale
+
+; Information added by Drupal.org packaging script on 2017-01-03
+version = "7.x-1.0"
+core = "7.x"
+project = "locale_translation_context"
+datestamp = "1483453745"
+
