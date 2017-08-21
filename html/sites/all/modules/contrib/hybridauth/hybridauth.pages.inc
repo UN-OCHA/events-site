@@ -85,14 +85,14 @@ function hybridauth_window_start($provider_id) {
   }
   else {
     drupal_set_message(t('There was an error processing your request.'), 'error');
-    _hybridauth_window_close(FALSE);
+    _hybridauth_window_close(FALSE, $provider_id);
   }
 }
 
 /**
  * Close the popup (if used) and redirect if there was no error.
  */
-function _hybridauth_window_close($redirect = TRUE) {
+function _hybridauth_window_close($redirect = TRUE, $provider_id = '') {
   global $user;
   // Prevent devel module from spewing.
   $GLOBALS['devel_shutdown'] = FALSE;
@@ -118,26 +118,35 @@ function _hybridauth_window_close($redirect = TRUE) {
   $destination = url($destination_options['path'], $destination_options);
   $destination_error = url($destination_error_options['path'], $destination_error_options);
 
-  drupal_add_js(array(
-    'hybridauth'=> array(
-      'redirect' => $redirect ? 1 : 0,
-      'destination' => $destination,
-      'destination_error' => $destination_error,
-    )
-  ), 'setting');
-  drupal_add_js(drupal_get_path('module', 'hybridauth') . '/js/hybridauth.close.js');
+  $window_type = variable_get('hybridauth_provider_' . $provider_id . '_window_type', '');
+  
+  if ($window_type == 'current') {
+    $url = ($redirect) ? $destination : $destination_error;
+    
+    drupal_goto($url);
+  }
+  else {
+    drupal_add_js(array(
+      'hybridauth'=> array(
+        'redirect' => $redirect ? 1 : 0,
+        'destination' => $destination,
+        'destination_error' => $destination_error,
+      )
+    ), 'setting');
+    drupal_add_js(drupal_get_path('module', 'hybridauth') . '/js/hybridauth.close.js');
 
-  // Make sure that we send the correct content type with charset, otherwise
-  // Firefox might repeat the GET request.
-  // @see https://www.drupal.org/node/2648912
-  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    // Make sure that we send the correct content type with charset, otherwise
+    // Firefox might repeat the GET request.
+    // @see https://www.drupal.org/node/2648912
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
 
-  $page = element_info('page');
-  // Don't show messages on this closing page, show them later.
-  $page['#show_messages'] = FALSE;
-  $page['#children'] = t('Closing...');
-  print theme('html', array('page' => $page));
-  drupal_exit();
+    $page = element_info('page');
+    // Don't show messages on this closing page, show them later.
+    $page['#show_messages'] = FALSE;
+    $page['#children'] = t('Closing...');
+    print theme('html', array('page' => $page));
+    drupal_exit();
+  }
 }
 
 function _hybridauth_window_auth($hybridauth, $provider_id) {
@@ -206,7 +215,7 @@ function _hybridauth_window_auth($hybridauth, $provider_id) {
         drupal_set_message(t('There was an error processing your request.'), 'error');
     }
 
-    _hybridauth_window_close(FALSE);
+    _hybridauth_window_close(FALSE, $provider_id);
   }
 
   $profile['provider'] = $provider_id;
@@ -229,12 +238,12 @@ function _hybridauth_window_process_auth($data) {
       // Registered to this user.
       if ($user->uid == $identity['uid']) {
         drupal_set_message(t('You have already registered this identity.'));
-        _hybridauth_window_close();
+        _hybridauth_window_close(TRUE, $data['provider']);
       }
       // Registered to another user.
       else {
         drupal_set_message(t('This identity is registered to another user.'), 'error');
-        _hybridauth_window_close();
+        _hybridauth_window_close(TRUE, $data['provider']);
       }
     }
     // Identity is not registered - add it to the logged in user.
@@ -242,7 +251,7 @@ function _hybridauth_window_process_auth($data) {
       _hybridauth_identity_save($data);
       drupal_set_message(t('New identity added.'));
       _hybridauth_invoke_hooks('hybridauth_identity_added', $user, $data);
-      _hybridauth_window_close();
+      _hybridauth_window_close(TRUE, $data['provider']);
     }
   }
 
@@ -344,7 +353,7 @@ function _hybridauth_window_process_auth($data) {
       // Terminate if an error occurred during user_save().
       if (!$account) {
         drupal_set_message(t('Error saving user account.'), 'error');
-        _hybridauth_window_close();
+        _hybridauth_window_close(TRUE, $data['provider']);
       }
       _hybridauth_invoke_hooks('hybridauth_user_insert', $account, $data);
       _hybridauth_identity_save($data, $account->uid);
@@ -418,16 +427,16 @@ function _hybridauth_window_process_auth($data) {
         $message = t('New account registration is not allowed.');
       }
       drupal_set_message($message, 'error');
-      _hybridauth_window_close(FALSE);
+      _hybridauth_window_close(FALSE, $data['provider']);
     }
     // Only admin can create accounts.
     else {
       drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');
-      _hybridauth_window_close(FALSE);
+      _hybridauth_window_close(FALSE, $data['provider']);
     }
   }
 
-  _hybridauth_window_close();
+  _hybridauth_window_close(TRUE, $data['provider']);
 }
 
 function _hybridauth_check_additional_info($data) {
