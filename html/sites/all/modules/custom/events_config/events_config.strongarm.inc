@@ -20,6 +20,45 @@ function events_config_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_entity_types';
+  $strongarm->value = array(
+    'node' => 'node',
+    'taxonomy_term' => 'taxonomy_term',
+    'user' => 0,
+  );
+  $export['entity_translation_entity_types'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_revision_enabled';
+  $strongarm->value = TRUE;
+  $export['entity_translation_revision_enabled'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_shared_labels';
+  $strongarm->value = 1;
+  $export['entity_translation_shared_labels'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_show_fallback_on_overview_pages';
+  $strongarm->value = 1;
+  $export['entity_translation_show_fallback_on_overview_pages'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'entity_translation_workflow_enabled';
+  $strongarm->value = 0;
+  $export['entity_translation_workflow_enabled'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'hybridauth_destination';
   $strongarm->value = '';
   $export['hybridauth_destination'] = $strongarm;
@@ -283,6 +322,88 @@ After that, you will be able to log in at [site:login-url] using your [user:hybr
   $strongarm->name = 'hybridauth_widget_weight';
   $strongarm->value = '100';
   $export['hybridauth_widget_weight'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'language_negotiation_language';
+  $strongarm->value = array(
+    'locale-url' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_from_url',
+        'switcher' => 'locale_language_switcher_url',
+        'url_rewrite' => 'locale_language_url_rewrite_url',
+      ),
+      'file' => 'includes/locale.inc',
+    ),
+    'locale-browser' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_from_browser',
+      ),
+      'file' => 'includes/locale.inc',
+      'cache' => 0,
+    ),
+    'locale-user' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_from_user',
+      ),
+      'file' => 'includes/locale.inc',
+    ),
+    'language-default' => array(
+      'callbacks' => array(
+        'language' => 'language_from_default',
+      ),
+    ),
+  );
+  $export['language_negotiation_language'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'language_negotiation_language_content';
+  $strongarm->value = array(
+    'locale-interface' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_from_interface',
+      ),
+      'file' => 'includes/locale.inc',
+    ),
+    'language-default' => array(
+      'callbacks' => array(
+        'language' => 'language_from_default',
+      ),
+    ),
+  );
+  $export['language_negotiation_language_content'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'language_negotiation_language_url';
+  $strongarm->value = array(
+    'locale-url' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_from_url',
+        'switcher' => 'locale_language_switcher_url',
+        'url_rewrite' => 'locale_language_url_rewrite_url',
+      ),
+      'file' => 'includes/locale.inc',
+    ),
+    'locale-url-fallback' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_url_fallback',
+      ),
+      'file' => 'includes/locale.inc',
+    ),
+  );
+  $export['language_negotiation_language_url'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'locale_field_language_fallback';
+  $strongarm->value = 1;
+  $export['locale_field_language_fallback'] = $strongarm;
 
   return $export;
 }

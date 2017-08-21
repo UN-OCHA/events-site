@@ -217,6 +217,9 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
       'vocabulary_machine_name' => $vocabulary,
     );
 
+    // Fill in name field.
+    $term->name_field['en'][0]['value'] = $name;
+
     if ($external_id) {
       $term->field_external_id['und'][0]['value'] = $external_id;
     }
