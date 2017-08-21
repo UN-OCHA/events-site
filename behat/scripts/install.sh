@@ -6,4 +6,6 @@ cd sites/test
 ../../../behat/bin/drush en events_config -y
 ../../../behat/bin/drush en events_event -y
 ../../../behat/bin/drush fra -y
+../../../behat/bin/drush en events_page -y
+../../../behat/bin/drush fra -y
 ../../../behat/bin/drush search-index
