@@ -94,11 +94,22 @@ function ev_migrate_process_row($row) {
 
   $event->field_event_date[LANGUAGE_NONE][] = $row['date'];
 
-  if ($category = ev_migrate_get_term($row['category'], 'ev_category')) {
+  if (isset($row['description'])) {
+    $event->description[LANGUAGE_NONE][] = array(
+      'value' => $row['description'],
+      'format' => 'markdown',
+    );
+  }
+
+  if (isset($row['address']) && isset($row['address']['locality'])) {
+    $event->field_event_location_details[LANGUAGE_NONE][]['value'] = $row['address']['locality'];
+  }
+
+  if (isset($row['category']) && $category = ev_migrate_get_term($row['category'], 'ev_category')) {
     $event->field_event_category[LANGUAGE_NONE][]['tid'] = $category->tid;
   }
 
-  if ($location = ev_migrate_get_term($row['location'], 'ev_category')) {
+  if (isset($row['location']) && $location = ev_migrate_get_term($row['location'], 'ev_location')) {
     $event->field_event_location[LANGUAGE_NONE][]['tid'] = $location->tid;
   }
 
