@@ -3,3 +3,187 @@
  * @file
  * Code for Events migration.
  */
+
+/**
+ * Migrate events.
+ */
+function ev_migrate_events() {
+  $page = variable_get('ev_migrate_page', 0);
+  $api_url = variable_get('ev_migrate_api_url', 'https://ocha:dev@staging.humanitarianresponse.info/ev-migrate/events');
+  $shared_secret = variable_get('ev_migrate_shared_secret', 'ThisIsMySecret');
+  $timestamp = REQUEST_TIME;
+
+  // Build hash.
+  $hash = md5($shared_secret . '_' . $page . '_' . $timestamp);
+
+  // Build URL;
+  $url = $api_url;
+  $url .= '/' . $page;
+  $url .= '/' . $timestamp;
+  $url .= '/' . $hash;
+
+  // Get data.
+  $request = drupal_http_request($url);
+  if (isset($request->data)) {
+    $data = drupal_json_decode($request->data);
+    if (count($data)) {
+      foreach ($data as $row) {
+        ev_migrate_process_row($row);
+      }
+    }
+  }
+
+  variable_set('ev_migrate_page', $page + 1);
+};
+
+/**
+ * Process event data.
+ */
+function ev_migrate_process_row($row) {
+  if (function_exists('drush_log')) {
+    drush_log('Migrating ' . $row['url']);
+  }
+
+  // Make sure we have a user.
+  $account = user_load_by_mail($row['author']['email']);
+  if (!$account) {
+    // Cleanup init.
+    $row['author']['init'] = str_replace('oauthconnector_hid_oauth__', '', $row['author']['init']);
+    if (empty($row['author']['init'])) {
+      $row['author']['init'] = $row['author']['email'];
+    }
+
+    // Create user object.
+    $account = array(
+      'name' => !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'],
+      'mail' => $row['author']['email'],
+      'status' => 1,
+      'init' => $row['author']['init'],
+      'language' => $row['author']['language'],
+      'timezone' => $row['author']['timezone'],
+    );
+    $account = user_save(null, $account);
+
+    // Save the HID association with hybridauth.
+    $hdata = array(
+      'provider' => 'HumanitarianId',
+      'identifier' => $row['author']['init'],
+    );
+    _hybridauth_identity_save($hdata, $account->uid);
+  }
+
+  // Create a new event.
+  $event = new stdClass();
+  $event->type = 'ev_event';
+  $event->status = 1;
+  node_object_prepare($event);
+
+  $event->language = 'en';
+  $event->uid = $account->uid;
+  $event->status = TRUE;
+  $event->promote = FALSE;
+  $event->comment = FALSE;
+  $event->revision = TRUE;
+  $event->log = 'Event imported from ' . $row['url'];
+
+  $event->title = $row['title'];
+  $event->created = $row['created'];
+  $event->changed = $row['changed'];
+  $event->ev_migrate_created = $event->created;
+  $event->ev_migrate_changed = $event->changed;
+
+  $event->field_event_date[LANGUAGE_NONE][] = $row['date'];
+
+  if ($category = ev_migrate_get_term($row['category'], 'ev_category')) {
+    $event->field_event_category[LANGUAGE_NONE][]['tid'] = $category->tid;
+  }
+
+  if ($location = ev_migrate_get_term($row['location'], 'ev_category')) {
+    $event->field_event_location[LANGUAGE_NONE][]['tid'] = $location->tid;
+  }
+
+  if (isset($row['themes']) && is_array($row['themes'])) {
+    foreach ($row['themes'] as $name) {
+      if ($theme = ev_migrate_get_term($name, 'ev_theme')) {
+        $event->field_event_theme[LANGUAGE_NONE][]['tid'] = $theme->tid;
+      }
+    }
+  }
+
+  if (isset($row['organizations']) && is_array($row['organizations'])) {
+    foreach ($row['organizations'] as $name) {
+      if ($organization = ev_migrate_get_term($name, 'ev_organization')) {
+        $event->field_event_organization[LANGUAGE_NONE][]['tid'] = $organization->tid;
+      }
+    }
+  }
+
+  if (isset($row['disasters']) && is_array($row['disasters'])) {
+    foreach ($row['disasters'] as $name) {
+      if ($disaster = ev_migrate_get_term($name, 'ev_disaster')) {
+        $event->field_event_disasters[LANGUAGE_NONE][]['tid'] = $disaster->tid;
+      }
+    }
+  }
+
+  if (isset($row['sectors']) && is_array($row['sectors'])) {
+    foreach ($row['sectors'] as $name) {
+      if ($sector = ev_migrate_get_term($name, 'ev_list')) {
+        $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
+      }
+    }
+  }
+
+  if (isset($row['bundles']) && is_array($row['bundles'])) {
+    foreach ($row['bundles'] as $name) {
+      if ($bundle = ev_migrate_get_term($name, 'ev_list')) {
+        $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $bundle->tid;
+      }
+    }
+  }
+
+  if (isset($row['coordination_hubs']) && is_array($row['coordination_hubs'])) {
+    foreach ($row['coordination_hubs'] as $name) {
+      if ($coordination_hub = ev_migrate_get_term($name, 'ev_coordination_hub')) {
+        $event->field_event_coordination_hub[LANGUAGE_NONE][]['tid'] = $coordination_hub->tid;
+      }
+    }
+  }
+
+  $event = node_submit($event);
+  node_save($event);
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function ev_migrate_node_presave($node) {
+  if (isset($node->ev_migrate_changed)) {
+    $node->changed = $node->ev_migrate_changed;
+    $node->timestamp = $node->ev_migrate_changed;
+  }
+  if (isset($node->ev_migrate_created)) {
+    $node->created = $node->ev_migrate_created;
+  }
+}
+
+/**
+ * Load a term.
+ */
+function ev_migrate_get_term($name, $vocabulary) {
+  // Query by name.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term');
+  $query->entityCondition('bundle', $vocabulary, '=');
+  $query->propertyCondition('name', '%' . $name . '%', 'LIKE');
+  $result = $query->execute();
+
+  // Make sure term exists.
+  if (!isset($result['taxonomy_term'])) {
+    return FALSE;
+  }
+
+  $term_tid = reset($result['taxonomy_term']);
+  $term = taxonomy_term_load($term_tid->tid);
+  return $term;
+}
