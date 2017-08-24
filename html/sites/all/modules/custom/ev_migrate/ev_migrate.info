@@ -1,0 +1,4 @@
+name = Events migration API
+description = Provides drush command to migrate events to Humanitarian Events
+core = 7.x
+package = Humanitarianresponse
