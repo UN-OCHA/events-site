@@ -62,7 +62,7 @@ function ev_migrate_process_row($row) {
       'language' => $row['author']['language'],
       'timezone' => $row['author']['timezone'],
     );
-    $account = user_save(null, $account);
+    $account = user_save(NULL, $account);
 
     // Save the HID association with hybridauth.
     $hdata = array(
@@ -150,6 +150,38 @@ function ev_migrate_process_row($row) {
     }
   }
 
+  if (isset($row['event_meeting_minutes']) && is_array($row['event_meeting_minutes'])) {
+    $meeting_minute_term_info = events_config_get_term('Meeting Minutes', 'ev_document_type');
+    $meeting_minute_tid = $meeting_minute_term_info['term']->tid;
+    foreach ($row['event_meeting_minutes'] as $event_meeting_minute) {
+      $fid = ev_migrate_fetch_and_save_file($event_meeting_minute['name'], $event_meeting_minute['url'], $event->created);
+      if ($fid) {
+        $event->field_event_documents[LANGUAGE_NONE][0]['field_document_type'][LANGUAGE_NONE][0]['tid'] = $meeting_minute_tid;
+        $event->field_event_documents[LANGUAGE_NONE][0]['field_document_file'][LANGUAGE_NONE][0] = array(
+          'fid' => $fid,
+          'display' => 1,
+          'description' => $event_meeting_minute['name'],
+        );
+      }
+    }
+  }
+
+  if (isset($row['event_agenda']) && is_array($row['event_agenda'])) {
+    $meeting_minute_term_info = events_config_get_term('Agenda', 'ev_document_type');
+    $meeting_minute_tid = $meeting_minute_term_info['term']->tid;
+    foreach ($row['event_agenda'] as $event_meeting_minute) {
+      $fid = ev_migrate_fetch_and_save_file($event_meeting_minute['name'], $event_meeting_minute['url'], $event->created);
+      if ($fid) {
+        $event->field_event_documents[LANGUAGE_NONE][0]['field_document_type'][LANGUAGE_NONE][0]['tid'] = $meeting_minute_tid;
+        $event->field_event_documents[LANGUAGE_NONE][0]['field_document_file'][LANGUAGE_NONE][0] = array(
+          'fid' => $fid,
+          'display' => 1,
+          'description' => $event_meeting_minute['name'],
+        );
+      }
+    }
+  }
+
   $event = node_submit($event);
   node_save($event);
 }
@@ -186,4 +218,41 @@ function ev_migrate_get_term($name, $vocabulary) {
   $term_tid = reset($result['taxonomy_term']);
   $term = taxonomy_term_load($term_tid->tid);
   return $term;
+}
+
+/**
+ * Fetch and save a remote file.
+ */
+function ev_migrate_fetch_and_save_file($filename, $url, $timestamp) {
+  $fid = db_select('file_managed', 'f')
+    ->fields('f', array('fid'))
+    ->condition('filename', $filename)
+    ->range(0, 1)
+    ->execute()->fetchField();
+
+  if (variable_get('ev_migrate_file_authentication', '')) {
+    $url = str_replace('https://', 'https://' . variable_get('ev_migrate_file_authentication', '') . '@', $url);
+  }
+
+  if (!$fid) {
+    $field_info = field_info_field('field_document_file');
+    $instance = field_info_instance('multifield', 'field_document_file', 'field_event_documents');
+
+    $destination = file_stream_wrapper_uri_normalize($field_info['settings']['uri_scheme'] . '://' . $instance['settings']['file_directory'] . '/' . format_date($timestamp, 'custom', 'Y-m-d') . '/');
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $file = system_retrieve_file($url, $destination, TRUE, FILE_EXISTS_RENAME);
+    if ($file) {
+      return $file->fid;
+    }
+    else {
+      if (function_exists('drush_log')) {
+        drush_log('Unable to fetch ' . $url);
+      }
+    }
+  }
+  else {
+    return $fid;
+  }
+
+  return FALSE;
 }
