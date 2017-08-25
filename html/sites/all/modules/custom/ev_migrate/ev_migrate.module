@@ -75,7 +75,14 @@ function ev_migrate_process_row($row) {
       'provider' => 'HumanitarianId',
       'identifier' => $row['author']['init'],
     );
-    _hybridauth_identity_save($hdata, $account->uid);
+
+    // Ignore errors.
+    try {
+      _hybridauth_identity_save($hdata, $account->uid);
+    }
+    catch (Exception $e) {
+      // Ignore it, not much we can do.
+    }
   }
 
   // Create a new event.
