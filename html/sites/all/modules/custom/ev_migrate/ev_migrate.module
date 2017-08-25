@@ -8,6 +8,14 @@
  * Migrate events.
  */
 function ev_migrate_events() {
+  if (function_exists('drush_log')) {
+    drush_log('Getting page ' . variable_get('ev_migrate_page', 0));
+  }
+
+  if (variable_get('ev_migrate_stop_processing', FALSE)) {
+    return;
+  }
+
   $page = variable_get('ev_migrate_page', 0);
   $api_url = variable_get('ev_migrate_api_url', '');
   $shared_secret = variable_get('ev_migrate_shared_secret', 'ThisIsMySecret');
@@ -30,10 +38,12 @@ function ev_migrate_events() {
       foreach ($data as $row) {
         ev_migrate_process_row($row);
       }
+      variable_set('ev_migrate_page', $page + 1);
+      return;
     }
   }
 
-  variable_set('ev_migrate_page', $page + 1);
+  variable_set('ev_migrate_stop_processing', TRUE);
 };
 
 /**
