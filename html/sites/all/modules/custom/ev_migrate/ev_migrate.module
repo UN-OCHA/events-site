@@ -47,6 +47,12 @@ function ev_migrate_process_row($row) {
   // Make sure we have a user.
   $account = user_load_by_mail($row['author']['email']);
   if (!$account) {
+    // Check if there's a user by the same name.
+    if (user_load_by_name(!empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'])) {
+      $row['author']['name'] = !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'];
+      $row['author']['name'] .= '_' . REQUEST_TIME;
+    }
+
     // Cleanup init.
     $row['author']['init'] = str_replace('oauthconnector_hid_oauth__', '', $row['author']['init']);
     if (empty($row['author']['init'])) {
