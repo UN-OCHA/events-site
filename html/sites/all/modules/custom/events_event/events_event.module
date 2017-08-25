@@ -329,17 +329,7 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
       foreach ($terms as $term) {
         // Add parent.
         if ($term_fields[$key]['has_parents']) {
-          $parents = taxonomy_get_parents_all($term->tid);
-          if ($parents) {
-            foreach ($parents as $parent) {
-              if (empty($facets[$term_fields[$key]['short_key']]['values'][$term->tid])) {
-                $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $parent->name;
-              }
-              else {
-                $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $parent->name . ' > ' . $facets[$term_fields[$key]['short_key']]['values'][$term->tid];
-              }
-            }
-          }
+          $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->field_long_name['und'][0]['value'];
         }
         else {
           $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->name;
@@ -956,9 +946,62 @@ function events_event_system_time_zones() {
 }
 
 /**
+ * Implements hook_taxonomy_term_presave().
+ */
+function events_event_taxonomy_term_presave($term) {
+  if (isset($term->vocabulary_machine_name) && $term->vocabulary_machine_name == 'ev_location') {
+    // Get original parent.
+    $query = db_select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+    $query->addField('t', 'tid');
+    $query->condition('h.tid', $term->tid);
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    $tids = $query->execute()->fetchCol();
+
+    $parent_ids = taxonomy_term_load_multiple($tids);
+    $parent_ids = array_keys($parent_ids);
+    $parent_id = reset($parent_ids);
+
+    // Make sure we have a parent.
+    if (!isset($term->parent)) {
+      $term_parent_id = $parent_id;
+    }
+    else {
+      $term_parent_id = reset($term->parent);
+    }
+
+    // Update long name based on direct child if needed.
+    if (!isset($term->field_long_name['und'][0]['value']) || empty($term->field_long_name['und'][0]['value']) || $parent_id != $term_parent_id) {
+      if ($term_parent_id == 0) {
+        $term->field_long_name['und'][0]['value'] = $term->name;
+      }
+      else {
+        $parent = taxonomy_term_load($parent_id);
+        $term->field_long_name['und'][0]['value'] = $parent->field_long_name['und'][0]['value'] . ' > ' . $term->name;
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_taxonomy_term_update().
  */
 function events_event_taxonomy_term_update($term) {
+  events_event_clear_term_cache($term);
+}
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function events_event_taxonomy_term_insert($term) {
+  events_event_clear_term_cache($term);
+}
+
+/**
+ * Clear term cache.
+ */
+function events_event_clear_term_cache($term) {
   // Do not clear the cache during cron.
   if (variable_get('cron_semaphore', FALSE)) {
     return;
@@ -992,14 +1035,7 @@ function events_event_taxonomy_term_update($term) {
 }
 
 /**
- * Implements hook_taxonomy_term_insert().
- */
-function events_event_taxonomy_term_insert($term) {
-  events_event_taxonomy_term_update($term);
-}
-
-/**
- * Get locations of an event as string..
+ * Get locations of an event as string.
  */
 function events_event_get_event_locations($node) {
   $output = '';
@@ -1354,14 +1390,13 @@ function events_event_field_widget_form_alter(&$element, &$form_state, $context)
       return;
     }
 
+    $ids = array_keys($element['#options']);
+    $terms = taxonomy_term_load_multiple($ids);
+
     foreach ($element['#options'] as $tid => &$option) {
       if (is_numeric($tid)) {
         $option_label = array();
-        $parents = taxonomy_get_parents_all($tid);
-        foreach ($parents as $parent_id => $parent) {
-          array_unshift($option_label, entity_label('taxonomy_term', $parent));
-        }
-        $option = implode(' > ', $option_label);
+        $option = $terms[$tid]->field_long_name['und'][0]['value'];
       }
     }
     cache_set($cache_key, $element['#options']);
