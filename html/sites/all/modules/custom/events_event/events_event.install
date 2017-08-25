@@ -12,9 +12,16 @@ function events_event_install() {
 }
 
 /**
- * Add full name to location terms.
+ * Revert event feature.
  */
 function events_event_update_7001() {
+  features_revert_module('events_event');
+}
+
+/**
+ * Add full name to location terms.
+ */
+function events_event_update_7002() {
   $vid = taxonomy_vocabulary_machine_name_load('ev_location')->vid;
   $tree = taxonomy_get_tree(8);
   foreach ($tree as $term_info) {
