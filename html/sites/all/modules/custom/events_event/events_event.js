@@ -226,10 +226,13 @@ var evFilters = function ($) {
     // Flip key and value.
     var flipped = [];
     for (var key in facet.values) {
-      flipped.push({
-        'key': key,
-        'label': facet.values[key]
-      });
+      // Make sure value is set.
+      if (facet.values[key]) {
+        flipped.push({
+          'key': key,
+          'label': facet.values[key]
+        });
+      }
     }
 
     // Sort by label.
