@@ -434,6 +434,7 @@ function events_event_strongarm() {
   $strongarm->name = 'node_options_ev_event';
   $strongarm->value = array(
     0 => 'status',
+    1 => 'revision',
   );
   $export['node_options_ev_event'] = $strongarm;
 
