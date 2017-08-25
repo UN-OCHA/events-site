@@ -70,9 +70,14 @@ function ev_migrate_process_row($row) {
       $row['author']['init'] = $row['author']['email'];
     }
 
+    $row['author']['name'] = !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'];
+    if (strlen($row['author']['name']) > 60) {
+      $row['author']['name'] = substr($row['author']['name'], 0, 60);
+    }
+
     // Create user object.
     $account = array(
-      'name' => !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'],
+      'name' => $row['author']['name'],
       'mail' => $row['author']['email'],
       'status' => 1,
       'init' => $row['author']['init'],
