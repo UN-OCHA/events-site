@@ -987,7 +987,12 @@ function events_event_taxonomy_term_presave($term) {
         $term->field_long_name['und'][0]['value'] = $term->name;
       }
       else {
-        $parent = taxonomy_term_load($parent_id);
+        if ($parent_id) {
+          $parent = taxonomy_term_load($parent_id);
+        }
+        elseif ($term_parent_id) {
+          $parent = taxonomy_term_load($term_parent_id);
+        }
         $term->field_long_name['und'][0]['value'] = $parent->field_long_name['und'][0]['value'] . ' > ' . $term->name;
       }
     }
