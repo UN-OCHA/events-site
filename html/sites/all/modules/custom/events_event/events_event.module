@@ -950,18 +950,23 @@ function events_event_system_time_zones() {
  */
 function events_event_taxonomy_term_presave($term) {
   if (isset($term->vocabulary_machine_name) && $term->vocabulary_machine_name == 'ev_location') {
-    // Get original parent.
-    $query = db_select('taxonomy_term_data', 't');
-    $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
-    $query->addField('t', 'tid');
-    $query->condition('h.tid', $term->tid);
-    $query->orderBy('t.weight');
-    $query->orderBy('t.name');
-    $tids = $query->execute()->fetchCol();
+    // Get original parent for existing terms.
+    if (isset($term->tid)) {
+      $query = db_select('taxonomy_term_data', 't');
+      $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+      $query->addField('t', 'tid');
+      $query->condition('h.tid', $term->tid);
+      $query->orderBy('t.weight');
+      $query->orderBy('t.name');
+      $tids = $query->execute()->fetchCol();
 
-    $parent_ids = taxonomy_term_load_multiple($tids);
-    $parent_ids = array_keys($parent_ids);
-    $parent_id = reset($parent_ids);
+      $parent_ids = taxonomy_term_load_multiple($tids);
+      $parent_ids = array_keys($parent_ids);
+      $parent_id = reset($parent_ids);
+    }
+    else {
+      $parent_id = 0;
+    }
 
     // Make sure we have a parent.
     if (!isset($term->parent)) {
