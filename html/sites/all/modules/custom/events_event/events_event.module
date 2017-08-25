@@ -329,7 +329,12 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
       foreach ($terms as $term) {
         // Add parent.
         if ($term_fields[$key]['has_parents']) {
-          $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->field_long_name['und'][0]['value'];
+          if (isset($terms[$tid]->field_long_name['und'][0]['value'])) {
+            $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->field_long_name['und'][0]['value'];
+          }
+          else {
+            $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->name;
+          }
         }
         else {
           $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->name;
@@ -1411,7 +1416,9 @@ function events_event_field_widget_form_alter(&$element, &$form_state, $context)
     foreach ($element['#options'] as $tid => &$option) {
       if (is_numeric($tid)) {
         $option_label = array();
-        $option = $terms[$tid]->field_long_name['und'][0]['value'];
+        if (isset($terms[$tid]->field_long_name['und'][0]['value'])) {
+          $option = $terms[$tid]->field_long_name['und'][0]['value'];
+        }
       }
     }
     cache_set($cache_key, $element['#options']);
