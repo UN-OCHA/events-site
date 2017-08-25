@@ -329,7 +329,7 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
       foreach ($terms as $term) {
         // Add parent.
         if ($term_fields[$key]['has_parents']) {
-          if (isset($terms[$tid]->field_long_name['und'][0]['value'])) {
+          if (isset($term->field_long_name['und'][0]['value'])) {
             $facets[$term_fields[$key]['short_key']]['values'][$term->tid] = $term->field_long_name['und'][0]['value'];
           }
           else {
