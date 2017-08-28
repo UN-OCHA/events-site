@@ -32,3 +32,25 @@ function events_event_update_7002() {
     taxonomy_term_save($term);
   }
 }
+
+/**
+ * Revert event feature.
+ */
+function events_event_update_7003() {
+  features_revert_module('events_event');
+}
+
+/**
+ * Add parent tids to location terms.
+ */
+function events_event_update_7004() {
+  $vid = taxonomy_vocabulary_machine_name_load('ev_location')->vid;
+  $tree = taxonomy_get_tree(8);
+  foreach ($tree as $term_info) {
+    if (function_exists('drush_log')) {
+      drush_log('Processing ' . $term_info->name);
+    }
+    $term = taxonomy_term_load($term_info->tid);
+    taxonomy_term_save($term);
+  }
+}
