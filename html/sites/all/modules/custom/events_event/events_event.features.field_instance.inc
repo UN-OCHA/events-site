@@ -889,6 +889,42 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-ev_location-field_parent_tids'.
+  $field_instances['taxonomy_term-ev_location-field_parent_tids'] = array(
+    'bundle' => 'ev_location',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_parent_tids',
+    'label' => 'Parent tids',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance:
   // 'taxonomy_term-ev_organization-field_ev_legend_color'.
   $field_instances['taxonomy_term-ev_organization-field_ev_legend_color'] = array(
@@ -1010,6 +1046,7 @@ function events_event_field_default_field_instances() {
   t('Long name');
   t('Name');
   t('Organization');
+  t('Parent tids');
   t('Theme');
 
   return $field_instances;
