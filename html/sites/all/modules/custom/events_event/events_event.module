@@ -1035,7 +1035,7 @@ function events_event_taxonomy_term_insert($term) {
   // Update parent tids based on direct child if needed.
   if (isset($term->vocabulary_machine_name) && $term->vocabulary_machine_name == 'ev_location') {
     if (!isset($term->field_parent_tids['und'][0]['value']) || empty($term->field_parent_tids['und'][0]['value'])) {
-      // Trigger an update
+      // Trigger an update.
       taxonomy_term_save($term);
       return;
     }
