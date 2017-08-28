@@ -405,17 +405,16 @@ function events_event_fetch_events() {
         $event[$term_field_info['short_key']] = array();
         if (isset($node->{$term_field}['und'][0]['tid'])) {
           foreach ($node->{$term_field}['und'] as $child) {
-            $event[$term_field_info['short_key']][] = $child['tid'];
-
             // Add parent tid.
             if ($term_field_info['has_parents']) {
-              $parents = taxonomy_get_parents_all($child['tid']);
-              if (count($parents) > 1) {
-                array_shift($parents);
-                foreach ($parents as $parent) {
-                  $event[$term_field_info['short_key']][] = $parent->tid;
-                }
+              $term = taxonomy_term_load($child['tid']);
+              $parents = explode('|', $term->field_parent_tids['und'][0]['value']);
+              foreach ($parents as $parent) {
+                $event[$term_field_info['short_key']][] = $parent;
               }
+            }
+            else {
+              $event[$term_field_info['short_key']][] = $child['tid'];
             }
           }
           $event[$term_field_info['short_key']] = array_unique($event[$term_field_info['short_key']]);
@@ -1001,6 +1000,24 @@ function events_event_taxonomy_term_presave($term) {
         $term->field_long_name['und'][0]['value'] = $parent->field_long_name['und'][0]['value'] . ' > ' . $term->name;
       }
     }
+
+    // Update parent tids based on direct child if needed.
+    if (!empty($term->tid)) {
+      if (!isset($term->field_parent_tids['und'][0]['value']) || empty($term->field_parent_tids['und'][0]['value']) || $parent_id != $term_parent_id) {
+        if ($term_parent_id == 0) {
+          $term->field_parent_tids['und'][0]['value'] = $term->tid;
+        }
+        else {
+          if ($parent_id) {
+            $parent = taxonomy_term_load($parent_id);
+          }
+          elseif ($term_parent_id) {
+            $parent = taxonomy_term_load($term_parent_id);
+          }
+          $term->field_parent_tids['und'][0]['value'] = $parent->field_parent_tids['und'][0]['value'] . '|' . $term->tid;
+        }
+      }
+    }
   }
 }
 
@@ -1015,6 +1032,15 @@ function events_event_taxonomy_term_update($term) {
  * Implements hook_taxonomy_term_insert().
  */
 function events_event_taxonomy_term_insert($term) {
+  // Update parent tids based on direct child if needed.
+  if (isset($term->vocabulary_machine_name) && $term->vocabulary_machine_name == 'ev_location') {
+    if (!isset($term->field_parent_tids['und'][0]['value']) || empty($term->field_parent_tids['und'][0]['value'])) {
+      // Trigger an update.
+      taxonomy_term_save($term);
+      return;
+    }
+  }
+
   events_event_clear_term_cache($term);
 }
 
