@@ -121,7 +121,18 @@ function ev_migrate_process_row($row) {
   $event->ev_migrate_created = $event->created;
   $event->ev_migrate_changed = $event->changed;
 
-  $event->field_event_date[LANGUAGE_NONE][] = $row['date'];
+  $event->field_event_date[LANGUAGE_NONE][0] = $row['date'];
+  if (!empty($row['date']['rrule'])) {
+    $field_info = field_info_field('field_event_date');
+    // Double check date format used.
+    if (strpos(date_type_format($field_info['type']), 'T') !== FALSE) {
+      $event->field_event_date[LANGUAGE_NONE][0]['value'] = str_replace(' ', 'T', $event->field_event_date[LANGUAGE_NONE][0]['value']);
+      $event->field_event_date[LANGUAGE_NONE][0]['value2'] = str_replace(' ', 'T', $event->field_event_date[LANGUAGE_NONE][0]['value2']);
+    }
+
+    // Build all values.
+    $event->field_event_date[LANGUAGE_NONE] = date_repeat_build_dates($event->field_event_date[LANGUAGE_NONE][0]['rrule'], NULL, $field_info, $event->field_event_date[LANGUAGE_NONE][0]);
+  }
 
   if (isset($row['description'])) {
     $event->description[LANGUAGE_NONE][] = array(
@@ -224,6 +235,11 @@ function ev_migrate_process_row($row) {
 
   $event = node_submit($event);
   node_save($event);
+
+  if (function_exists('drush_log')) {
+    drush_log('Events saved with id ' . $event->nid);
+  }
+
 }
 
 /**
