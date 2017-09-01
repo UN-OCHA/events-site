@@ -19,6 +19,11 @@ class EventsEventSearchApiStoreData extends SearchApiAbstractAlterCallback {
     return $index->machine_name === 'un_events';
   }
 
+  /**
+   * Configuration form.
+   *
+   * @see SearchApiAlterCallbackInterface::configurationForm()
+   */
   public function configurationForm() {
     $form['note'] = array(
       '#markup' => '<p>' . t('No configuration needed.') . '</p>',
@@ -26,6 +31,11 @@ class EventsEventSearchApiStoreData extends SearchApiAbstractAlterCallback {
     return $form;
   }
 
+  /**
+   * Alter items during indexing.
+   *
+   * @see SearchApiAlterCallbackInterface::alterItems()
+   */
   public function alterItems(array &$items) {
     // This only works with solr backend.
     foreach ($items as &$item) {
@@ -46,6 +56,11 @@ class EventsEventSearchApiStoreData extends SearchApiAbstractAlterCallback {
 
   }
 
+  /**
+   * Property Info.
+   *
+   * @see SearchApiAlterCallbackInterface::propertyInfo()
+   */
   public function propertyInfo() {
     return array(
       'search_api_event_data' => array(
