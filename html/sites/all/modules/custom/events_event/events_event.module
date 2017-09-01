@@ -409,6 +409,10 @@ function events_event_fetch_events() {
         unset($event['start_raw']);
         unset($event['end_raw']);
         unset($event['timezone_db']);
+        unset($event['rrule']);
+        unset($event['changed']);
+        unset($event['created']);
+
         $events[] = $event;
       }
     }
@@ -416,10 +420,19 @@ function events_event_fetch_events() {
 
   // Check if data is missing.
   if (!empty($nids)) {
-    $event_nodes = node_load_multiple($nids);
+    $event_nodes = node_load_multiple(array_keys($nids));
     foreach ($event_nodes as $event_node) {
       $event_data = events_event_build_api_structure($event_node, $timezone);
-      $events = array_merge($events, $event_data);
+      foreach ($event_data as $event) {
+        unset($event['start_raw']);
+        unset($event['end_raw']);
+        unset($event['timezone_db']);
+        unset($event['rrule']);
+        unset($event['changed']);
+        unset($event['created']);
+
+        $events[] = $event;
+      }
     }
   }
 
@@ -439,13 +452,16 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
     $date_end->setTimezone(timezone_open($timezone));
 
     $event = array(
+      'start_raw' => $date['value'],
+      'end_raw' => $date['value2'],
+      'rrule' => $date['rrule'],
+      'timezone_db' => $date['timezone_db'],
+      'changed' => $node->changed,
+      'created' => $node->created,
       'id' => $node->nid,
       'title' => $node->title,
       'start' => $date_start->format(DATE_FORMAT_DATETIME),
       'end' => $date_end->format(DATE_FORMAT_DATETIME),
-      'start_raw' => $date['value'],
-      'end_raw' => $date['value2'],
-      'timezone_db' => $date['timezone_db'],
       'allDay' => $date['value'] == $date['value2'],
       'url' => url('node/' . $node->nid, array('absolute' => TRUE)),
       'backgroundColor' => events_event_get_event_color($node),
@@ -506,7 +522,32 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
 function events_event_to_ical() {
   $query_filters = events_event_get_query_filters();
   $data = events_event_fetch_events_from_search_api('', '', $query_filters);
-  $nodes = $data['events'];
+  $nids = array_flip($data['nids']);
+
+  $events = array();
+
+  // Load stored event data.
+  if (!empty($nids)) {
+    $result = db_select('events_event_data', 'e')
+        ->fields('e', array('nid', 'data'))
+        ->condition('nid', array_keys($nids), 'IN')
+        ->execute()
+        ->fetchAllKeyed(0, 1);
+
+    foreach ($result as $nid => $events_data) {
+      unset($nids[$nid]);
+      $events[] = unserialize($events_data);
+    }
+  }
+
+  // Check if data is missing.
+  if (!empty($nids)) {
+    $event_nodes = node_load_multiple(array_keys($nids));
+    foreach ($event_nodes as $event_node) {
+      $event_data = events_event_build_api_structure($event_node, $timezone);
+      $events[] = $event_data;
+    }
+  }
 
   $library = libraries_load('iCalcreator');
   $config = array('unique_id' => 'Date iCal');
@@ -515,8 +556,13 @@ function events_event_to_ical() {
   $vcalendar->setProperty('X-WR-CALNAME', 'UN Events', array('VALUE' => 'TEXT'));
   $vcalendar->setProperty('X-WR-TIMEZONE', 'UTC');
 
-  foreach ($nodes as $node) {
-    $date = $node->field_event_date['und'][0];
+  foreach ($events as $event) {
+    $node = $event[0];
+    $date = array(
+      'value' => $node['start_raw'],
+      'value2' => $node['end_raw'],
+      'rrule' => $node['rrule'],
+    );
     $vevent = $vcalendar->newComponent('vevent');
     $vevent->setUid($node->nid);
     $vevent->setSummary($node->title);
@@ -650,12 +696,12 @@ function events_event_to_ical() {
       }
     }
 
-    $vevent->setUrl(url('node/' . $node->nid, array('absolute' => TRUE)), array('type' => 'URI'));
-    $vevent->setDescription($node->title);
+    $vevent->setUrl($node['url']);
+    $vevent->setDescription($node['title']);
 
     // Last modified - updated.
     $lm = new DateTime();
-    $lm->setTimestamp($node->changed);
+    $lm->setTimestamp($node['changed']);
     $vevent->setLastModified(
       $lm->format('Y'),
       $lm->format('m'),
@@ -668,7 +714,7 @@ function events_event_to_ical() {
 
     // Created.
     $lm = new DateTime();
-    $lm->setTimestamp($node->created);
+    $lm->setTimestamp($node['created']);
     $vevent->setCreated(
       $lm->format('Y'),
       $lm->format('m'),
@@ -681,11 +727,6 @@ function events_event_to_ical() {
   }
 
   $output = $vcalendar->createCalendar();
-
-  if (FALSE) {
-    $output = str_replace('\,', ',', $output);
-    $output = str_replace('\;', ';', $output);
-  }
 
   // Prevent devel module from appending queries to ical export.
   $GLOBALS['devel_shutdown'] = FALSE;
