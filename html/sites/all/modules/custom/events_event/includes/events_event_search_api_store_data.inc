@@ -39,11 +39,10 @@ class EventsEventSearchApiStoreData extends SearchApiAbstractAlterCallback {
   public function alterItems(array &$items) {
     foreach ($items as &$item) {
       try {
-
         $events = events_event_build_api_structure($item);
 
         db_merge('events_event_data')
-          ->key(array('nid' => $node->nid))
+          ->key(array('nid' => $item->nid))
           ->fields(array(
             'data' => serialize($events),
           ))

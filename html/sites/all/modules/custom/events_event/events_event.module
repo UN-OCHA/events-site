@@ -379,7 +379,7 @@ function events_event_fetch_events() {
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
   $data = events_event_fetch_events_from_search_api($start, $end, $query_filters);
-  $nids = $data['nids'];
+  $nids = array_flip($data['nids']);
 
   $events = array();
 
@@ -387,7 +387,7 @@ function events_event_fetch_events() {
   if (!empty($nids)) {
     $result = db_select('events_event_data', 'e')
         ->fields('e', array('nid', 'data'))
-        ->condition('nid', $nids, 'IN')
+        ->condition('nid', array_keys($nids), 'IN')
         ->execute()
         ->fetchAllKeyed(0, 1);
 
