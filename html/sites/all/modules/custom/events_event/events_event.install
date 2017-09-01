@@ -4,6 +4,34 @@
  * Code for the Event feature.
  */
 
+ /**
+  * Implements hook_schema().
+  */
+function events_event_schema() {
+  $schema['events_event_data'] = array(
+    'description' => 'Stores event data for API.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Node ID.',
+        'default' => 0,
+      ),
+      'data' => array(
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'A serialized array of event info.',
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+
+  return $schema;
+}
+
 /**
  * Implements hook_install().
  */
@@ -52,5 +80,14 @@ function events_event_update_7004() {
     }
     $term = taxonomy_term_load($term_info->tid);
     taxonomy_term_save($term);
+  }
+}
+
+/**
+ * Add new table.
+ */
+function events_event_update_7005() {
+  if (!db_table_exists('events_event_data')) {
+    db_create_table('events_event_data', drupal_get_schema_unprocessed('events_event', 'events_event_data'));
   }
 }
