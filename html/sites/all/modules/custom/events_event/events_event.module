@@ -296,6 +296,8 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   if ($facets_only) {
     $query->range(0, 0);
   }
+
+  $query->sort('search_api_id', 'ASC');
   $results = $query->execute();
 
   // Load events.
