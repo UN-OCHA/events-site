@@ -3,6 +3,7 @@ description = Event
 core = 7.x
 package = Events
 version = 7.x-1.0
+files[] = includes/events_event_search_api_store_data.inc
 dependencies[] = chosen
 dependencies[] = color_field
 dependencies[] = date
