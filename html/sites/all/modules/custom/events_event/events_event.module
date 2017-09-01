@@ -1605,3 +1605,18 @@ https://events.rwlabs.org
     system_send_email_action($node, $context);
   }
 }
+
+/**
+ * Implements hook_search_api_alter_callback_info().
+ */
+function events_event_search_api_alter_callback_info() {
+  // This does not work with search_api_db, no field are returned.
+  $callbacks['events_event_search_api_store_data'] = array(
+    'name' => t('Store data for events API calls'),
+    'description' => t('Store data for events API calls.'),
+    'class' => 'EventsEventSearchApiStoreData',
+    'weight' => 100,
+  );
+
+  return $callbacks;
+}
