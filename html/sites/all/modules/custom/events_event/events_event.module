@@ -389,7 +389,7 @@ function events_event_fetch_events() {
         ->fields('e', array('nid', 'data'))
         ->condition('nid', $nids, 'IN')
         ->execute()
-        ->fetchAllKeyed(0,1);
+        ->fetchAllKeyed(0, 1);
 
     foreach ($result as $nid => $events_data) {
       unset($nids[$nid]);
