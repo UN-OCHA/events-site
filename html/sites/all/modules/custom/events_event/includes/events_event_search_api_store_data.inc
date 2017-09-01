@@ -37,23 +37,23 @@ class EventsEventSearchApiStoreData extends SearchApiAbstractAlterCallback {
    * @see SearchApiAlterCallbackInterface::alterItems()
    */
   public function alterItems(array &$items) {
-    // This only works with solr backend.
     foreach ($items as &$item) {
       try {
-        $data = array(
-          'field_event_date' => $item->field_event_date['und'],
-        );
-        if (!$data) {
-          $item->search_api_viewed = NULL;
-          continue;
-        }
-        $item->search_api_viewed = $data;
+        $events = events_event_build_api_structure($item);
+
+        db_merge('events_event_data')
+          ->key(array('nid' => $item->nid))
+          ->fields(array(
+            'data' => serialize($events),
+          ))
+          ->execute();
+
+        $item->search_api_event_data = TRUE;
       }
       catch (Exception $e) {
-        $item->search_api_viewed = NULL;
+        $item->search_api_event_data = FALSE;
       }
     }
-
   }
 
   /**
@@ -65,8 +65,8 @@ class EventsEventSearchApiStoreData extends SearchApiAbstractAlterCallback {
     return array(
       'search_api_event_data' => array(
         'label' => t('Event data'),
-        'description' => t('Data for the event API.'),
-        'type' => 'text',
+        'description' => t('Flag for the event API.'),
+        'type' => 'boolean',
       ),
     );
   }
