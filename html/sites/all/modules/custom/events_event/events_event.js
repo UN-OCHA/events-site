@@ -570,11 +570,6 @@ var evCalendar = function ($) {
     var alreadyTrigger = false;
 
     $.extend(settings.$settings.events, {
-      timeout: 25000,
-      cache: true,
-      headers: {
-        'Cache-Control': 'max-age=300'
-      },
       success: function() {
         $('.fc-view').removeClass('fc-view--error');
         $('.fc-loading-message, .fc-loading-message--error').remove();
