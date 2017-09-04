@@ -9,3 +9,4 @@ cd sites/test
 ../../../behat/bin/drush cc all
 ../../../behat/bin/drush fra -y
 ../../../behat/bin/drush search-index
+../../../behat/bin/drush vset -y events_event_page_cache 0

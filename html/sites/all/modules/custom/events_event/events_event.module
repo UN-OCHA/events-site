@@ -195,6 +195,8 @@ function events_event_exported_term_fields() {
  */
 function events_event_calendar() {
   $settings = array(
+    'timeout' => 25000,
+    'cache' => TRUE,
     'base_url' => '',
     'header' => array(
       'left' => 'prev,next today',
@@ -221,6 +223,13 @@ function events_event_calendar() {
     ),
     'categories' => _events_event_fetch_categories(),
   );
+
+  // Add caching.
+  if (variable_get('events_event_page_cache', 60)) {
+    $settings['headers'] = array(
+      'Cache-Control' => 'max-age=' . variable_get('events_event_page_cache', 60),
+    );
+  }
 
   // Parse query parameters.
   $query_filters = events_event_get_query_filters();
@@ -732,8 +741,10 @@ function events_event_to_ical() {
   $GLOBALS['devel_shutdown'] = FALSE;
 
   drupal_add_http_header('Content-Type', 'text/calendar; charset=UTF-8');
-  drupal_add_http_header('Cache-Control', 'no-cache, must-revalidate');
   drupal_add_http_header('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
+  if (variable_get('events_event_page_cache', 60)) {
+    drupal_add_http_header('Cache-Control', 'public, max-age=' . variable_get('events_event_page_cache', 60));
+  }
 
   echo $output;
 }
@@ -1471,6 +1482,9 @@ function _events_event_render_dates_as_string($dates) {
 function events_event_json_output($data) {
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
+  if (variable_get('events_event_page_cache', 60)) {
+    drupal_add_http_header('Cache-Control', 'public, max-age=' . variable_get('events_event_page_cache', 60));
+  }
   drupal_json_output($data);
 }
 
