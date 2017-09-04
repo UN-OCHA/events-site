@@ -51,7 +51,7 @@ function events_event_update_7001() {
  */
 function events_event_update_7002() {
   $vid = taxonomy_vocabulary_machine_name_load('ev_location')->vid;
-  $tree = taxonomy_get_tree(8);
+  $tree = taxonomy_get_tree($vid);
   foreach ($tree as $term_info) {
     if (function_exists('drush_log')) {
       drush_log('Processing ' . $term_info->name);
@@ -73,7 +73,7 @@ function events_event_update_7003() {
  */
 function events_event_update_7004() {
   $vid = taxonomy_vocabulary_machine_name_load('ev_location')->vid;
-  $tree = taxonomy_get_tree(8);
+  $tree = taxonomy_get_tree($vid);
   foreach ($tree as $term_info) {
     if (function_exists('drush_log')) {
       drush_log('Processing ' . $term_info->name);
@@ -90,4 +90,12 @@ function events_event_update_7005() {
   if (!db_table_exists('events_event_data')) {
     db_create_table('events_event_data', drupal_get_schema_unprocessed('events_event', 'events_event_data'));
   }
+}
+
+/**
+ * Update location terms.
+ */
+function events_event_update_7006() {
+  events_event_update_7002();
+  events_event_update_7004();
 }
