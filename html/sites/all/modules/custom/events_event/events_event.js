@@ -570,6 +570,7 @@ var evCalendar = function ($) {
     var alreadyTrigger = false;
 
     $.extend(settings.$settings.events, {
+      cache: true,
       success: function() {
         $('.fc-view').removeClass('fc-view--error');
         $('.fc-loading-message, .fc-loading-message--error').remove();

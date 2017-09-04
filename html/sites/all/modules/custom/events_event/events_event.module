@@ -196,7 +196,6 @@ function events_event_exported_term_fields() {
 function events_event_calendar() {
   $settings = array(
     'timeout' => 25000,
-    'cache' => TRUE,
     'base_url' => '',
     'header' => array(
       'left' => 'prev,next today',
