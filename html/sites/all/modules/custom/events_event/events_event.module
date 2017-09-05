@@ -1186,11 +1186,11 @@ function events_event_clear_term_cache($term) {
  * Get locations of an event as string.
  */
 function events_event_get_event_locations($node) {
-  $output = '';
+  $output = [];
 
-  if (isset($node->field_event_location['und'])) {
+  if (isset($node->field_event_location[LANGUAGE_NONE])) {
     $tids = array();
-    foreach ($node->field_event_location['und'] as $location) {
+    foreach ($node->field_event_location[LANGUAGE_NONE] as $location) {
       $tids[] = $location['tid'];
     }
     $terms = taxonomy_term_load_multiple($tids);
@@ -1198,10 +1198,9 @@ function events_event_get_event_locations($node) {
       $output[] = $term->name;
     }
 
-    $output = implode(', ', $output);
   }
 
-  return $output;
+  return implode(', ', $output);
 }
 
 /**

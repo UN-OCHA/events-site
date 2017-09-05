@@ -112,7 +112,7 @@ function events_event_field_default_field_instances() {
     'bundle' => 'ev_event',
     'default_value' => array(
       0 => array(
-        'tid' => 5576,
+        'tid' => 44528,
       ),
     ),
     'deleted' => 0,
