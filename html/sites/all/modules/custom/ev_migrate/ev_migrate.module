@@ -169,7 +169,7 @@ function ev_migrate_process_row($row) {
     }
 
     // Limit to 250 characters.
-    if (!isset($event->field_event_original_theme[LANGUAGE_NONE][0]['value'])) {
+    if (isset($event->field_event_original_theme[LANGUAGE_NONE][0]['value'])) {
       $event->field_event_original_theme[LANGUAGE_NONE][0]['value'] = substr($event->field_event_original_theme[LANGUAGE_NONE][0]['value'], 0, 250);
     }
   }
