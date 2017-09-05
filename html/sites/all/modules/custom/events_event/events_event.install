@@ -37,6 +37,7 @@ function events_event_schema() {
  */
 function events_event_install() {
   theme_enable(array('ochabasic'));
+  features_feature_lock('events_event', 'search_api_server');
 }
 
 /**
@@ -98,4 +99,11 @@ function events_event_update_7005() {
 function events_event_update_7006() {
   events_event_update_7002();
   events_event_update_7004();
+}
+
+/**
+ * Lock search api server.
+ */
+function events_event_update_7007() {
+  features_feature_lock('events_event', 'search_api_server');
 }
