@@ -263,7 +263,7 @@ function ev_migrate_get_term($name, $vocabulary) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'taxonomy_term');
   $query->entityCondition('bundle', $vocabulary, '=');
-  $query->propertyCondition('name', '%' . $name . '%', 'LIKE');
+  $query->propertyCondition('name', $name, '=');
   $result = $query->execute();
 
   // Make sure term exists.
