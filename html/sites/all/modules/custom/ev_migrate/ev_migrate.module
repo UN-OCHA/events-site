@@ -158,6 +158,14 @@ function ev_migrate_process_row($row) {
       if ($theme = ev_migrate_get_term($name, 'ev_theme')) {
         $event->field_event_theme[LANGUAGE_NONE][]['tid'] = $theme->tid;
       }
+      else {
+        if (!isset($event->field_event_theme[LANGUAGE_NONE][0]['value'])) {
+          $event->field_event_theme[LANGUAGE_NONE][0]['value'] = $name;
+        }
+        else {
+          $event->field_event_theme[LANGUAGE_NONE][0]['value'] .= ', ' . $name;
+        }
+      }
     }
   }
 
