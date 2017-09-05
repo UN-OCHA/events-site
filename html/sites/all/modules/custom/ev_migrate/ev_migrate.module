@@ -159,11 +159,11 @@ function ev_migrate_process_row($row) {
         $event->field_event_theme[LANGUAGE_NONE][]['tid'] = $theme->tid;
       }
       else {
-        if (!isset($event->field_event_theme[LANGUAGE_NONE][0]['value'])) {
-          $event->field_event_theme[LANGUAGE_NONE][0]['value'] = $name;
+        if (!isset($event->field_event_original_theme[LANGUAGE_NONE][0]['value'])) {
+          $event->field_event_original_theme[LANGUAGE_NONE][0]['value'] = $name;
         }
         else {
-          $event->field_event_theme[LANGUAGE_NONE][0]['value'] .= ', ' . $name;
+          $event->field_event_original_theme[LANGUAGE_NONE][0]['value'] .= ', ' . $name;
         }
       }
     }
