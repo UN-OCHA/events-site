@@ -1186,7 +1186,7 @@ function events_event_clear_term_cache($term) {
  * Get locations of an event as string.
  */
 function events_event_get_event_locations($node) {
-  $output = '';
+  $output = array();
 
   if (isset($node->field_event_location[LANGUAGE_NONE])) {
     $tids = array();
@@ -1197,11 +1197,9 @@ function events_event_get_event_locations($node) {
     foreach ($terms as $term) {
       $output[] = $term->name;
     }
-
-    $output = implode(', ', $output);
   }
 
-  return $output;
+  return implode(', ', $output);
 }
 
 /**
