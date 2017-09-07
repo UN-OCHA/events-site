@@ -563,6 +563,9 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
       if (empty($data['data'])) {
+        if (function_exists('drush_log')) {
+          drush_log('No data received from ' . $url);
+        }
         break;
       }
 
@@ -602,10 +605,20 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
         $url = $data['next']['href'];
       }
       else {
+        if (function_exists('drush_log')) {
+          drush_log('No next set ' . $url);
+        }
+
+        $url = '';
         break;
       }
     }
     else {
+      if (function_exists('drush_log')) {
+        drush_log('No data received from ' . $url);
+      }
+
+      $url = '';
       break;
     }
   }
