@@ -259,11 +259,10 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
           $term->parent = $parent_id;
           $needs_update = TRUE;
         }
-        else {
-          if (function_exists('drush_log')) {
-            drush_log('Same Id ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')', 'error');
-          }
-        }
+      }
+      else {
+        $term->parent = $parent_id;
+        $needs_update = TRUE;
       }
     }
 
