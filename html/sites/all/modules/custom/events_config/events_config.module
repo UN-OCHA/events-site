@@ -200,7 +200,7 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
   }
 
   // Query by name if not found or not defined.
-  if (!$external_id || !isset($result['taxonomy_term'])) {
+  if (!$external_id && !isset($result['taxonomy_term'])) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
     $query->entityCondition('bundle', $vocabulary, '=');
@@ -614,7 +614,6 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
             }
 
             $parent_term = reset($result['taxonomy_term']);
-            $term = taxonomy_term_load($parent_term->tid);
             $parent = $parent_term->tid;
           }
 
@@ -708,7 +707,7 @@ function events_config_libraries_info_alter(&$libraries) {
 /**
  * Implements hook_libraries_info_alter().
  */
-function _events_config_log($message, $type = '') {
+function _events_config_log($message, $type = 'notice') {
   if (function_exists('drush_log')) {
     drush_log($message, $type);
   }
