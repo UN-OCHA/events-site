@@ -230,6 +230,10 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
 
     taxonomy_term_save($term);
     $output['new'] = TRUE;
+
+    if (function_exists('drush_log')) {
+      drush_log('Created new term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+    }
   }
   else {
     $term_tid = reset($result['taxonomy_term']);
@@ -255,11 +259,19 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
           $term->parent = $parent_id;
           $needs_update = TRUE;
         }
+        else {
+          if (function_exists('drush_log')) {
+            drush_log('Same Id ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')', 'error');
+          }
+        }
       }
     }
 
     if ($needs_update) {
       taxonomy_term_save($term);
+      if (function_exists('drush_log')) {
+        drush_log('Updated term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+      }
     }
   }
 
