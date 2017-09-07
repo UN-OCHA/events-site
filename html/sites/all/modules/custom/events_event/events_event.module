@@ -1110,13 +1110,17 @@ function events_event_taxonomy_term_presave($term) {
           $term->field_parent_tids[LANGUAGE_NONE][0]['value'] = $term->tid;
         }
         else {
-          if ($parent_id) {
+          $parent = FALSE;
+          if ($parent_id && $parent_id != $term->tid) {
             $parent = taxonomy_term_load($parent_id);
           }
-          elseif ($term_parent_id) {
+          elseif ($term_parent_id && $term_parent_id != $term->tid) {
             $parent = taxonomy_term_load($term_parent_id);
           }
-          $term->field_parent_tids[LANGUAGE_NONE][0]['value'] = $parent->field_parent_tids[LANGUAGE_NONE][0]['value'] . '|' . $term->tid;
+
+          if ($parent) {
+            $term->field_parent_tids[LANGUAGE_NONE][0]['value'] = $parent->field_parent_tids[LANGUAGE_NONE][0]['value'] . '|' . $term->tid;
+          }
         }
       }
     }
