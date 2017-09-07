@@ -554,12 +554,13 @@ function events_config_fetch_and_sync_locations() {
  */
 function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_needed = FALSE, $max_depth = 9) {
   $url = $endpoint;
+  $page = 1;
 
   while (TRUE) {
     if (function_exists('drush_log')) {
       drush_log('Fetching ' . $url);
     }
-    $request = drupal_http_request($url);
+    $request = drupal_http_request($url . '&page=' . $page);
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
       if (empty($data['data'])) {
@@ -601,17 +602,7 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
         }
       }
 
-      if (isset($data['next']) && isset($data['next']['href'])) {
-        $url = $data['next']['href'];
-      }
-      else {
-        if (function_exists('drush_log')) {
-          drush_log('No next set ' . $url);
-        }
-
-        $url = '';
-        break;
-      }
+      $page++;
     }
     else {
       if (function_exists('drush_log')) {
