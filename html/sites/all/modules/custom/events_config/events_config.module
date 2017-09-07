@@ -260,6 +260,10 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
           $needs_update = TRUE;
         }
       }
+      else {
+        $term->parent = $parent_id;
+        $needs_update = TRUE;
+      }
     }
 
     if ($needs_update) {
