@@ -557,15 +557,16 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
   $page = 1;
 
   while (TRUE) {
+    $fetch_url = $url . '&page=' . $page;
     if (function_exists('drush_log')) {
-      drush_log('Fetching ' . $url);
+      drush_log('Fetching ' . $fetch_url);
     }
-    $request = drupal_http_request($url . '&page=' . $page);
+    $request = drupal_http_request($fetch_url);
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
       if (empty($data['data'])) {
         if (function_exists('drush_log')) {
-          drush_log('No data received from ' . $url);
+          drush_log('No data received from ' . $fetch_url);
         }
         break;
       }
@@ -606,10 +607,8 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
     }
     else {
       if (function_exists('drush_log')) {
-        drush_log('No data received from ' . $url);
+        drush_log('No data received from ' . $fetch_url);
       }
-
-      $url = '';
       break;
     }
   }
