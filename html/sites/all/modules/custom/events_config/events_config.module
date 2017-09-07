@@ -231,9 +231,7 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
     taxonomy_term_save($term);
     $output['new'] = TRUE;
 
-    if (function_exists('drush_log')) {
-      drush_log('Created new term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
-    }
+    _events_config_log('Created new term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
   }
   else {
     $term_tid = reset($result['taxonomy_term']);
@@ -244,10 +242,14 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
       if (!isset($term->field_external_id['und'][0]['value']) || $term->field_external_id['und'][0]['value'] != $external_id) {
         $term->field_external_id['und'][0]['value'] = $external_id;
         $needs_update = TRUE;
+        _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+        _events_config_log('External Id: ' . $term->field_external_id['und'][0]['value'] . ' versus ' . $external_id);
       }
       if ($term->name != $name) {
         $term->name = $name;
         $needs_update = TRUE;
+        _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+        _events_config_log('Name: ' . $term->name . ' versus ' . $name);
       }
     }
 
@@ -256,7 +258,15 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
       if ($parents) {
         $parent = reset($parents);
         if ($parent->tid != $parent_id) {
-          $term->parent = $parent_id;
+          if ($term->tid != $parent_id) {
+            $term->parent = $parent_id;
+          }
+          else {
+            _events_config_log('Tried setting term id as parent for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')', 'error');
+            $term->parent = 0;
+          }
+          _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+          _events_config_log('Update parent: ' . $term->parent . ' versus ' . $parent_id);
           $needs_update = TRUE;
         }
       }
@@ -264,20 +274,18 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
         if ($term->tid != $parent_id) {
           $term->parent = $parent_id;
           $needs_update = TRUE;
+          _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+          _events_config_log('New parent: ' . $term->parent . ' versus ' . $parent_id);
         }
         else {
-          if (function_exists('drush_log')) {
-            drush_log('Tried setting term id as parent for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
-          }
+          _events_config_log('Tried setting term id as parent for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')', 'error');
         }
       }
     }
 
     if ($needs_update) {
       taxonomy_term_save($term);
-      if (function_exists('drush_log')) {
-        drush_log('Updated term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
-      }
+      _events_config_log('Updated term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
     }
   }
 
@@ -576,16 +584,12 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
 
   while (TRUE) {
     $fetch_url = $url . '&page=' . $page;
-    if (function_exists('drush_log')) {
-      drush_log('Fetching ' . $fetch_url);
-    }
+    _events_config_log('Fetching ' . $fetch_url);
     $request = drupal_http_request($fetch_url);
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
       if (empty($data['data'])) {
-        if (function_exists('drush_log')) {
-          drush_log('No data received from ' . $fetch_url);
-        }
+        _events_config_log('No data received from ' . $fetch_url);
         break;
       }
 
@@ -624,9 +628,7 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
       $page++;
     }
     else {
-      if (function_exists('drush_log')) {
-        drush_log('No data received from ' . $fetch_url);
-      }
+      _events_config_log('No data received from ' . $fetch_url);
       break;
     }
   }
@@ -701,4 +703,13 @@ function events_config_fetch_and_sync_themes() {
  */
 function events_config_libraries_info_alter(&$libraries) {
   unset($libraries['fullcalendar']['files']['css']);
+}
+
+/**
+ * Implements hook_libraries_info_alter().
+ */
+function _events_config_log($message, $type = '') {
+  if (function_exists('drush_log')) {
+    drush_log($message, $type);
+  }
 }
