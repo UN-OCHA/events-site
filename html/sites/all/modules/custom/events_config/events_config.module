@@ -261,8 +261,15 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
         }
       }
       else {
-        $term->parent = $parent_id;
-        $needs_update = TRUE;
+        if ($term->tid != $parent_id) {
+          $term->parent = $parent_id;
+          $needs_update = TRUE;
+        }
+        else {
+          if (function_exists('drush_log')) {
+            drush_log('Tried setting term id as parent for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+          }
+        }
       }
     }
 
