@@ -194,7 +194,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => 1,
       ),
       'type' => 'options_select',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
@@ -235,7 +235,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => 1,
       ),
       'type' => 'options_select',
-      'weight' => 12,
+      'weight' => 11,
     ),
   );
 
@@ -326,7 +326,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => 1,
       ),
       'type' => 'options_select',
-      'weight' => 8,
+      'weight' => 7,
     ),
   );
 
@@ -368,6 +368,58 @@ function events_event_field_default_field_instances() {
       'settings' => array(),
       'type' => 'multifield_table',
       'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_hrinfo_nid'.
+  $field_instances['node-ev_event-field_event_hrinfo_nid'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 24,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_hrinfo_nid',
+    'label' => 'HRInfo nid',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'display_empty' => 0,
+        'formatter' => 'number_unformatted',
+        'formatter_settings' => array(),
+      ),
+      'type' => 'field_extrawidgets_read_only',
+      'weight' => 13,
     ),
   );
 
@@ -450,7 +502,7 @@ function events_event_field_default_field_instances() {
         'apply_chosen' => 1,
       ),
       'type' => 'options_select',
-      'weight' => 10,
+      'weight' => 9,
     ),
   );
 
@@ -491,7 +543,7 @@ function events_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 11,
+      'weight' => 10,
     ),
   );
 
@@ -577,7 +629,7 @@ function events_event_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'field_extrawidgets_read_only',
-      'weight' => 7,
+      'weight' => 12,
     ),
   );
 
@@ -1085,6 +1137,7 @@ function events_event_field_default_field_instances() {
   t('Documents');
   t('External Id');
   t('File');
+  t('HRInfo nid');
   t('Legend color');
   t('Location');
   t('Location details');
