@@ -4,6 +4,46 @@
  * Code for Events migration.
  */
 
+ /**
+  * Implements hook_menu().
+  */
+function ev_migrate_menu() {
+  $items['from-hrinfo/%'] = array(
+    'title' => 'Redirect from HR Info',
+    'page callback' => 'ev_migrate_redirect_from_hrinfo',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Redirect from HR Info.
+ */
+function ev_migrate_redirect_from_hrinfo($external_nid) {
+  if (!is_numeric($external_nid)) {
+    drupal_access_denied();
+    return;
+  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node');
+  $query->entityCondition('bundle', 'ev_event', '=');
+  $query->fieldCondition('field_event_hrinfo_nid', 'value', $external_nid, '=');
+  $result = $query->execute();
+
+  if (!isset($result['node'])) {
+    drupal_not_found();
+    continue;
+  }
+
+  $nids = array_keys($result['node']);
+  $nid = reset($nids);
+  drupal_goto('node/' . $nid, array(), 301);
+}
+
 /**
  * Migrate events.
  */
@@ -133,6 +173,9 @@ function ev_migrate_process_row($row) {
     // Build all values.
     $event->field_event_date[LANGUAGE_NONE] = date_repeat_build_dates($event->field_event_date[LANGUAGE_NONE][0]['rrule'], NULL, $field_info, $event->field_event_date[LANGUAGE_NONE][0]);
   }
+
+  // Store external nid.
+  $event->field_event_hrinfo_nid[LANGUAGE_NONE][0]['value'] = $row['nid'];
 
   if (isset($row['description'])) {
     $event->description[LANGUAGE_NONE][] = array(

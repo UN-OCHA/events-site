@@ -100,6 +100,7 @@ Feature: Content Management
   Scenario: An administrative user create an event
     When I go to "node/add/ev-event"
     And for "title" I enter "xyzzy"
+    And I scroll to the "#edit-submit" element
     And I press the "Save" button
     Then I should see "Event xyzzy has been created"
 
@@ -107,6 +108,7 @@ Feature: Content Management
   Scenario: A user should see the event on the homepage
     When I go to "node/add/ev-event"
     And for "title" I enter "xyzzy"
+    And I scroll to the "#edit-submit" element
     And I press the "Save" button
     And I am on the homepage
     And I wait for the ajax response

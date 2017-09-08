@@ -186,6 +186,13 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
   }
 
   /**
+   * @When I scroll to the :selector element
+   */
+  public function scrollToElement($selector) {
+    $this->getSession()->executeScript('document.querySelector("' . $selector . '").scrollIntoView()');
+  }
+
+  /**
    * @Given I click the :arg1 element
    */
   public function iClickTheElement($selector) {
