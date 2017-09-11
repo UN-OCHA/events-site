@@ -471,7 +471,12 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
       'start' => $date_start->format(DATE_FORMAT_DATETIME),
       'end' => $date_end->format(DATE_FORMAT_DATETIME),
       'allDay' => $date['value'] == $date['value2'],
-      'url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'url' => url('node/' . $node->nid, array(
+        'absolute' => TRUE,
+        'query' => array(
+          'date' => substr($date['value'], 0, 10),
+        ),
+      )),
       'backgroundColor' => events_event_get_event_color($node),
       'location' => events_event_get_event_locations($node),
       'locationDetails' => isset($node->field_event_location_details[LANGUAGE_NONE][0]['value']) ? $node->field_event_location_details[LANGUAGE_NONE][0]['value'] : '',
@@ -1290,63 +1295,71 @@ function events_event_field_extra_fields() {
  * Implements hook_node_view().
  */
 function events_event_node_view($node, $view_mode, $langcode) {
+  $current_date = '';
+  if (isset($_GET['date'])) {
+    $current_date = $_GET['date'];
+  }
+
   $extrafields = field_extra_fields_get_display('node', $node->type, $view_mode);
 
   $extrafield_name = 'ev_local_time';
   if (isset($extrafields[$extrafield_name])
       && isset($extrafields[$extrafield_name]['visible'])
       && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_local_time($node, $view_mode, $langcode);
+    $node->content[$extrafield_name] = _events_event_ev_local_time($node, $view_mode, $langcode, $current_date);
   }
 
   $extrafield_name = 'ev_user_time';
   if (isset($extrafields[$extrafield_name])
       && isset($extrafields[$extrafield_name]['visible'])
       && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_user_time($node, $view_mode, $langcode);
+    $node->content[$extrafield_name] = _events_event_ev_user_time($node, $view_mode, $langcode, $current_date);
   }
 
   $extrafield_name = 'ev_display_date_time';
   if (isset($extrafields[$extrafield_name])
       && isset($extrafields[$extrafield_name]['visible'])
       && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_display_date_time($node, $view_mode, $langcode);
+    $node->content[$extrafield_name] = _events_event_ev_display_date_time($node, $view_mode, $langcode, $current_date);
   }
 
   $extrafield_name = 'ev_page_heading';
   if (isset($extrafields[$extrafield_name])
       && isset($extrafields[$extrafield_name]['visible'])
       && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_page_heading($node, $view_mode, $langcode);
+    $node->content[$extrafield_name] = _events_event_ev_page_heading($node, $view_mode, $langcode, $current_date);
   }
 
   $extrafield_name = 'ev_page_recurring';
   if (isset($extrafields[$extrafield_name])
       && isset($extrafields[$extrafield_name]['visible'])
       && $extrafields[$extrafield_name]['visible']) {
-    $node->content[$extrafield_name] = _events_event_ev_page_recurring($node, $view_mode, $langcode);
+    $node->content[$extrafield_name] = _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_date);
   }
 }
 
 /**
  * Display date in page heading.
  */
-function _events_event_ev_page_heading($node, $view_mode, $langcode) {
+function _events_event_ev_page_heading($node, $view_mode, $langcode, $current_date = '') {
   $date = $node->field_event_date[LANGUAGE_NONE][0];
+
   $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
   $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
 
-  $dates = array(
-    'show_remaining_days' => FALSE,
-    'value' => array(
-      'formatted' => $date_start->format('d F Y H:i'),
-      'formatted_date' => $date_start->format('d F Y'),
-      'formatted_time' => $date_start->format('H:i'),
-      'formatted_timezone' => drupal_get_user_timezone(),
-    ),
-  );
+  if (!empty($current_date)) {
+    foreach ($node->field_event_date[LANGUAGE_NONE] as $date_object) {
+      if (strpos($date_object['value'], $current_date) !== FALSE) {
+        $date_start = new DateTime($date_object['value'], timezone_open($date_object['timezone_db']));
+        $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
+        $date_end = new DateTime($date_object['value2'], timezone_open($date_object['timezone_db']));
+        $date_end->setTimezone(timezone_open(drupal_get_user_timezone()));
+        break;
+      }
+    }
+  }
 
-  $output = $dates['value']['formatted_date'];
+  $output = $date_start->format('d F Y');
 
   return array(
     '#markup' => '<h1 class="event-heading"><span>' . $output . '</span> ' . $node->title . '</h1>',
@@ -1356,7 +1369,7 @@ function _events_event_ev_page_heading($node, $view_mode, $langcode) {
 /**
  * Fisplay recurring info.
  */
-function _events_event_ev_page_recurring($node, $view_mode, $langcode) {
+function _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_date = '') {
   // Check if it's recurring.
   if (!isset($node->field_event_date[LANGUAGE_NONE][0]['rrule']) || empty($node->field_event_date[LANGUAGE_NONE][0]['rrule'])) {
     return;
@@ -1415,9 +1428,9 @@ function _events_event_ev_page_recurring($node, $view_mode, $langcode) {
 /**
  * Display date in user and local time.
  */
-function _events_event_ev_display_date_time($node, $view_mode, $langcode) {
-  $local = _events_event_ev_local_time($node, $view_mode, $langcode);
-  $user = _events_event_ev_user_time($node, $view_mode, $langcode);
+function _events_event_ev_display_date_time($node, $view_mode, $langcode, $current_date = '') {
+  $local = _events_event_ev_local_time($node, $view_mode, $langcode, $current_date);
+  $user = _events_event_ev_user_time($node, $view_mode, $langcode, $current_date);
   $local_html = '<p><strong>' . t('Local time', array(), array('context' => 'events')) . ':</strong><br>' . $local . '</p>';
   $user_html = '<p><strong>' . t('Your time', array(), array('context' => 'events')) . ':</strong><br>' . $user . '</p>';
 
@@ -1430,12 +1443,24 @@ function _events_event_ev_display_date_time($node, $view_mode, $langcode) {
 /**
  * Display date in local time.
  */
-function _events_event_ev_local_time($node, $view_mode, $langcode) {
+function _events_event_ev_local_time($node, $view_mode, $langcode, $current_date = '') {
   $date = $node->field_event_date[LANGUAGE_NONE][0];
   $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
   $date_start->setTimezone(timezone_open($date['timezone']));
   $date_end = new DateTime($date['value2'], timezone_open($date['timezone_db']));
   $date_end->setTimezone(timezone_open($date['timezone']));
+
+  if (!empty($current_date)) {
+    foreach ($node->field_event_date[LANGUAGE_NONE] as $date_object) {
+      if (strpos($date_object['value'], $current_date) !== FALSE) {
+        $date_start = new DateTime($date_object['value'], timezone_open($date_object['timezone_db']));
+        $date_start->setTimezone(timezone_open($date_object['timezone']));
+        $date_end = new DateTime($date_object['value2'], timezone_open($date_object['timezone_db']));
+        $date_end->setTimezone(timezone_open($date_object['timezone']));
+        break;
+      }
+    }
+  }
 
   $dates = array(
     'show_remaining_days' => FALSE,
@@ -1460,12 +1485,24 @@ function _events_event_ev_local_time($node, $view_mode, $langcode) {
 /**
  * Display date in user time.
  */
-function _events_event_ev_user_time($node, $view_mode, $langcode) {
+function _events_event_ev_user_time($node, $view_mode, $langcode, $current_date = '') {
   $date = $node->field_event_date[LANGUAGE_NONE][0];
   $date_start = new DateTime($date['value'], timezone_open($date['timezone_db']));
   $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
   $date_end = new DateTime($date['value2'], timezone_open($date['timezone_db']));
   $date_end->setTimezone(timezone_open(drupal_get_user_timezone()));
+
+  if (!empty($current_date)) {
+    foreach ($node->field_event_date[LANGUAGE_NONE] as $date_object) {
+      if (strpos($date_object['value'], $current_date) !== FALSE) {
+        $date_start = new DateTime($date_object['value'], timezone_open($date_object['timezone_db']));
+        $date_start->setTimezone(timezone_open(drupal_get_user_timezone()));
+        $date_end = new DateTime($date_object['value2'], timezone_open($date_object['timezone_db']));
+        $date_end->setTimezone(timezone_open(drupal_get_user_timezone()));
+        break;
+      }
+    }
+  }
 
   $dates = array(
     'show_remaining_days' => FALSE,
