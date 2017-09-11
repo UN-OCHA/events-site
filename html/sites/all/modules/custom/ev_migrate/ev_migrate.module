@@ -254,6 +254,11 @@ function ev_migrate_process_row($row) {
       if ($sector = ev_migrate_get_term($name, 'ev_list')) {
         $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
       }
+      elseif (isset($row['location'])) {
+        if ($sector = ev_migrate_get_term($row['location'] . ': ' . $name, 'ev_list')) {
+          $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
+        }
+      }
     }
   }
 
