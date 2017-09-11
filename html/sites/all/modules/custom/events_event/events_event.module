@@ -1277,6 +1277,11 @@ function events_event_field_extra_fields() {
     'description' => t('Display date and event title in page heading.', array(), array('context' => 'events')),
     'weight' => 2,
   );
+  $extra['node']['ev_event']['display']['ev_page_recurring'] = array(
+    'label' => t('Display recurring info', array(), array('context' => 'events')),
+    'description' => t('Display recurring info for an event.', array(), array('context' => 'events')),
+    'weight' => 2,
+  );
 
   return $extra;
 }
@@ -1314,6 +1319,13 @@ function events_event_node_view($node, $view_mode, $langcode) {
       && $extrafields[$extrafield_name]['visible']) {
     $node->content[$extrafield_name] = _events_event_ev_page_heading($node, $view_mode, $langcode);
   }
+
+  $extrafield_name = 'ev_page_recurring';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_page_recurring($node, $view_mode, $langcode);
+  }
 }
 
 /**
@@ -1338,6 +1350,66 @@ function _events_event_ev_page_heading($node, $view_mode, $langcode) {
 
   return array(
     '#markup' => '<h1 class="event-heading"><span>' . $output . '</span> ' . $node->title . '</h1>',
+  );
+}
+
+/**
+ * Fisplay recurring info.
+ */
+function _events_event_ev_page_recurring($node, $view_mode, $langcode) {
+  // Check if it's recurring.
+  if (!isset($node->field_event_date[LANGUAGE_NONE][0]['rrule']) || empty($node->field_event_date[LANGUAGE_NONE][0]['rrule'])) {
+    return;
+  }
+
+  $first_started = '';
+  $next_occurence = '';
+  $all_dates = array();
+
+  foreach ($node->field_event_date[LANGUAGE_NONE] as $date_info) {
+    $date = new DateTime($date_info['value'], timezone_open($date_info['timezone_db']));
+    $date->setTimezone(timezone_open(drupal_get_user_timezone()));
+
+    if (empty($first_started)) {
+      $first_started = '';
+      $first_started .= '<div class="info-recurring--first-started"><label>';
+      $first_started .= t('First started', array(), array('context' => 'events'));
+      $first_started .= ':</label> ' . $date->format('d F Y') . '</div>';
+    }
+
+    if (empty($next_occurence)) {
+      if (REQUEST_TIME < $date->getTimestamp()) {
+        $next_occurence = '';
+        $next_occurence .= '<div class="info-recurring--next-occurence"><label>';
+        $next_occurence .= t('Next occurence', array(), array('context' => 'events'));
+        $next_occurence .= ':</label> ' . $date->format('d F Y') . '</div>';
+      }
+    }
+
+    $all_dates[] = $date->format('d F Y');
+  }
+
+  $all_dates_list = '';
+  $all_dates_list .= '<div class="info-recurring--all-repeats--dates">';
+  $all_dates_list .= theme('item_list', array('items' => $all_dates));
+  $all_dates_list .= '</div>';
+
+  $all_repeats = '';
+  $all_repeats .= '<div class="info-recurring--all-repeats"><label>';
+  $all_repeats .= t('Total number', array(), array('context' => 'events'));
+  $all_repeats .= ':</label> ' . count($node->field_event_date[LANGUAGE_NONE]);
+  $all_repeats .= $all_dates_list;
+  $all_repeats .= '</div>';
+
+
+  $output = '<div class="info-recurring">';
+  $output .= $first_started;
+  $output .= $next_occurence;
+  $output .= $all_repeats;
+  $output .= '</div>';
+
+  return array(
+    '#markup' => $output,
   );
 }
 
