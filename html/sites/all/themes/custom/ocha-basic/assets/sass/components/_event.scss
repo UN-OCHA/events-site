@@ -32,8 +32,8 @@
   display: flex;
   flex-wrap: wrap;
   border-bottom: 1px dotted $mid-light-grey;
-  padding-bottom: $base-unit;
-  margin-bottom: $base-unit*2;    
+  padding-bottom: $base-unit*1.5;
+  margin-bottom: $base-unit;
   
   > div {
     flex: 0 0 100%;
@@ -64,6 +64,9 @@
 
 @include media-query(sm) {
   .info-recurring {
+    padding-bottom: $base-unit*1.5;
+    margin-bottom: $base-unit*2;
+
     > div {
       flex: 1;
     }
