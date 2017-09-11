@@ -366,25 +366,31 @@ function events_event_strongarm() {
       'display' => array(
         'ev_local_time' => array(
           'default' => array(
-            'weight' => '19',
+            'weight' => '21',
             'visible' => FALSE,
           ),
         ),
         'ev_user_time' => array(
           'default' => array(
-            'weight' => '20',
+            'weight' => '22',
             'visible' => FALSE,
           ),
         ),
         'ev_display_date_time' => array(
           'default' => array(
-            'weight' => '1',
+            'weight' => '2',
             'visible' => TRUE,
           ),
         ),
         'ev_page_heading' => array(
           'default' => array(
             'weight' => '0',
+            'visible' => TRUE,
+          ),
+        ),
+        'ev_page_recurring' => array(
+          'default' => array(
+            'weight' => '1',
             'visible' => TRUE,
           ),
         ),

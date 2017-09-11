@@ -28,6 +28,55 @@
 
 }
 
+.info-recurring {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px dotted $mid-light-grey;
+  padding-bottom: $base-unit;
+  margin-bottom: $base-unit*2;    
+  
+  > div {
+    flex: 0 0 100%;
+  }
+
+  label {
+    font-weight: 600;
+    display: inline;
+  }
+  
+}
+
+.info-recurring--all-repeats {
+  .info-recurring--all-repeats--dates {
+    display: none;
+  }
+  
+  &:hover .info-recurring--all-repeats--dates {
+    display: block;
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid $mid-light-grey;
+    padding: $base-unit*2;
+    max-height: 50vh;
+    overflow: auto;
+  }
+}
+
+@include media-query(sm) {
+  .info-recurring {
+    > div {
+      flex: 1;
+    }
+    
+    > div + div {
+      border-left: 1px solid $mid-light-grey;
+      margin-left: $base-unit;
+      padding-left: $base-unit;
+    }
+  }
+}
+
+
 .field-item {
 	table {
 		table-layout: fixed;
