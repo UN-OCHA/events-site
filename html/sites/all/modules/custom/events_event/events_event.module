@@ -1776,6 +1776,10 @@ function events_event_node_update($node) {
       return;
     }
 
+    if (isset($node->do_not_send_email) && $node->do_not_send_email) {
+      return;
+    }
+
     $recipient = user_load($node->uid);
 
     $date_start = new DateTime($node->field_event_date[LANGUAGE_NONE][0]['value'], timezone_open($node->field_event_date[LANGUAGE_NONE][0]['timezone_db']));

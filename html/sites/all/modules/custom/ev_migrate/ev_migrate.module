@@ -95,66 +95,82 @@ function ev_migrate_process_row($row) {
     drush_log('Migrating ' . $row['url']);
   }
 
-  // Make sure we have a user.
-  $account = user_load_by_mail($row['author']['email']);
-  if (!$account) {
-    // Check if there's a user by the same name.
-    if (user_load_by_name(!empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'])) {
+  // See if the node already exists.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node');
+  $query->entityCondition('bundle', 'ev_event', '=');
+  $query->fieldCondition('field_event_hrinfo_nid', 'value', $row['nid'], '=');
+  $result = $query->execute();
+
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nid = reset($nids);
+    $event = node_load($nid);
+    $event->log = 'Event imported from ' . $row['url'];
+    $event->do_not_send_email = TRUE;
+  }
+  else {
+    // Make sure we have a user.
+    $account = user_load_by_mail($row['author']['email']);
+    if (!$account) {
+      // Check if there's a user by the same name.
+      if (user_load_by_name(!empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'])) {
+        $row['author']['name'] = !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'];
+        $row['author']['name'] .= '_' . REQUEST_TIME;
+      }
+
+      // Cleanup init.
+      $row['author']['init'] = str_replace('oauthconnector_hid_oauth__', '', $row['author']['init']);
+      if (empty($row['author']['init'])) {
+        $row['author']['init'] = $row['author']['email'];
+      }
+
       $row['author']['name'] = !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'];
-      $row['author']['name'] .= '_' . REQUEST_TIME;
+      if (strlen($row['author']['name']) > 60) {
+        $row['author']['name'] = substr($row['author']['name'], 0, 60);
+      }
+
+      // Create user object.
+      $account = array(
+        'name' => $row['author']['name'],
+        'mail' => $row['author']['email'],
+        'status' => 1,
+        'init' => $row['author']['init'],
+        'language' => $row['author']['language'],
+        'timezone' => $row['author']['timezone'],
+      );
+      $account = user_save(NULL, $account);
+
+      // Save the HID association with hybridauth.
+      $hdata = array(
+        'provider' => 'HumanitarianId',
+        'identifier' => $row['author']['init'],
+      );
+
+      // Ignore errors.
+      try {
+        _hybridauth_identity_save($hdata, $account->uid);
+      }
+      catch (Exception $e) {
+        // Ignore it, not much we can do.
+      }
     }
 
-    // Cleanup init.
-    $row['author']['init'] = str_replace('oauthconnector_hid_oauth__', '', $row['author']['init']);
-    if (empty($row['author']['init'])) {
-      $row['author']['init'] = $row['author']['email'];
-    }
+    // Create a new event.
+    $event = new stdClass();
+    $event->type = 'ev_event';
+    $event->status = 1;
+    node_object_prepare($event);
 
-    $row['author']['name'] = !empty($row['author']['name']) ? $row['author']['name'] : $row['author']['email'];
-    if (strlen($row['author']['name']) > 60) {
-      $row['author']['name'] = substr($row['author']['name'], 0, 60);
-    }
-
-    // Create user object.
-    $account = array(
-      'name' => $row['author']['name'],
-      'mail' => $row['author']['email'],
-      'status' => 1,
-      'init' => $row['author']['init'],
-      'language' => $row['author']['language'],
-      'timezone' => $row['author']['timezone'],
-    );
-    $account = user_save(NULL, $account);
-
-    // Save the HID association with hybridauth.
-    $hdata = array(
-      'provider' => 'HumanitarianId',
-      'identifier' => $row['author']['init'],
-    );
-
-    // Ignore errors.
-    try {
-      _hybridauth_identity_save($hdata, $account->uid);
-    }
-    catch (Exception $e) {
-      // Ignore it, not much we can do.
-    }
+    $event->language = 'en';
+    $event->uid = $account->uid;
+    $event->status = TRUE;
+    $event->promote = FALSE;
+    $event->comment = FALSE;
+    $event->log = 'Event imported from ' . $row['url'];
   }
 
-  // Create a new event.
-  $event = new stdClass();
-  $event->type = 'ev_event';
-  $event->status = 1;
-  node_object_prepare($event);
-
-  $event->language = 'en';
-  $event->uid = $account->uid;
-  $event->status = TRUE;
-  $event->promote = FALSE;
-  $event->comment = FALSE;
   $event->revision = TRUE;
-  $event->log = 'Event imported from ' . $row['url'];
-
   $event->title = $row['title'];
   $event->created = $row['created'];
   $event->changed = $row['changed'];
@@ -237,6 +253,11 @@ function ev_migrate_process_row($row) {
     foreach ($row['sectors'] as $name) {
       if ($sector = ev_migrate_get_term($name, 'ev_list')) {
         $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
+      }
+      elseif (isset($row['location'])) {
+        if ($sector = ev_migrate_get_term($row['location'] . ': ' . $name, 'ev_list')) {
+          $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
+        }
       }
     }
   }
