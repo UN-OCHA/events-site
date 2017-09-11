@@ -1401,7 +1401,6 @@ function _events_event_ev_page_recurring($node, $view_mode, $langcode) {
   $all_repeats .= $all_dates_list;
   $all_repeats .= '</div>';
 
-
   $output = '<div class="info-recurring">';
   $output .= $first_started;
   $output .= $next_occurence;
