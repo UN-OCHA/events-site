@@ -88,6 +88,31 @@ function ev_migrate_events() {
 };
 
 /**
+ * Migrate event.
+ */
+function ev_migrate_event($nid) {
+  $api_url = variable_get('ev_migrate_api_url_single', '');
+  $shared_secret = variable_get('ev_migrate_shared_secret', 'ThisIsMySecret');
+  $timestamp = REQUEST_TIME;
+
+  // Build hash.
+  $hash = md5($shared_secret . '_' . $timestamp);
+
+  // Build URL;
+  $url = $api_url;
+  $url .= '/' . $nid;
+  $url .= '/' . $timestamp;
+  $url .= '/' . $hash;
+
+  // Get data.
+  $request = drupal_http_request($url);
+  if (isset($request->data)) {
+    $data = drupal_json_decode($request->data);
+    ev_migrate_process_row($data);
+  }
+};
+
+/**
  * Process event data.
  */
 function ev_migrate_process_row($row) {
@@ -267,6 +292,12 @@ function ev_migrate_process_row($row) {
     foreach ($row['bundles'] as $name) {
       if ($bundle = ev_migrate_get_term($name, 'ev_list')) {
         $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $bundle->tid;
+      }
+      elseif (isset($row['location']) && $sector = ev_migrate_get_term($row['location'] . ': ' . $name, 'ev_list')) {
+        $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
+      }
+      elseif (isset($row['country']) && $sector = ev_migrate_get_term($row['country'] . ': ' . $name, 'ev_list')) {
+        $event->field_event_cluster[LANGUAGE_NONE][]['tid'] = $sector->tid;
       }
     }
   }
