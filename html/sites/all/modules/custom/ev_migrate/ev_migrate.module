@@ -238,7 +238,7 @@ function ev_migrate_process_row($row) {
   }
 
   if (isset($row['themes']) && is_array($row['themes'])) {
-    $event->field_event_theme[LANGUAGE_NONE][] = array();
+    $event->field_event_theme[LANGUAGE_NONE] = array();
     $event->field_event_original_theme[LANGUAGE_NONE][0]['value'] = '';
     foreach ($row['themes'] as $name) {
       if ($theme = ev_migrate_get_term($name, 'ev_theme')) {
@@ -282,13 +282,13 @@ function ev_migrate_process_row($row) {
   if (isset($row['sectors']) && is_array($row['sectors'])) {
     foreach ($row['sectors'] as $name) {
       if ($sector = ev_migrate_get_term($name, 'ev_list')) {
-        $cluster_tids = $sector->tid;
+        $cluster_tids[] = $sector->tid;
       }
       elseif (isset($row['location']) && $sector = ev_migrate_get_term($row['location'] . ': ' . $name, 'ev_list')) {
-        $cluster_tids = $sector->tid;
+        $cluster_tids[] = $sector->tid;
       }
       elseif (isset($row['country']) && $sector = ev_migrate_get_term($row['country'] . ': ' . $name, 'ev_list')) {
-        $cluster_tids = $sector->tid;
+        $cluster_tids[] = $sector->tid;
       }
     }
   }
@@ -296,19 +296,19 @@ function ev_migrate_process_row($row) {
   if (isset($row['bundles']) && is_array($row['bundles'])) {
     foreach ($row['bundles'] as $name) {
       if ($bundle = ev_migrate_get_term($name, 'ev_list')) {
-        $cluster_tids = $bundle->tid;
+        $cluster_tids[] = $bundle->tid;
       }
       elseif (isset($row['location']) && $bundle = ev_migrate_get_term($row['location'] . ': ' . $name, 'ev_list')) {
-        $cluster_tids = $bundle->tid;
+        $cluster_tids[] = $bundle->tid;
       }
       elseif (isset($row['country']) && $bundle = ev_migrate_get_term($row['country'] . ': ' . $name, 'ev_list')) {
-        $cluster_tids = $bundle->tid;
+        $cluster_tids[] = $bundle->tid;
       }
     }
   }
 
-  $event->field_event_cluster[LANGUAGE_NONE] = array();
   if (!empty($cluster_tids)) {
+    $event->field_event_cluster[LANGUAGE_NONE] = array();
     // Remove duplicates.
     $cluster_tids = array_unique($cluster_tids);
     foreach ($cluster_tids as $cluster_tid) {
@@ -317,7 +317,7 @@ function ev_migrate_process_row($row) {
   }
 
   if (isset($row['coordination_hubs']) && is_array($row['coordination_hubs'])) {
-    $event->field_event_coordination_hub[LANGUAGE_NONE][] = array();
+    $event->field_event_coordination_hub[LANGUAGE_NONE] = array();
     foreach ($row['coordination_hubs'] as $name) {
       if ($coordination_hub = ev_migrate_get_term($name, 'ev_coordination_hub')) {
         $event->field_event_coordination_hub[LANGUAGE_NONE][]['tid'] = $coordination_hub->tid;
