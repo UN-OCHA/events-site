@@ -581,8 +581,8 @@ function events_event_to_ical() {
       'rrule' => $node['rrule'],
     );
     $vevent = $vcalendar->newComponent('vevent');
-    $vevent->setUid($node->nid);
-    $vevent->setSummary($node->title);
+    $vevent->setUid($node['nid']);
+    $vevent->setSummary($node['title']);
 
     $date_start = new DateTime($date['value']);
 
