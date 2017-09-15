@@ -534,7 +534,11 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
  */
 function events_event_to_ical() {
   $query_filters = events_event_get_query_filters();
-  $data = events_event_fetch_events_from_search_api('', '', $query_filters);
+
+  // Start from beginning of last month.
+  $start = strtotime('first day of last month', time());
+
+  $data = events_event_fetch_events_from_search_api($start, '', $query_filters);
   $nids = array_flip($data['nids']);
 
   $events = array();
