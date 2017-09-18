@@ -9,33 +9,78 @@
 var evExports = function ($) {
   'use strict';
 
+  var settings = {
+    icalLabel: 'ICAL'
+  };
+
   function _buildOption (text, fn) {
+
     var listItem = $('<li />');
     var button = $('<button type="button">' + Drupal.t(text, {}, {context: 'events'}) + '</button>');
     button.on('click', fn);
     listItem.append(button);
+    if (text === 'ICAL') {
+      settings.icalBtn = button;
+      settings.icalInfo = $('<p class="calendar-export__ical-info">* ICAL exports include information on past events up to one month back.</p>');
+      evCalendar.settings.$calendar.after(settings.icalInfo);
+      settings.icalInfo.hide();
+      if (evCalendar.settings.state.view === 'past') {
+        button.text(settings.icalLabel + ' *');
+        settings.icalInfo.show();
+      }
+      button.attr('id', 'ical-btn');
+      var icalLinkHolder = $('<div class="calendar-export__ical-link" />');
+      settings.icalLink = $('<input type="text" id="ical-link" readonly />');
+      settings.icalLink.on('click', function () {
+        $(this).select();
+      });
+      icalLinkHolder.append('<label for="ical-link">ICAL link</label>');
+      icalLinkHolder.append(settings.icalLink);
+      listItem.append(icalLinkHolder);
+    }
     return listItem;
   }
 
   function _init () {
-    var exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
+    settings.exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
     var exportButton = $('<button type="button" id="export-dropdown" class="calendar-export__button calendar-actions__toggle">' + Drupal.t('Export', {}, {context: 'events'}) + '</button>');
     exportButton.attr('data-toggle', 'dropdown');
     exportButton.attr('aria-haspopup', 'true');
     exportButton.attr('aria-expanded', 'false');
 
-    exportOptionsList.append(_buildOption('ICAL', exportICAL)).append(_buildOption('PDF', exportPDF));
-    evCalendar.settings.exportContainer.append(exportButton).append(exportOptionsList);
+    exportButton.on('click', function () {
+      _resetICAL();
+    });
+
+    settings.exportOptionsList.append(_buildOption(settings.icalLabel, _exportICAL)).append(_buildOption('PDF', _exportPDF));
+    evCalendar.settings.exportContainer.append(exportButton).append(settings.exportOptionsList);
   }
 
-  function exportICAL () {
+  function _update () {
+    if (settings.icalBtn) {
+      if (evCalendar.settings.state.view === 'past') {
+        settings.icalBtn.text(settings.icalLabel + ' *');
+        settings.icalInfo.show();
+        return;
+      }
+      settings.icalBtn.text(settings.icalLabel);
+      settings.icalInfo.hide();
+    }
+  }
+
+  function _resetICAL () {
+    settings.exportOptionsList.removeClass('show-ical');
+  }
+
+  function _exportICAL () {
     var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
     var url = baseUrl + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
-    window.location = url;
+    settings.exportOptionsList.toggleClass('show-ical');
+    settings.icalLink.val(url);
   }
 
-  function exportPDF () {
+  function _exportPDF () {
     var calendar = $('.fc-view-container').clone();
     var table = _formatPdfEvents(calendar);
     var filters = evFilters.getCurrentFilters();
@@ -179,7 +224,8 @@ var evExports = function ($) {
   }
 
   return {
-    init: _init
+    init: _init,
+    update: _update
   };
 
 }(jQuery);
@@ -732,6 +778,7 @@ var evCalendar = function ($) {
     selected.addClass('fc-state-active');
     var label = selected.text() ? selected.text() : settings.state.view;
     settings.viewToggle.find('span').text(label);
+    evExports.update();
   }
 
   return {
@@ -844,7 +891,7 @@ function chosenA11y (select, name, label) {
       evExports.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu', function (e) {
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn', function (e) {
         e.stopPropagation();
       });
     }

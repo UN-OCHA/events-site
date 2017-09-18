@@ -227,6 +227,31 @@
 	}
 }
 
+.show-ical {
+	button {
+		display: none;
+	}
+}
+
+.calendar-export__ical-link {
+	display: none;
+
+	.show-ical & {
+		display: block;
+	}
+
+	input {
+		width: 100%;
+		border: none;
+		background: $light-bg-color;
+		font-family: $heading-font;;
+	}
+}
+
+.calendar-export__ical-info {
+  margin-top: $base-unit*2;
+}
+
 @include media-query(md) {
 
 	.block-views {
@@ -315,6 +340,10 @@
 		}
 	}
 
+	.calendar-export__ical-link {
+		padding: $base-unit;
+	}
+
 	.calendar-settings {
 		width: auto;
 		max-width: 460px;
@@ -368,6 +397,12 @@
 				position: absolute;
 				width: 100%;
 				border: none;
+
+				&.show-ical {
+					width: 480px;
+					right: 0;
+					left: auto;
+				}
 			}
 		}
 	}
