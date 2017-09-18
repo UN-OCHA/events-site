@@ -73,8 +73,7 @@ var evExports = function ($) {
   }
 
   function _exportICAL () {
-    var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
-    var url = baseUrl + '/ical?';
+    var url = window.location.protocol + '//' + window.location.hostname + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
     settings.exportOptionsList.toggleClass('show-ical');
     settings.icalLink.val(url);
