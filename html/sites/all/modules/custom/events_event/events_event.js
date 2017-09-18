@@ -14,29 +14,37 @@ var evExports = function ($) {
   };
 
   function _buildOption (text, fn) {
-
     var listItem = $('<li />');
     var button = $('<button type="button">' + Drupal.t(text, {}, {context: 'events'}) + '</button>');
     button.on('click', fn);
     listItem.append(button);
+
     if (text === 'ICAL') {
+      var icalLinkHolder = $('<div class="calendar-export__ical-link-holder" />');
+      var icalMsg = Drupal.t('ICAL exports include information on past events up to one month back.', {}, {context: 'events'});
+      var copyBtn = $('<button type="button" id="ical-copy" data-clipboard-target="#ical-link" class="calender-export__ical-copy"><span class="sr-only">' + Drupal.t('Copy', {}, {context: 'events'}) + '</span></button>');
+      settings.icalLink = $('<a href="" id="ical-link" class="calendar-export__ical-link"></a>');
       settings.icalBtn = button;
-      settings.icalInfo = $('<p class="calendar-export__ical-info">* ICAL exports include information on past events up to one month back.</p>');
+      settings.icalInfo = $('<p class="calendar-export__ical-info">* ' + icalMsg + '</p>');
+
+      settings.icalBtn.attr('id', 'ical-btn');
       evCalendar.settings.$calendar.after(settings.icalInfo);
       settings.icalInfo.hide();
       if (evCalendar.settings.state.view === 'past') {
         button.text(settings.icalLabel + ' *');
         settings.icalInfo.show();
       }
-      button.attr('id', 'ical-btn');
-      var icalLinkHolder = $('<div class="calendar-export__ical-link" />');
-      settings.icalLink = $('<input type="text" id="ical-link" readonly />');
-      settings.icalLink.on('click', function () {
-        $(this).select();
-      });
-      icalLinkHolder.append('<label for="ical-link">ICAL link</label>');
+      icalLinkHolder.append('<p class="calendar-export__ical-link-label">' + Drupal.t('ICAL link', {}, {context: 'events'}) + '</p>');
       icalLinkHolder.append(settings.icalLink);
+      icalLinkHolder.append(copyBtn);
       listItem.append(icalLinkHolder);
+      var copyIcal = new Clipboard('#ical-copy');
+      copyIcal.on('success', function () {
+        copyBtn.addClass('success');
+        setTimeout(function () {
+          copyBtn.removeClass('success');
+        }, 600);
+      });
     }
     return listItem;
   }
@@ -76,7 +84,7 @@ var evExports = function ($) {
     var url = window.location.protocol + '//' + window.location.hostname + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
     settings.exportOptionsList.toggleClass('show-ical');
-    settings.icalLink.val(url);
+    settings.icalLink.text(url).attr('href', url);
   }
 
   function _exportPDF () {
@@ -890,7 +898,7 @@ function chosenA11y (select, name, label) {
       evExports.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn', function (e) {
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder', function (e) {
         e.stopPropagation();
       });
     }

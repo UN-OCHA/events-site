@@ -65,7 +65,7 @@
 			margin: $base-unit 0;
 			border: none;
 
-			button {
+			&> button {
 				text-align: left;
 			}
 		}
@@ -228,24 +228,63 @@
 }
 
 .show-ical {
-	button {
+	li > button {
 		display: none;
 	}
 }
 
-.calendar-export__ical-link {
+.calendar-export__ical-link-holder {
+  position: relative;
 	display: none;
 
 	.show-ical & {
 		display: block;
 	}
+}
 
-	input {
-		width: 100%;
-		border: none;
-		background: $light-bg-color;
-		font-family: $heading-font;;
-	}
+.calendar-export__ical-link-holder {
+  .calendar-export__ical-link {
+    height: $base-unit*4.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: 1px solid $border-color;
+    background: $light-bg-color;
+    padding: 0 $base-unit*5 0 $base-unit;
+    line-height: $base-unit*4.25;
+    color: $heading-text-dark-color;
+  }
+
+  .calender-export__ical-copy {
+    width: $base-unit*4.5;
+    height: 34px;
+    position: absolute;
+    text-indent: -999999px;
+    right: 9px;
+    bottom: 9px;
+    padding: 0;
+    background: white;
+    text-align: center;
+    line-height: 12px;
+
+    &:before {
+      content: "\e913";
+      font-family: 'unocha-icons' !important;
+      display: block;
+      text-indent: 0;
+    }
+
+    &.success {
+      &:before {
+        content: "\e944";
+      }
+    }
+  }
+}
+
+.calendar-export__ical-link-label {
+  font-weight: bold;
+  margin: $base-unit 0;
 }
 
 .calendar-export__ical-info {
@@ -340,7 +379,7 @@
 		}
 	}
 
-	.calendar-export__ical-link {
+	.calendar-export__ical-link-holder {
 		padding: $base-unit;
 	}
 
