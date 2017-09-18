@@ -248,6 +248,10 @@
 	}
 }
 
+.calendar-export__ical-info {
+  margin-top: $base-unit*2;
+}
+
 @include media-query(md) {
 
 	.block-views {
