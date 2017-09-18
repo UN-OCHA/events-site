@@ -9,30 +9,54 @@
 var evExports = function ($) {
   'use strict';
 
+  var settings = {
+  };
+
   function _buildOption (text, fn) {
     var listItem = $('<li />');
     var button = $('<button type="button">' + Drupal.t(text, {}, {context: 'events'}) + '</button>');
     button.on('click', fn);
     listItem.append(button);
+
+    if (text === 'ICAL') {
+      button.attr('id', 'ical-btn')
+      var icalLinkHolder = $('<div class="calendar-export__ical-link" />');
+      settings.icalLink = $('<input type="text" id="ical-link" readonly />');
+      settings.icalLink.on('click', function () {
+        $(this).select();
+      })
+      icalLinkHolder.append('<label for="ical-link">ICAL link</label>');
+      icalLinkHolder.append(settings.icalLink);
+      listItem.append(icalLinkHolder);
+    }
     return listItem;
   }
 
   function _init () {
-    var exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
+    settings.exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
     var exportButton = $('<button type="button" id="export-dropdown" class="calendar-export__button calendar-actions__toggle">' + Drupal.t('Export', {}, {context: 'events'}) + '</button>');
     exportButton.attr('data-toggle', 'dropdown');
     exportButton.attr('aria-haspopup', 'true');
     exportButton.attr('aria-expanded', 'false');
 
-    exportOptionsList.append(_buildOption('ICAL', exportICAL)).append(_buildOption('PDF', exportPDF));
-    evCalendar.settings.exportContainer.append(exportButton).append(exportOptionsList);
+    exportButton.on('click', function (e) {
+      resetICAL();
+    })
+
+    settings.exportOptionsList.append(_buildOption('ICAL', exportICAL)).append(_buildOption('PDF', exportPDF));
+    evCalendar.settings.exportContainer.append(exportButton).append(settings.exportOptionsList);
+  }
+
+  function resetICAL () {
+    settings.exportOptionsList.removeClass('show-ical');
   }
 
   function exportICAL () {
     var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
     var url = baseUrl + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
-    window.location = url;
+    settings.exportOptionsList.toggleClass('show-ical');
+    settings.icalLink.val(url);
   }
 
   function exportPDF () {
@@ -844,7 +868,7 @@ function chosenA11y (select, name, label) {
       evExports.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu', function (e) {
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn', function (e) {
         e.stopPropagation();
       });
     }
