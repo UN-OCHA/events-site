@@ -33,9 +33,9 @@
               ),
             )
           ); ?>
-        <?php
-endif; ?>
+        <?php endif; ?>
       </div>
+      <?php print render($page['lang_switch']); ?>
     </div>
   </div>
   <div class="cd-site-header">
