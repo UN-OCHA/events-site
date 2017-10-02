@@ -712,3 +712,12 @@ function _events_config_log($message, $type = 'notice') {
     drush_log($message, $type);
   }
 }
+
+/**
+ * Implements hook_language_switch_links_alter().
+ */
+function events_config_language_switch_links_alter(array &$links, $type, $path) {
+  foreach ($links as $key => $link) {
+    $links[$key]['title'] = strtoupper($link['language']->language);
+  }
+}

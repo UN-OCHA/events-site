@@ -8,4 +8,5 @@ scripts[] = assets/js/clipboard.min.js
 scripts[] = assets/js/modernizr-output.js
 regions[page_top] = Page Top
 regions[content] = Content
+regions[lang_switch] = Language switcher
 regions[page_bottom] = Page Bottom
