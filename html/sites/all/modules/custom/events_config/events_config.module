@@ -714,10 +714,42 @@ function _events_config_log($message, $type = 'notice') {
 }
 
 /**
+ * Implements template_preprocess_page().
+ */
+function events_config_preprocess_page(&$variables) {
+  // Add language links.
+  global $language;
+  $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
+  $links = language_negotiation_get_switch_links('language', $path);
+  $vars = array(
+    'links' => $links->links,
+    'attributes' => array(
+      'class' => array('cd-dropdown-menu'),
+      'role' => 'menu',
+      'id' => 'cd-language',
+      'aria-labelledby' => 'cd-language-toggle',
+    ),
+  );
+
+  $output = '';
+  $output .= '<div class="language-switcher">';
+  $output .= '<button type="button" class="cd-global-header__sites-btn" data-toggle="dropdown" id="cd-language-toggle">';
+  $output .= $language->language;
+  $output .= '<i class="icon-arrow-down" aria-hidden="true"></i>';
+  $output .= '</button>';
+  $output .= theme('links__locale_block', $vars);
+  $output .= '</div>';
+
+  $variables['page']['language_switcher'] = $output;
+}
+
+/**
  * Implements hook_language_switch_links_alter().
  */
 function events_config_language_switch_links_alter(array &$links, $type, $path) {
   foreach ($links as $key => $link) {
     $links[$key]['title'] = strtoupper($link['language']->language);
+    $links[$key]['attributes']['lang'] = $links[$key]['attributes']['xml:lang'];
+    unset($links[$key]['attributes']['xml:lang']);
   }
 }
