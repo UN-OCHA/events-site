@@ -732,12 +732,13 @@ function events_config_preprocess_page(&$variables) {
   );
 
   $output = '';
-  $output .= '<div class="cd-global-header__language-switcher"><div class="language-switcher">';
+  $output .= '<div class="language-switcher">';
   $output .= '<button type="button" class="cd-global-header__sites-btn" data-toggle="dropdown" id="cd-language-toggle">';
   $output .= $language->language;
-  $output .= '<i class="icon-arrow-down" aria-hidden="true"></i></button>';
+  $output .= '<i class="icon-arrow-down" aria-hidden="true"></i>';
+  $output .= '</button>';
   $output .= theme('links__locale_block', $vars);
-  $output .= '</div></div>';
+  $output .= '</div>';
 
   $variables['page']['language_switcher'] = $output;
 }
@@ -748,5 +749,7 @@ function events_config_preprocess_page(&$variables) {
 function events_config_language_switch_links_alter(array &$links, $type, $path) {
   foreach ($links as $key => $link) {
     $links[$key]['title'] = strtoupper($link['language']->language);
+    $links[$key]['attributes']['lang'] = $links[$key]['attributes']['xml:lang'];
+    unset($links[$key]['attributes']['xml:lang']);
   }
 }
