@@ -35,7 +35,7 @@
           ); ?>
         <?php endif; ?>
       </div>
-      <?php print render($page['lang_switch']); ?>
+      <?php print $page['language_switcher']; ?>
     </div>
   </div>
   <div class="cd-site-header">
