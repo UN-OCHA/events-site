@@ -737,7 +737,7 @@ function events_config_preprocess_page(&$variables) {
   $output .= $language->language;
   $output .= '<i class="icon-arrow-down" aria-hidden="true"></i></button>';
   $output .= theme('links__locale_block', $vars);
-  $output .= '</div></div';
+  $output .= '</div></div>';
 
   $variables['page']['language_switcher'] = $output;
 }
