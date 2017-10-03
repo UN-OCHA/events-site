@@ -733,7 +733,7 @@ function events_config_preprocess_page(&$variables) {
 
   $output = '';
   $output .= '<div class="language-switcher">';
-  $output .= '<button type="button" class="cd-global-header__sites-btn" data-toggle="dropdown" id="cd-language-toggle">';
+  $output .= '<button type="button" class="cd-global-header__lang-btn" data-toggle="dropdown" id="cd-language-toggle">';
   $output .= $language->language;
   $output .= '<i class="icon-arrow-down" aria-hidden="true"></i>';
   $output .= '</button>';
