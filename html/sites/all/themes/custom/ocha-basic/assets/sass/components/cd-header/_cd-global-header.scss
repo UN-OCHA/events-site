@@ -32,14 +32,13 @@
   }
 }
 
-.cd-global-header__sites-btn, .cd-global-header__lang-btn {
+.cd-global-header__sites-btn {
   color: $light-text-color;
   text-transform: uppercase;
   text-align: left;
   padding: 0 $base-unit;
   height: $cd-global-header-height;
   @include font-size($small-font-size);
-  font-weight: 300;
 
   &:hover, &:focus {
     background: darken($primary-bg-color, 10%);
@@ -49,26 +48,9 @@
 
 .cd-global-header__nav {
   margin-right: -$base-unit;
-  display: flex;
 
   .no-flexbox & {
     float: right;
-  }
-}
-
-.cd-global-header__language-switcher {
-  position: relative;
-
-  &:before {
-    content: "";
-    display: inline-block;
-    width: 1px;
-    position: absolute;
-    left: -1px;
-    top: 14px;
-    height: 12px;
-    z-index: 1;
-    background: white;
   }
 }
 
@@ -86,15 +68,4 @@
     margin-right: 0;
   }
 
-}
-
-@media (min-width: map-get($grid-breakpoints, xl)) {
-  .cd-global-header__lang-btn {
-    @include font-size($medium-font-size);
-    padding: 0 $base-unit*2;
-
-    .icon-arrow-down {
-      @include font-size($base-font-size);
-    }
-  }
 }

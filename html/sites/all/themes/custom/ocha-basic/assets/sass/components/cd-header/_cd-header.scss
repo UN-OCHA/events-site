@@ -77,9 +77,6 @@
       color: $light-text-color;
     }
   }
-  .cd-global-header__language-switcher & {
-    min-width: 50px;
-  }
 }
 
 @include media-query(md) {
