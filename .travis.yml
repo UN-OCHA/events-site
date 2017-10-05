@@ -33,7 +33,7 @@ before_script:
   # Behat
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  - sleep 3
+  - sleep 3 
   - cd $TRAVIS_BUILD_DIR/behat
   - ./scripts/setup.sh
   - cd $TRAVIS_BUILD_DIR/behat
@@ -45,5 +45,5 @@ before_script:
 
 script:
   - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
-  - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
-  - # cd $TRAVIS_BUILD_DIR/behat && bin/behat --config behat.travis.yml
+  - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,inc,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
+  - cd $TRAVIS_BUILD_DIR/behat && bin/behat --config behat.travis.yml
