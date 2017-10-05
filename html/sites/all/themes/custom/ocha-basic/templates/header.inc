@@ -34,8 +34,10 @@
             )
           ); ?>
         <?php endif; ?>
+        <div class="cd-global-header__language-switcher">
+          <?php print $page['language_switcher']; ?>
+        </div>
       </div>
-      <?php print render($page['lang_switch']); ?>
     </div>
   </div>
   <div class="cd-site-header">
