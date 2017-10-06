@@ -39,3 +39,10 @@ function events_config_update_7004() {
 function events_config_update_7005() {
   module_enable(array('l10n_update'));
 }
+
+/**
+ * Enable admin_denied.
+ */
+function events_config_update_7006() {
+  module_enable(array('admin_denied'));
+}
