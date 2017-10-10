@@ -27,6 +27,9 @@ function events_event_field_default_field_bases() {
     'settings' => array(
       'display_default' => 0,
       'display_field' => 0,
+      'entity_translation_sync' => array(
+        0 => 'fid',
+      ),
       'uri_scheme' => 'public',
     ),
     'translatable' => 0,
@@ -54,6 +57,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -80,6 +85,7 @@ function events_event_field_default_field_bases() {
       'cell_margin' => 1,
       'cell_width' => 10,
       'columns' => 16,
+      'entity_translation_sync' => FALSE,
     ),
     'translatable' => 0,
     'type' => 'color_field_rgb',
@@ -106,6 +112,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -132,6 +140,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -158,6 +168,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -176,6 +188,7 @@ function events_event_field_default_field_bases() {
     'settings' => array(
       'cache_count' => 4,
       'cache_enabled' => 0,
+      'entity_translation_sync' => FALSE,
       'granularity' => array(
         'day' => 'day',
         'hour' => 'hour',
@@ -214,6 +227,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -249,6 +264,23 @@ function events_event_field_default_field_bases() {
     'type' => 'multifield',
   );
 
+  // Exported field_base: 'field_event_hrinfo_nid'.
+  $field_bases['field_event_hrinfo_nid'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_event_hrinfo_nid',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+    ),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_event_info'.
   $field_bases['field_event_info'] = array(
     'active' => 1,
@@ -263,7 +295,9 @@ function events_event_field_default_field_bases() {
     ),
     'locked' => 0,
     'module' => 'text',
-    'settings' => array(),
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+    ),
     'translatable' => 0,
     'type' => 'text_long',
   );
@@ -289,6 +323,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -309,6 +345,7 @@ function events_event_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'max_length' => 255,
     ),
     'translatable' => 0,
@@ -336,9 +373,33 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
+  );
+
+  // Exported field_base: 'field_event_original_theme'.
+  $field_bases['field_event_original_theme'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_event_original_theme',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
   );
 
   // Exported field_base: 'field_event_theme'.
@@ -362,6 +423,8 @@ function events_event_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'entity_translation_sync' => FALSE,
+      'options_list_callback' => NULL,
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
@@ -382,9 +445,76 @@ function events_event_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'max_length' => 255,
     ),
     'translatable' => 0,
+    'type' => 'text',
+  );
+
+  // Exported field_base: 'field_long_name'.
+  $field_bases['field_long_name'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_long_name',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
+  // Exported field_base: 'field_parent_tids'.
+  $field_bases['field_parent_tids'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_parent_tids',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
+  // Exported field_base: 'name_field'.
+  $field_bases['name_field'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'name_field',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max_length' => 255,
+    ),
+    'translatable' => 1,
     'type' => 'text',
   );
 

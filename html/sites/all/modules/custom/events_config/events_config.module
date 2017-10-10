@@ -25,7 +25,7 @@ function events_config_menu() {
  */
 function events_config_login_redirect() {
   drupal_goto('hybridauth/window/HumanitarianId', array(
-    'destination' => 'events',
+    'destination' => drupal_get_destination(),
     'destination_error' => 'events',
   ));
 }
@@ -38,7 +38,7 @@ function events_config_hybridauth_user_login($account, $data) {
   $user_data = array();
 
   if (isset($data['locale'])) {
-    if (in_array($data['locale'], array('en', 'fr'))) {
+    if (in_array($data['locale'], array('en', 'fr', 'es'))) {
       if ($account->language != $data['locale']) {
         $account->language = $data['locale'];
         $needs_update = TRUE;
@@ -200,7 +200,7 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
   }
 
   // Query by name if not found or not defined.
-  if (!$external_id || !isset($result['taxonomy_term'])) {
+  if (!$external_id && !isset($result['taxonomy_term'])) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
     $query->entityCondition('bundle', $vocabulary, '=');
@@ -217,6 +217,9 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
       'vocabulary_machine_name' => $vocabulary,
     );
 
+    // Fill in name field.
+    $term->name_field['en'][0]['value'] = $name;
+
     if ($external_id) {
       $term->field_external_id['und'][0]['value'] = $external_id;
     }
@@ -227,6 +230,8 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
 
     taxonomy_term_save($term);
     $output['new'] = TRUE;
+
+    _events_config_log('Created new term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
   }
   else {
     $term_tid = reset($result['taxonomy_term']);
@@ -237,10 +242,14 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
       if (!isset($term->field_external_id['und'][0]['value']) || $term->field_external_id['und'][0]['value'] != $external_id) {
         $term->field_external_id['und'][0]['value'] = $external_id;
         $needs_update = TRUE;
+        _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+        _events_config_log('External Id: ' . $term->field_external_id['und'][0]['value'] . ' versus ' . $external_id);
       }
       if ($term->name != $name) {
         $term->name = $name;
         $needs_update = TRUE;
+        _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+        _events_config_log('Name: ' . $term->name . ' versus ' . $name);
       }
     }
 
@@ -249,14 +258,34 @@ function events_config_get_term($name, $vocabulary, $external_id = NULL, $parent
       if ($parents) {
         $parent = reset($parents);
         if ($parent->tid != $parent_id) {
+          if ($term->tid != $parent_id) {
+            $term->parent = $parent_id;
+          }
+          else {
+            _events_config_log('Tried setting term id as parent for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')', 'error');
+            $term->parent = 0;
+          }
+          _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+          _events_config_log('Update parent: ' . $term->parent . ' versus ' . $parent_id);
+          $needs_update = TRUE;
+        }
+      }
+      else {
+        if ($term->tid != $parent_id) {
           $term->parent = $parent_id;
           $needs_update = TRUE;
+          _events_config_log('Updated needed for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
+          _events_config_log('New parent: ' . $term->parent . ' versus ' . $parent_id);
+        }
+        else {
+          _events_config_log('Tried setting term id as parent for ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')', 'error');
         }
       }
     }
 
     if ($needs_update) {
       taxonomy_term_save($term);
+      _events_config_log('Updated term in ' . $vocabulary . ': ' . $name . ' (' . $term->tid . ')');
     }
   }
 
@@ -551,15 +580,16 @@ function events_config_fetch_and_sync_locations() {
  */
 function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_needed = FALSE, $max_depth = 9) {
   $url = $endpoint;
+  $page = 1;
 
   while (TRUE) {
-    if (function_exists('drush_log')) {
-      drush_log('Fetching ' . $url);
-    }
-    $request = drupal_http_request($url);
+    $fetch_url = $url . '&page=' . $page;
+    _events_config_log('Fetching ' . $fetch_url);
+    $request = drupal_http_request($fetch_url);
     if (isset($request->data)) {
       $data = drupal_json_decode($request->data);
       if (empty($data['data'])) {
+        _events_config_log('No data received from ' . $fetch_url);
         break;
       }
 
@@ -584,7 +614,6 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
             }
 
             $parent_term = reset($result['taxonomy_term']);
-            $term = taxonomy_term_load($parent_term->tid);
             $parent = $parent_term->tid;
           }
 
@@ -595,14 +624,10 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
         }
       }
 
-      if (isset($data['next']) && isset($data['next']['href'])) {
-        $url = $data['next']['href'];
-      }
-      else {
-        break;
-      }
+      $page++;
     }
     else {
+      _events_config_log('No data received from ' . $fetch_url);
       break;
     }
   }
@@ -677,4 +702,59 @@ function events_config_fetch_and_sync_themes() {
  */
 function events_config_libraries_info_alter(&$libraries) {
   unset($libraries['fullcalendar']['files']['css']);
+}
+
+/**
+ * Implements hook_libraries_info_alter().
+ */
+function _events_config_log($message, $type = 'notice') {
+  if (function_exists('drush_log')) {
+    drush_log($message, $type);
+  }
+}
+
+/**
+ * Implements template_preprocess_page().
+ */
+function events_config_preprocess_page(&$variables) {
+  // Bail out if function is not available.
+  if (!function_exists('language_negotiation_get_switch_links')) {
+    return;
+  }
+
+  // Add language links.
+  global $language;
+  $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
+  $links = language_negotiation_get_switch_links('language', $path);
+  $vars = array(
+    'links' => $links->links,
+    'attributes' => array(
+      'class' => array('cd-dropdown-menu'),
+      'role' => 'menu',
+      'id' => 'cd-language',
+      'aria-labelledby' => 'cd-language-toggle',
+    ),
+  );
+
+  $output = '';
+  $output .= '<div class="language-switcher">';
+  $output .= '<button type="button" class="cd-global-header__lang-btn" data-toggle="dropdown" id="cd-language-toggle">';
+  $output .= $language->language;
+  $output .= '<i class="icon-arrow-down" aria-hidden="true"></i>';
+  $output .= '</button>';
+  $output .= theme('links__locale_block', $vars);
+  $output .= '</div>';
+
+  $variables['page']['language_switcher'] = $output;
+}
+
+/**
+ * Implements hook_language_switch_links_alter().
+ */
+function events_config_language_switch_links_alter(array &$links, $type, $path) {
+  foreach ($links as $key => $link) {
+    $links[$key]['title'] = strtoupper($link['language']->language);
+    $links[$key]['attributes']['lang'] = $links[$key]['attributes']['xml:lang'];
+    unset($links[$key]['attributes']['xml:lang']);
+  }
 }

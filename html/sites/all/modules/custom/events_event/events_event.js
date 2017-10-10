@@ -9,33 +9,85 @@
 var evExports = function ($) {
   'use strict';
 
+  var settings = {
+    icalLabel: 'ICAL'
+  };
+
   function _buildOption (text, fn) {
     var listItem = $('<li />');
-    var button = $('<button type="button">' + Drupal.t(text) + '</button>');
+    var button = $('<button type="button">' + Drupal.t(text, {}, {context: 'events'}) + '</button>');
     button.on('click', fn);
     listItem.append(button);
+
+    if (text === 'ICAL') {
+      var icalLinkHolder = $('<div class="calendar-export__ical-link-holder" />');
+      var icalMsg = Drupal.t('ICAL exports include information on past events up to one month back.', {}, {context: 'events'});
+      var copyBtn = $('<button type="button" id="ical-copy" data-clipboard-target="#ical-link" class="calender-export__ical-copy"><span class="sr-only">' + Drupal.t('Copy', {}, {context: 'events'}) + '</span></button>');
+      settings.icalLink = $('<a href="" id="ical-link" class="calendar-export__ical-link"></a>');
+      settings.icalBtn = button;
+      settings.icalInfo = $('<p class="calendar-export__ical-info">* ' + icalMsg + '</p>');
+
+      settings.icalBtn.attr('id', 'ical-btn');
+      evCalendar.settings.$calendar.after(settings.icalInfo);
+      settings.icalInfo.hide();
+      if (evCalendar.settings.state.view === 'past') {
+        button.text(settings.icalLabel + ' *');
+        settings.icalInfo.show();
+      }
+      icalLinkHolder.append('<p class="calendar-export__ical-link-label">' + Drupal.t('ICAL link', {}, {context: 'events'}) + '</p>');
+      icalLinkHolder.append(settings.icalLink);
+      icalLinkHolder.append(copyBtn);
+      listItem.append(icalLinkHolder);
+      var copyIcal = new Clipboard('#ical-copy');
+      copyIcal.on('success', function () {
+        copyBtn.addClass('success');
+        setTimeout(function () {
+          copyBtn.removeClass('success');
+        }, 600);
+      });
+    }
     return listItem;
   }
 
   function _init () {
-    var exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
-    var exportButton = $('<button type="button" id="export-dropdown" class="calendar-export__button calendar-actions__toggle">' + Drupal.t('Export') + '</button>');
+    settings.exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
+    var exportButton = $('<button type="button" id="export-dropdown" class="calendar-export__button calendar-actions__toggle">' + Drupal.t('Export', {}, {context: 'events'}) + '</button>');
     exportButton.attr('data-toggle', 'dropdown');
     exportButton.attr('aria-haspopup', 'true');
     exportButton.attr('aria-expanded', 'false');
 
-    exportOptionsList.append(_buildOption('ICAL', exportICAL)).append(_buildOption('PDF', exportPDF));
-    evCalendar.settings.exportContainer.append(exportButton).append(exportOptionsList);
+    exportButton.on('click', function () {
+      _resetICAL();
+    });
+
+    settings.exportOptionsList.append(_buildOption(settings.icalLabel, _exportICAL)).append(_buildOption('PDF', _exportPDF));
+    evCalendar.settings.exportContainer.append(exportButton).append(settings.exportOptionsList);
   }
 
-  function exportICAL () {
-    var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
-    var url = baseUrl + '/ical?';
+  function _update () {
+    if (settings.icalBtn) {
+      if (evCalendar.settings.state.view === 'past') {
+        settings.icalBtn.text(settings.icalLabel + ' *');
+        settings.icalInfo.show();
+        return;
+      }
+      settings.icalBtn.text(settings.icalLabel);
+      settings.icalInfo.hide();
+    }
+  }
+
+  function _resetICAL () {
+    settings.exportOptionsList.removeClass('show-ical');
+  }
+
+  function _exportICAL () {
+    var url = window.location.protocol + '//' + window.location.hostname + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
-    window.location = url;
+    settings.exportOptionsList.toggleClass('show-ical');
+    settings.icalLink.text(url).attr('href', url);
   }
 
-  function exportPDF () {
+  function _exportPDF () {
     var calendar = $('.fc-view-container').clone();
     var table = _formatPdfEvents(calendar);
     var filters = evFilters.getCurrentFilters();
@@ -49,7 +101,7 @@ var evExports = function ($) {
 
     // Heading.
     var headingText = $('.fc-toolbar h2').text();
-    var calendarHeading = Drupal.t('CALENDAR') + ': ' + headingText.toUpperCase();
+    var calendarHeading = Drupal.t('CALENDAR', {}, {context: 'events'}) + ': ' + headingText.toUpperCase();
     doc.setFontSize(18);
     doc.setFontType('bold');
     doc.setTextColor(0,122,192);
@@ -60,7 +112,7 @@ var evExports = function ($) {
       doc.setFontSize(10);
       doc.setTextColor(0);
       doc.setFontType('bold');
-      doc.text(Drupal.t('Filter Criteria') + ': ', docMargin, tableY);
+      doc.text(Drupal.t('Filter Criteria', {}, {context: 'events'}) + ': ', docMargin, tableY);
 
       doc.setTextColor(0,122,192);
       doc.text(filters, docMargin + 70, tableY);
@@ -87,7 +139,7 @@ var evExports = function ($) {
     for (var i = 0; i < totalPages; i++) {
       var realPageNumber = i + 1;
       doc.setPage(realPageNumber);
-      doc.text(Drupal.t('Page') + ' ' + realPageNumber + '/' + totalPages, docMargin, doc.internal.pageSize.height - 25);
+      doc.text(Drupal.t('Page', {}, {context: 'events'}) + ' ' + realPageNumber + '/' + totalPages, docMargin, doc.internal.pageSize.height - 25);
     }
 
     // Save.
@@ -146,19 +198,19 @@ var evExports = function ($) {
 
     var columns = [
       {
-        title: 'Date',
+        title: Drupal.t('Date', {}, {context: 'events'}),
         dataKey: 'date'
       },
       {
-        title: 'Time',
+        title: Drupal.t('Time', {}, {context: 'events'}),
         dataKey: 'time'
       },
       {
-        title: 'Name of meeting',
+        title: Drupal.t('Name of meeting', {}, {context: 'events'}),
         dataKey: 'name'
       },
       {
-        title: 'Location',
+        title: Drupal.t('Location', {}, {context: 'events'}),
         dataKey: 'location'
       }
     ];
@@ -170,8 +222,8 @@ var evExports = function ($) {
   }
 
   function _getPdfFooter (data, doc) {
-    var createdAt = 'Created: ' + moment().format('DD MMM YYYY');
-    var poweredBy = 'Powered by Humanitarian Events. https://events.rwlabs.org';
+    var createdAt = Drupal.t('Created', {}, {context: 'events'}) + ': ' + moment().format('DD MMM YYYY');
+    var poweredBy = Drupal.t('Powered by Humanitarian Events. https://events.rwlabs.org', {}, {context: 'events'});
     doc.setFontSize(8);
     doc.setFontType('normal');
     doc.text(createdAt, doc.internal.pageSize.width - 118, doc.internal.pageSize.height - 35);
@@ -179,7 +231,8 @@ var evExports = function ($) {
   }
 
   return {
-    init: _init
+    init: _init,
+    update: _update
   };
 
 }(jQuery);
@@ -216,20 +269,23 @@ var evFilters = function ($) {
     var filter = $('<div class="calendar-filters--' + f + ' processed block-views"></div>');
     var filterContainer = $('<div class="calendar-actions__section" />');
     var filterButton = $('<button type="button" class="calendar-filters__button">' + facet.label + '</button>');
-    var backButton = $('<button type="button" class="calendar-actions__btn">' + Drupal.t('Back') + '</button>');
+    var backButton = $('<button type="button" class="calendar-actions__btn">' + Drupal.t('Back', {}, {context: 'events'}) + '</button>');
 
     var newLabel = $('<label for="filter-' + filterCount + '">' + facet.label + '</label>');
     var newSelect = $('<select class="chosen-enable" data-type="' + f + '" id="filter-' + filterCount + '"></select>');
-    var emptyOption = $('<option value="' + f + '">' + Drupal.t('- Any -') + '</option>');
+    var emptyOption = $('<option value="' + f + '">' + Drupal.t('- Any -', {}, {context: 'events'}) + '</option>');
     newSelect.append(emptyOption);
 
     // Flip key and value.
     var flipped = [];
     for (var key in facet.values) {
-      flipped.push({
-        'key': key,
-        'label': facet.values[key]
-      });
+      // Make sure value is set.
+      if (facet.values[key]) {
+        flipped.push({
+          'key': key,
+          'label': facet.values[key]
+        });
+      }
     }
 
     // Sort by label.
@@ -287,7 +343,7 @@ var evFilters = function ($) {
   function _buildHTML () {
     settings.filtersWrapperInner = $('<div class="calendar-filters__inner dropdown-menu clearfix"></div>');
     var currentFiltersWrapper = $('<div class="calendar-filters__current hidden"></div>');
-    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Filter events')+ '</button>';
+    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Filter events', {}, {context: 'events'})+ '</button>';
     var clearBtn = '<button type="button" class="calendar-filters__clear btn-icon"><i class="icon-cancel"></i>Clear filters</button>';
     evCalendar.settings.filtersContainer.append(filtersHeading).append(settings.filtersWrapperInner).append(currentFiltersWrapper);
     currentFiltersWrapper.append('<p />').append(clearBtn);
@@ -326,7 +382,7 @@ var evFilters = function ($) {
     var filtersLength = filters.length;
     var selectedFilters = [];
     var selectedFiltersLength = 0;
-    var defaultOptionText = '- Any -';
+    var defaultOptionText = Drupal.t('- Any -', {}, {context: 'events'});
     var str = '';
 
     for (var i = 0; i < filtersLength; i++) {
@@ -408,7 +464,7 @@ var evFilters = function ($) {
       });
       newSelect.chosen();
 
-      var inputLabel = Drupal.t('Search ') + newSelect.prev('label').text();
+      var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
       chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
 
       // unbind touchstart event so can scroll filters on mobile without triggering them
@@ -428,7 +484,7 @@ var evFilters = function ($) {
       $('.calendar-actions').removeClass('calendar-actions--filtered');
       return;
     }
-    var currentFiltersHtml = '<strong>Current filters:</strong> ' + currentFilters;
+    var currentFiltersHtml = '<strong>' + Drupal.t('Current filters', {}, {context: 'events'}) + ':</strong> ' + currentFilters;
     currentFiltersDiv.find('p').html(currentFiltersHtml);
     currentFiltersDiv.removeClass('hidden');
     $('.calendar-actions').addClass('calendar-actions--filtered');
@@ -498,16 +554,16 @@ var evCalendar = function ($) {
     settings.calendarControls.addClass('fc-toolbar-controls');
     settings.calendarControls.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
       .addClass('sr-only')
-      .text('Previous')
+      .text(Drupal.t('Previous', {}, {context: 'events'}))
       .after('<i class="icon-arrow-left"></i>');
     settings.calendarControls.find('.fc-next-button span').removeClass('fc-icon fc-icon-right-single-arrow')
       .addClass('sr-only')
-      .text('Next')
+      .text(Drupal.t('Next', {}, {context: 'events'}))
       .after('<i class="icon-arrow-right"></i>');
 
     $('.fc-center').prepend(settings.calendarControls);
 
-    $('.fc-toolbar .fc-today-button').html('<span>Go to </span>' + $('.fc-today-button').text());
+    $('.fc-toolbar .fc-today-button').html('<span>' + Drupal.t('Go to', {}, {context: 'events'}) + ' </span>' + $('.fc-today-button').text());
     _formatViewSettings();
 
   }
@@ -517,8 +573,8 @@ var evCalendar = function ($) {
     settings.filtersContainer = $('<div class="calendar-filters"></div>');
     settings.exportContainer = $('<div class="calendar-export"></div>');
     settings.timeZoneContainer = $('<div class="calendar-settings"></div>');
-    var sidebarBtn = '<button type="button" class="calendar-sidebar-btn btn-icon "><i class="icon-settings"></i><span>' + Drupal.t('Options') + '</span></button>';
-    var closeBtn = '<button type="button" class="calendar-actions__close calendar-actions__btn">' + Drupal.t('Done') + '</span></button>';
+    var sidebarBtn = '<button type="button" class="calendar-sidebar-btn btn-icon "><i class="icon-settings"></i><span>' + Drupal.t('Options', {}, {context: 'events'}) + '</span></button>';
+    var closeBtn = '<button type="button" class="calendar-actions__close calendar-actions__btn">' + Drupal.t('Done', {}, {context: 'events'}) + '</span></button>';
 
     settings.actionsContainer
       .append(closeBtn)
@@ -534,7 +590,7 @@ var evCalendar = function ($) {
     settings.sidebarOpen = false;
     settings.viewToggleContainer = $('<div class="calendar-view-selector"></div>');
     settings.viewToggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown"/>');
-    settings.viewToggle.html(Drupal.t('Showing: ') + '<span></span>');
+    settings.viewToggle.html(Drupal.t('Showing', {}, {context: 'events'}) + ': <span></span>');
     settings.viewToggle.attr('aria-haspopup', 'true');
     settings.viewToggle.attr('aria-expanded', 'false');
   }
@@ -567,13 +623,13 @@ var evCalendar = function ($) {
     var alreadyTrigger = false;
 
     $.extend(settings.$settings.events, {
-      timeout: 5000,
+      cache: true,
       success: function() {
         $('.fc-view').removeClass('fc-view--error');
         $('.fc-loading-message, .fc-loading-message--error').remove();
       },
       error: function() {
-        var errorMessage = '<div class="fc-loading-message fc-loading-message--error">' + Drupal.t('There was an error fetching events, please try again') + '</div>';
+        var errorMessage = '<div class="fc-loading-message fc-loading-message--error">' + Drupal.t('There was an error fetching events, please try again', {}, {context: 'events'}) + '</div>';
         $('.fc-view').addClass('fc-view--error').before(errorMessage);
       }
     });
@@ -581,7 +637,7 @@ var evCalendar = function ($) {
     $.extend(settings.$settings, {
       loading: function(isLoading, view) {
         if (isLoading) {
-          var loadingMessage = '<div class="fc-loading-message">' + Drupal.t('Please wait while we fetch events') + '</div>';
+          var loadingMessage = '<div class="fc-loading-message">' + Drupal.t('Please wait while we fetch events', {}, {context: 'events'}) + '</div>';
           view.el.addClass('fc-view--loading').before(loadingMessage);
           return;
         }
@@ -638,7 +694,7 @@ var evCalendar = function ($) {
     $.extend(settings.$settings.views, {
       'upcoming': {
         'type': 'list',
-        'buttonText': 'Upcoming',
+        'buttonText': Drupal.t('Upcoming', {}, {context: 'events'}),
         'duration': {
           'days': 7
         },
@@ -656,7 +712,7 @@ var evCalendar = function ($) {
       },
       'past': {
         'type': 'listrev',
-        'buttonText': 'Past events',
+        'buttonText': Drupal.t('Past events', {}, {context: 'events'}),
         'duration': {
           'days': 90
         },
@@ -729,6 +785,7 @@ var evCalendar = function ($) {
     selected.addClass('fc-state-active');
     var label = selected.text() ? selected.text() : settings.state.view;
     settings.viewToggle.find('span').text(label);
+    evExports.update();
   }
 
   return {
@@ -748,9 +805,9 @@ var evTimeZone = function ($) {
   var settings = {};
 
   function _buildHTML () {
-    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone: ') +'</button>');
+    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone', {}, {context: 'events'}) +': </button>');
     var dropdown = $('<div class="calendar-settings__tz-dropdown dropdown-menu" aria-labelledby="timezone-dropdown"></div>');
-    var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone') + '</label>');
+    var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone', {}, {context: 'events'}) + '</label>');
     var select = $('<select id="timezone-selector"></select>');
     toggle.attr('data-toggle', 'dropdown');
     toggle.attr('aria-haspopup', 'true');
@@ -766,7 +823,7 @@ var evTimeZone = function ($) {
       var filters = $.extend({}, evFilters.settings.eventFilters);
       filters.timezone = data;
       evFilters.update(filters);
-      settings.toggle.text('Time zone: ' + $(e.target).find('option:selected').text());
+      settings.toggle.text(Drupal.t('Time zone', {}, {context: 'events'}) + ' :' + $(e.target).find('option:selected').text());
       evCalendar.settings.$calendar.fullCalendar('option', 'timezone', data);
       $('.calendar-settings__tz-button').click();
     }
@@ -802,7 +859,7 @@ var evTimeZone = function ($) {
         $tz.chosen().change(function(e) {
           _changeTimezone(e);
         });
-        chosenA11y($tz, 'timezone-search', 'Search timezones');
+        chosenA11y($tz, 'timezone-search', Drupal.t('Search timezones'));
       }
     });
 
@@ -823,7 +880,7 @@ var evTimeZone = function ($) {
 function chosenA11y (select, name, label) {
   var input = select.next('.chosen-container').find('.chosen-search-input');
   input.attr({name: name, id: name});
-  input.before('<label for="' + name + '" class="sr-only">' + Drupal.t(label) + '</label>');
+  input.before('<label for="' + name + '" class="sr-only">' + label + '</label>');
 }
 
 (function($) {
@@ -841,7 +898,7 @@ function chosenA11y (select, name, label) {
       evExports.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu', function (e) {
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder', function (e) {
         e.stopPropagation();
       });
     }

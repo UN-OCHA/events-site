@@ -21,6 +21,7 @@ function events_page_menu_default_menu_links() {
         'title' => '',
       ),
       'identifier' => 'menu-footer-menu_about:about',
+      'alter' => TRUE,
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -29,6 +30,8 @@ function events_page_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -49,
     'customized' => 1,
+    'language' => 'und',
+    'menu_links_customized' => 1,
   );
   // Exported menu link: menu-footer-menu_code-of-conduct:code-of-conduct.
   $menu_links['menu-footer-menu_code-of-conduct:code-of-conduct'] = array(
@@ -41,6 +44,7 @@ function events_page_menu_default_menu_links() {
         'title' => '',
       ),
       'identifier' => 'menu-footer-menu_code-of-conduct:code-of-conduct',
+      'alter' => TRUE,
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -49,6 +53,8 @@ function events_page_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 1,
+    'language' => 'und',
+    'menu_links_customized' => 1,
   );
   // Exported menu link: menu-footer-menu_privacy-policy:https://www.un.org/en/sections/about-website/privacy-notice.
   $menu_links['menu-footer-menu_privacy-policy:https://www.un.org/en/sections/about-website/privacy-notice'] = array(
@@ -61,6 +67,7 @@ function events_page_menu_default_menu_links() {
         'title' => '',
       ),
       'identifier' => 'menu-footer-menu_privacy-policy:https://www.un.org/en/sections/about-website/privacy-notice',
+      'alter' => TRUE,
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -69,6 +76,8 @@ function events_page_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 1,
+    'language' => 'en',
+    'menu_links_customized' => 1,
   );
 
   // Translatables

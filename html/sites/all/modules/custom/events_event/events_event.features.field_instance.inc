@@ -31,6 +31,7 @@ function events_event_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'description_field' => 1,
+      'entity_translation_sync' => FALSE,
       'file_directory' => 'docs',
       'file_extensions' => 'txt pdf doc docx pps ppsx',
       'filefield_paths' => array(
@@ -92,6 +93,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Document_type',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -121,7 +123,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -141,6 +143,7 @@ function events_event_field_default_field_instances() {
           'tid' => 5576,
         ),
       ),
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -166,7 +169,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -181,6 +184,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Cluster',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -206,7 +210,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -221,6 +225,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Coordination Hub',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -244,7 +249,7 @@ function events_event_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 21,
+        'weight' => 23,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -262,6 +267,7 @@ function events_event_field_default_field_instances() {
       'default_value2' => 'strtotime',
       'default_value_code' => '',
       'default_value_code2' => '+1 Hour',
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -295,7 +301,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -310,6 +316,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Disaster(s)',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -338,7 +345,7 @@ function events_event_field_default_field_instances() {
           'view_mode' => 'default',
         ),
         'type' => 'multifield_table',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -352,6 +359,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Documents',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -360,6 +368,52 @@ function events_event_field_default_field_instances() {
       'settings' => array(),
       'type' => 'multifield_table',
       'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_hrinfo_nid'.
+  $field_instances['node-ev_event-field_event_hrinfo_nid'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 25,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_hrinfo_nid',
+    'label' => 'HRInfo nid',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'display_empty' => 0,
+        'formatter' => 'number_unformatted',
+        'formatter_settings' => array(),
+      ),
+      'type' => 'field_extrawidgets_read_only',
+      'weight' => 13,
     ),
   );
 
@@ -375,7 +429,7 @@ function events_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -390,6 +444,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Additional Information',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
@@ -416,7 +471,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -431,6 +486,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Location',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -456,7 +512,7 @@ function events_event_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -470,6 +526,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Location details',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -496,7 +553,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -511,6 +568,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Organization',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -521,6 +579,50 @@ function events_event_field_default_field_instances() {
       ),
       'type' => 'options_select',
       'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_original_theme'.
+  $field_instances['node-ev_event-field_event_original_theme'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 24,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_original_theme',
+    'label' => 'Original theme',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'display_empty' => 0,
+        'formatter' => '',
+        'formatter_settings' => array(),
+        'size' => 60,
+      ),
+      'type' => 'field_extrawidgets_read_only',
+      'weight' => 12,
     ),
   );
 
@@ -536,7 +638,7 @@ function events_event_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 22,
+        'weight' => 12,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -551,6 +653,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Theme',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -584,6 +687,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Legend color',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -592,6 +696,43 @@ function events_event_field_default_field_instances() {
       'settings' => array(),
       'type' => 'color_field_plain_text',
       'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-ev_category-name_field'.
+  $field_instances['taxonomy_term-ev_category-name_field'] = array(
+    'bundle' => 'ev_category',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'name_field',
+    'label' => 'Name',
+    'required' => TRUE,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'hide_label' => array(
+        'entity' => FALSE,
+        'page' => FALSE,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => -5,
     ),
   );
 
@@ -615,6 +756,7 @@ function events_event_field_default_field_instances() {
     'label' => 'External Id',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -648,6 +790,7 @@ function events_event_field_default_field_instances() {
     'label' => 'External Id',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -659,6 +802,43 @@ function events_event_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-ev_document_type-name_field'.
+  $field_instances['taxonomy_term-ev_document_type-name_field'] = array(
+    'bundle' => 'ev_document_type',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'name_field',
+    'label' => 'Name',
+    'required' => TRUE,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'hide_label' => array(
+        'entity' => FALSE,
+        'page' => FALSE,
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => -5,
     ),
   );
 
@@ -682,6 +862,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Legend color',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -712,6 +893,7 @@ function events_event_field_default_field_instances() {
     'label' => 'External Id',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -734,7 +916,7 @@ function events_event_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -746,6 +928,43 @@ function events_event_field_default_field_instances() {
     'label' => 'External Id',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-ev_location-field_long_name'.
+  $field_instances['taxonomy_term-ev_location-field_long_name'] = array(
+    'bundle' => 'ev_location',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_long_name',
+    'label' => 'Long name',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -757,6 +976,42 @@ function events_event_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-ev_location-field_parent_tids'.
+  $field_instances['taxonomy_term-ev_location-field_parent_tids'] = array(
+    'bundle' => 'ev_location',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_parent_tids',
+    'label' => 'Parent tids',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
     ),
   );
 
@@ -781,6 +1036,7 @@ function events_event_field_default_field_instances() {
     'label' => 'Legend color',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -811,6 +1067,7 @@ function events_event_field_default_field_instances() {
     'label' => 'External Id',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -846,6 +1103,7 @@ function events_event_field_default_field_instances() {
     'label' => 'External Id',
     'required' => 0,
     'settings' => array(
+      'entity_translation_sync' => FALSE,
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -872,10 +1130,15 @@ function events_event_field_default_field_instances() {
   t('Documents');
   t('External Id');
   t('File');
+  t('HRInfo nid');
   t('Legend color');
   t('Location');
   t('Location details');
+  t('Long name');
+  t('Name');
   t('Organization');
+  t('Original theme');
+  t('Parent tids');
   t('Theme');
 
   return $field_instances;
