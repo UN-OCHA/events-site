@@ -53,7 +53,7 @@ function events_event_taxonomy_default_vocabularies() {
       'name' => 'Location',
       'machine_name' => 'ev_location',
       'description' => '',
-      'hierarchy' => 0,
+      'hierarchy' => 1,
       'module' => 'taxonomy',
       'weight' => 0,
     ),
