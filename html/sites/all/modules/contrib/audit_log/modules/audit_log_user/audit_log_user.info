@@ -1,0 +1,11 @@
+name = Audit log Users
+description = Provides user related actions
+package = Audit log
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2017-11-09
+version = "7.x-1.2+22-dev"
+core = "7.x"
+project = "audit_log"
+datestamp = "1510224487"
+

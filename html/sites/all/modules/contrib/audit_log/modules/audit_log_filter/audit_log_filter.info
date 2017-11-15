@@ -1,0 +1,15 @@
+name = Audit filter logging
+description = Provides a way to exclude certain events from being logged.
+package = Audit log
+core = 7.x
+
+dependencies[] = audit_log
+
+configure = admin/config/system/audit-log/filter-by-role
+
+; Information added by Drupal.org packaging script on 2017-11-09
+version = "7.x-1.2+22-dev"
+core = "7.x"
+project = "audit_log"
+datestamp = "1510224487"
+
