@@ -46,3 +46,15 @@ function events_config_update_7005() {
 function events_config_update_7006() {
   module_enable(array('admin_denied'));
 }
+
+/**
+ * Enable audit_log module.
+ */
+function events_config_update_7007() {
+  module_enable(array(
+    'audit_log',
+    'audit_log_user',
+    'audit_log_syslog',
+    'audit_log_hybridauth',
+  ));
+}
