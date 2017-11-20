@@ -31,7 +31,7 @@ function ev_migrate_redirect_from_hrinfo($external_nid) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node');
   $query->entityCondition('bundle', 'ev_event', '=');
-  $query->fieldCondition('field_event_hrinfo_nid', 'value', $external_nid, '=');
+  $query->fieldCondition('field_event_external_id', 'value', 'hrinfo-' . $external_nid, '=');
   $result = $query->execute();
 
   if (!isset($result['node'])) {
@@ -81,7 +81,7 @@ function ev_migrate_events() {
     $data = drupal_json_decode($request->data);
     if (count($data)) {
       foreach ($data as $row) {
-        ev_migrate_process_row($row);
+        ev_migrate_process_row($row, 'hrinfo-');
       }
       variable_set('ev_migrate_page', $page + 1);
       return;
@@ -119,7 +119,7 @@ function ev_migrate_event($nid) {
 /**
  * Process event data.
  */
-function ev_migrate_process_row($row) {
+function ev_migrate_process_row($row, $prefix = '') {
   $needs_update = FALSE;
 
   if (function_exists('drush_log')) {
@@ -130,7 +130,7 @@ function ev_migrate_process_row($row) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node');
   $query->entityCondition('bundle', 'ev_event', '=');
-  $query->fieldCondition('field_event_hrinfo_nid', 'value', $row['nid'], '=');
+  $query->fieldCondition('field_event_external_id', 'value', $prefix . $row['nid'], '=');
   $result = $query->execute();
 
   if (isset($result['node'])) {
@@ -242,8 +242,8 @@ function ev_migrate_process_row($row) {
   $event->field_event_date[LANGUAGE_NONE] = $date_data;
 
   // Store external nid.
-  $needs_update = $needs_update || $event->field_event_hrinfo_nid[LANGUAGE_NONE][0]['value'] != $row['nid'];
-  $event->field_event_hrinfo_nid[LANGUAGE_NONE][0]['value'] = $row['nid'];
+  $needs_update = $needs_update || $event->field_event_external_id[LANGUAGE_NONE][0]['value'] != $row['nid'];
+  $event->field_event_external_id[LANGUAGE_NONE][0]['value'] = $prefix . $row['nid'];
 
   if (isset($row['description']['value'])) {
     $needs_update = $needs_update || $event->field_event_info[LANGUAGE_NONE][0]['value'] != $row['description']['value'];
