@@ -4,9 +4,21 @@
  * Code for Events migration.
  */
 
- /**
-  * Implements hook_menu().
-  */
+/**
+ * Wrapper around log function.
+ */
+function ev_migrate_log($message) {
+  if (function_exists('drush_log')) {
+    drush_log($message);
+  }
+  else {
+    watchdog('Event migrate', $message);
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
 function ev_migrate_menu() {
   $items['from-hrinfo/%'] = array(
     'title' => 'Redirect from HR Info',
@@ -49,13 +61,11 @@ function ev_migrate_redirect_from_hrinfo($external_nid) {
  */
 function ev_migrate_events() {
   if (variable_get('ev_migrate_stop_processing', FALSE)) {
-    drush_log('Kill switch is enabled!');
+    ev_migrate_log('Kill switch is enabled!');
     return;
   }
 
-  if (function_exists('drush_log')) {
-    drush_log('Getting page ' . variable_get('ev_migrate_page', 0));
-  }
+  ev_migrate_log('Getting page ' . variable_get('ev_migrate_page', 0));
 
   $page = variable_get('ev_migrate_page', 0);
   $api_url = variable_get('ev_migrate_api_url', '');
@@ -70,10 +80,6 @@ function ev_migrate_events() {
   $url .= '/' . $page;
   $url .= '/' . $timestamp;
   $url .= '/' . $hash;
-
-  if (function_exists('drush_log')) {
-    drush_log($url);
-  }
 
   // Get data.
   $request = drupal_http_request($url);
@@ -122,9 +128,7 @@ function ev_migrate_event($nid) {
 function ev_migrate_process_row($row, $prefix = '') {
   $needs_update = FALSE;
 
-  if (function_exists('drush_log')) {
-    drush_log('Migrating ' . $row['url']);
-  }
+  ev_migrate_log('Migrating ' . $row['url']);
 
   // See if the node already exists.
   $query = new EntityFieldQuery();
@@ -409,14 +413,10 @@ function ev_migrate_process_row($row, $prefix = '') {
     $event = node_submit($event);
     node_save($event);
 
-    if (function_exists('drush_log')) {
-      drush_log('Events saved with id ' . $event->nid);
-    }
+    ev_migrate_log('Events saved with id ' . $event->nid);
   }
   else {
-    if (function_exists('drush_log')) {
-      drush_log('No need to save event with id ' . $event->nid);
-    }
+    ev_migrate_log('No need to save event with id ' . $event->nid);
   }
 
 }
@@ -480,9 +480,7 @@ function ev_migrate_fetch_and_save_file($filename, $url, $timestamp) {
       return $file->fid;
     }
     else {
-      if (function_exists('drush_log')) {
-        drush_log('Unable to fetch ' . $url);
-      }
+      ev_migrate_log('Unable to fetch ' . $url);
     }
   }
   else {
