@@ -60,16 +60,16 @@ function ev_migrate_redirect_from_hrinfo($external_nid) {
  * Migrate events.
  */
 function ev_migrate_events() {
-  if (variable_get('ev_migrate_stop_processing', FALSE)) {
+  if (variable_get('ev_migrate_stop_processing_hrinfo', FALSE)) {
     ev_migrate_log('Kill switch is enabled!');
     return;
   }
 
-  ev_migrate_log('Getting page ' . variable_get('ev_migrate_page', 0));
+  ev_migrate_log('Getting page ' . variable_get('ev_migrate_page_hrinfo', 0));
 
-  $page = variable_get('ev_migrate_page', 0);
-  $api_url = variable_get('ev_migrate_api_url', '');
-  $shared_secret = variable_get('ev_migrate_shared_secret', 'ThisIsMySecret');
+  $page = variable_get('ev_migrate_page_hrinfo', 0);
+  $api_url = variable_get('ev_migrate_api_url_hrinfo', '');
+  $shared_secret = variable_get('ev_migrate_shared_secret_hrinfo', 'ThisIsMySecret');
   $timestamp = REQUEST_TIME;
 
   // Build hash.
@@ -89,7 +89,7 @@ function ev_migrate_events() {
       foreach ($data as $row) {
         ev_migrate_process_row($row, 'hrinfo-');
       }
-      variable_set('ev_migrate_page', $page + 1);
+      variable_set('ev_migrate_page_hrinfo', $page + 1);
       return;
     }
   }
@@ -101,8 +101,8 @@ function ev_migrate_events() {
  * Migrate event.
  */
 function ev_migrate_event($nid) {
-  $api_url = variable_get('ev_migrate_api_url_single', '');
-  $shared_secret = variable_get('ev_migrate_shared_secret', 'ThisIsMySecret');
+  $api_url = variable_get('ev_migrate_api_url_single_hrinfo', '');
+  $shared_secret = variable_get('ev_migrate_shared_secret_hrinfo', 'ThisIsMySecret');
   $timestamp = REQUEST_TIME;
 
   // Build hash.
@@ -246,7 +246,7 @@ function ev_migrate_process_row($row, $prefix = '') {
   $event->field_event_date[LANGUAGE_NONE] = $date_data;
 
   // Store external nid.
-  $needs_update = $needs_update || $event->field_event_external_id[LANGUAGE_NONE][0]['value'] != $row['nid'];
+  $needs_update = $needs_update || $event->field_event_external_id[LANGUAGE_NONE][0]['value'] != $prefix . $row['nid'];
   $event->field_event_external_id[LANGUAGE_NONE][0]['value'] = $prefix . $row['nid'];
 
   if (isset($row['description']['value'])) {
@@ -465,8 +465,8 @@ function ev_migrate_fetch_and_save_file($filename, $url, $timestamp) {
     ->range(0, 1)
     ->execute()->fetchField();
 
-  if (variable_get('ev_migrate_file_authentication', '')) {
-    $url = str_replace('https://', 'https://' . variable_get('ev_migrate_file_authentication', '') . '@', $url);
+  if (variable_get('ev_migrate_file_authentication_hrinfo', '')) {
+    $url = str_replace('https://', 'https://' . variable_get('ev_migrate_file_authentication_hrinfo', '') . '@', $url);
   }
 
   if (!$fid) {
