@@ -490,9 +490,14 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
           // Add parent tid.
           if ($term_field_info['has_parents']) {
             $term = taxonomy_term_load($child['tid']);
-            $parents = explode('|', $term->field_parent_tids[LANGUAGE_NONE][0]['value']);
-            foreach ($parents as $parent) {
-              $event[$term_field_info['short_key']][] = $parent;
+            if (isset($term->field_parent_tids[LANGUAGE_NONE][0]['value'])) {
+              $parents = explode('|', $term->field_parent_tids[LANGUAGE_NONE][0]['value']);
+              foreach ($parents as $parent) {
+                $event[$term_field_info['short_key']][] = $parent;
+              }
+            }
+            else {
+              $event[$term_field_info['short_key']][] = $child['tid'];
             }
           }
           else {

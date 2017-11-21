@@ -474,6 +474,10 @@ function events_config_get_user_organizations($account = NULL) {
  */
 function events_config_api_call_list($type, $callback) {
   $secret = variable_get('events_config_hid_api_key', '');
+  if (!$secret) {
+    _events_config_log('No secret defined for HID endpoint');
+    return;
+  }
 
   $offset = 0;
   $base_endpoint = variable_get('events_config_hid_endpoint', 'https://api.humanitarian.id/api/v2/');
@@ -486,18 +490,18 @@ function events_config_api_call_list($type, $callback) {
 
   while (TRUE) {
     $endpoint = $base_endpoint . 'list?sort=name&limit=200&type=' . $type . '&offset=' . $offset;
+
     $response = drupal_http_request($endpoint, array(
       'headers' => $headers,
       'method' => 'GET',
     ));
-
     if ($response->data) {
       $data = json_decode($response->data);
       if (empty($data)) {
         break;
       }
       foreach ($data as $item) {
-        if ($item->name) {
+        if (isset($item->name) && $item->name) {
           call_user_func($callback, $item->name, $item->_id);
         }
       }

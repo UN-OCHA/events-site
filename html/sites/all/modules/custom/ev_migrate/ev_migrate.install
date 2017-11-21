@@ -5,7 +5,7 @@
  */
 
 /**
- * Revert event feature.
+ * Rename variables.
  */
 function ev_migrate_update_7001() {
   variable_set('ev_migrate_api_url_hrinfo', variable_get('ev_migrate_api_url', ''));
