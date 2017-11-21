@@ -113,3 +113,146 @@ function events_event_update_7007() {
 function events_event_update_7008() {
   features_feature_unlock('events_event', 'search_api_server');
 }
+
+/**
+ * Migrate hrinfo_nid to field_event_external_id.
+ */
+function events_event_update_7009() {
+  if (!field_info_field('field_event_external_id')) {
+    field_create_field(array(
+      'translatable' => '0',
+      'entity_types' => array(),
+      'settings' => array(
+        'max_length' => '255',
+        'entity_translation_sync' => FALSE,
+      ),
+      'storage' => array(
+        'type' => 'field_sql_storage',
+        'settings' => array(),
+        'module' => 'field_sql_storage',
+        'active' => '1',
+        'details' => array(
+          'sql' => array(
+            'FIELD_LOAD_CURRENT' => array(
+              'field_data_field_event_external_id' => array(
+                'value' => 'field_event_external_id_value',
+                'format' => 'field_event_external_id_format',
+              ),
+            ),
+            'FIELD_LOAD_REVISION' => array(
+              'field_revision_field_event_external_id' => array(
+                'value' => 'field_event_external_id_value',
+                'format' => 'field_event_external_id_format',
+              ),
+            ),
+          ),
+        ),
+      ),
+      'foreign keys' => array(
+        'format' => array(
+          'table' => 'filter_format',
+          'columns' => array(
+            'format' => 'format',
+          ),
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          'format',
+        ),
+      ),
+      'field_name' => 'field_event_external_id',
+      'type' => 'text',
+      'module' => 'text',
+      'active' => '1',
+      'locked' => '0',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'columns' => array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => '255',
+          'not null' => FALSE,
+        ),
+        'format' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+      ),
+      'bundles' => array(
+        'node' => array(
+          'ev_event',
+        ),
+      ),
+    ));
+  }
+
+  $extra_bundles = array(
+    'ev_event',
+  );
+  $instances = field_info_instances();
+  foreach ($extra_bundles as $bundle) {
+    if (empty($instances['node'][$bundle]['field_event_external_id'])) {
+      field_create_instance(array(
+        'label' => 'External Id',
+        'widget' => array(
+          'weight' => '14',
+          'type' => 'field_extrawidgets_read_only',
+          'module' => 'field_extrawidgets',
+          'active' => 1,
+          'settings' => array(
+            'size' => '60',
+            'formatter' => '',
+            'formatter_settings' => array(),
+            'display_empty' => 0,
+          ),
+        ),
+        'settings' => array(
+          'text_processing' => '0',
+          'user_register_form' => FALSE,
+          'entity_translation_sync' => FALSE,
+        ),
+        'display' => array(
+          'default' => array(
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => array(),
+            'module' => 'text',
+            'weight' => 26,
+          ),
+          'teaser' => array(
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => array(),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'ds_extras_field_template' => '',
+        'default_value' => NULL,
+        'field_name' => 'field_event_external_id',
+        'entity_type' => 'node',
+        'bundle' => $bundle,
+        'deleted' => '0',
+      ));
+    }
+  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node');
+  $query->entityCondition('bundle', 'ev_event', '=');
+  $query->fieldCondition('field_event_hrinfo_nid', 'value', 0, '!=');
+  $result = $query->execute();
+
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $events = node_load_multiple($nids);
+    foreach ($events as $event) {
+      $event->field_event_external_id['und'][0]['value'] = 'hrinfo-' . $event->field_event_hrinfo_nid['und'][0]['value'];
+      $event->do_not_send_email = TRUE;
+      node_save($event);
+    }
+  }
+}
