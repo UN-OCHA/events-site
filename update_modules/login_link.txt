@@ -1,1 +1,0 @@
-http://localhost:8080/user/reset/1/1511176146/82MbQhuqugf6NvBf0dKc29lKPgr47p_cEClXOw8quJE/login

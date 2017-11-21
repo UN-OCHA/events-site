@@ -1,7 +1,9 @@
 node_modules
 vendor
 .DS_Store
+package-lock.json
 
+login_link.txt
 backstop_data/anon/**
 backstop_data/auth/**
 backstop_data/engine_scripts/cookies.json
