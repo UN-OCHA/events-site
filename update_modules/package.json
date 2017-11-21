@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "backstopjs": "^3.0.32"
+  },
+  "scripts": {
+    "reference-anon": "backstop reference --configPath=anonymous.js",
+    "test-anon": "backstop test --configPath=anonymous.js",
+    "reference-auth": "backstop reference --configPath=authenticated.js",
+    "test-auth": "backstop test --configPath=authenticated.js",
+    "reference": "npm run reference-anon && npm run reference-auth",
+    "test": "npm run test-anon && npm run test-auth"
+  }
+}

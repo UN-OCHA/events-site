@@ -1,0 +1,7 @@
+**/node_modules/
+**/vendor/
+**/.sass-cache/
+**/.DS_Store
+
+backstop_data/anon/**
+backstop_data/auth/**

@@ -1,0 +1,41 @@
+{
+  "id": "backstop_default",
+  "viewports": [
+    {
+      "label": "phone",
+      "width": 320,
+      "height": 480
+    },
+    {
+      "label": "tablet",
+      "width": 1024,
+      "height": 768
+    }
+  ],
+  "onBeforeScript": "chromy/onBefore.js",
+  "onReadyScript": "chromy/onReady.js",
+  "scenarios": [
+    {
+      "label": "node-add-ev-event",
+      "url": "http://localhost:8080/node/add/ev-event",
+      "cookiePath": "backstop_data/engine_scripts/cookies.json",
+      "removeSelectors": [
+        "#admin-menu"
+      ]
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "backstop_data/auth/bitmaps_reference",
+    "bitmaps_test": "backstop_data/auth/bitmaps_test",
+    "engine_scripts": "backstop_data/engine_scripts",
+    "html_report": "backstop_data/auth/html_report",
+    "ci_report": "backstop_data/auth/ci_report"
+  },
+  "report": ["browser", "CI"],
+  "engine": "chrome",
+  "engineFlags": [],
+  "asyncCaptureLimit": 3,
+  "asyncCompareLimit": 10,
+  "debug": false,
+  "debugWindow": false
+}
