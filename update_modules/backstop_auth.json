@@ -37,5 +37,6 @@
   "asyncCaptureLimit": 3,
   "asyncCompareLimit": 10,
   "debug": false,
-  "debugWindow": false
+  "debugWindow": false,
+  "cliExitOnFail": true
 }
