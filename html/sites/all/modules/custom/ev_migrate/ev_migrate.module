@@ -339,7 +339,7 @@ function ev_migrate_process_row($row, $prefix = '') {
   }
 
   if (isset($row['disasters']) && is_array($row['disasters'])) {
-    $current_disaster = $event->field_event_disasters[LANGUAGE_NONE];
+    $current_disaster = isset($event->field_event_disasters[LANGUAGE_NONE]) ? $event->field_event_disasters[LANGUAGE_NONE] : array();
     $event->field_event_disasters[LANGUAGE_NONE] = array();
     foreach ($row['disasters'] as $name) {
       if ($disaster = ev_migrate_get_term($name, 'ev_disaster')) {
@@ -390,7 +390,7 @@ function ev_migrate_process_row($row, $prefix = '') {
   }
 
   if (isset($row['coordination_hubs']) && is_array($row['coordination_hubs'])) {
-    $current_coordination_hub = $event->field_event_coordination_hub[LANGUAGE_NONE];
+    $current_coordination_hub = isset($event->field_event_coordination_hub[LANGUAGE_NONE]) ? $event->field_event_coordination_hub[LANGUAGE_NONE] : array();
     $event->field_event_coordination_hub[LANGUAGE_NONE] = array();
     foreach ($row['coordination_hubs'] as $name) {
       if ($coordination_hub = ev_migrate_get_term($name, 'ev_coordination_hub')) {
