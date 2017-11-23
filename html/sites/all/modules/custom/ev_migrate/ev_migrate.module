@@ -339,7 +339,7 @@ function ev_migrate_process_row($row, $prefix = '') {
   }
 
   if (isset($row['disasters']) && is_array($row['disasters'])) {
-    $current_disaster = $event->field_event_disasters[LANGUAGE_NONE];
+    $current_disaster = isset($event->field_event_disasters[LANGUAGE_NONE]) ? $event->field_event_disasters[LANGUAGE_NONE] : array();
     $event->field_event_disasters[LANGUAGE_NONE] = array();
     foreach ($row['disasters'] as $name) {
       if ($disaster = ev_migrate_get_term($name, 'ev_disaster')) {
@@ -390,7 +390,7 @@ function ev_migrate_process_row($row, $prefix = '') {
   }
 
   if (isset($row['coordination_hubs']) && is_array($row['coordination_hubs'])) {
-    $current_coordination_hub = $event->field_event_coordination_hub[LANGUAGE_NONE];
+    $current_coordination_hub = isset($event->field_event_coordination_hub[LANGUAGE_NONE]) ? $event->field_event_coordination_hub[LANGUAGE_NONE] : array();
     $event->field_event_coordination_hub[LANGUAGE_NONE] = array();
     foreach ($row['coordination_hubs'] as $name) {
       if ($coordination_hub = ev_migrate_get_term($name, 'ev_coordination_hub')) {
@@ -503,7 +503,7 @@ function ev_migrate_fetch_and_save_file($filename, $url, $timestamp) {
 
     $destination = file_stream_wrapper_uri_normalize($field_info['settings']['uri_scheme'] . '://' . $instance['settings']['file_directory'] . '/' . format_date($timestamp, 'custom', 'Y-m-d') . '/');
     file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $file = system_retrieve_file($url, $destination, TRUE, FILE_EXISTS_RENAME);
+    $file = _ev_migrate_system_retrieve_file($url, $destination, TRUE, FILE_EXISTS_RENAME);
     if ($file) {
       return $file->fid;
     }
@@ -516,4 +516,35 @@ function ev_migrate_fetch_and_save_file($filename, $url, $timestamp) {
   }
 
   return FALSE;
+}
+
+/**
+ * Attempts to get a file using drupal_http_request and to store it locally.
+ *
+ * @see system_retrieve_file()
+ */
+function _ev_migrate_system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
+  $parsed_url = parse_url($url);
+  if (!isset($destination)) {
+    $path = file_build_uri(drupal_basename($parsed_url['path']));
+  }
+  else {
+    if (is_dir(drupal_realpath($destination))) {
+      // Prevent URIs with triple slashes when glueing parts together.
+      $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
+    }
+    else {
+      $path = $destination;
+    }
+  }
+  $result = drupal_http_request($url);
+  if ($result->code != 200) {
+    return FALSE;
+  }
+  $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
+  if (!$local) {
+    drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
+  }
+
+  return $local;
 }
