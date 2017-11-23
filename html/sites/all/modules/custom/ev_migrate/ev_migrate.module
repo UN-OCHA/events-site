@@ -521,7 +521,7 @@ function ev_migrate_fetch_and_save_file($filename, $url, $timestamp) {
 /**
  * Attempts to get a file using drupal_http_request and to store it locally.
  *
- * @see system_retrieve_file().
+ * @see system_retrieve_file()
  */
 function _ev_migrate_system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
   $parsed_url = parse_url($url);
