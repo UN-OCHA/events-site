@@ -371,6 +371,51 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-ev_event-field_event_external_id'.
+  $field_instances['node-ev_event-field_event_external_id'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 26,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_external_id',
+    'label' => 'External Id',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'display_empty' => 0,
+        'formatter' => '',
+        'formatter_settings' => array(),
+        'size' => 60,
+      ),
+      'type' => 'field_extrawidgets_read_only',
+      'weight' => 14,
+    ),
+  );
+
   // Exported field_instance: 'node-ev_event-field_event_hrinfo_nid'.
   $field_instances['node-ev_event-field_event_hrinfo_nid'] = array(
     'bundle' => 'ev_event',
