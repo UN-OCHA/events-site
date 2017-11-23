@@ -194,6 +194,8 @@ function events_event_exported_term_fields() {
  * Page callback for calendar.
  */
 function events_event_calendar() {
+  global $language;
+
   $settings = array(
     'timeout' => 25000,
     'base_url' => '',
@@ -219,6 +221,9 @@ function events_event_calendar() {
     'events' => array(
       'url' => 'api/v0/fetch-events',
       'type' => 'GET',
+      'data' => array(
+        'lang' => $language->language,
+      ),
     ),
     'categories' => _events_event_fetch_categories(),
   );
@@ -383,6 +388,10 @@ function events_event_fetch_events() {
   $start = $start - (60 * 60 * 24) - ($start % 86400);
   $end = $end + (60 * 60 * 24) - ($end % 86400);
 
+  // Handle language links.
+  $lang_code = (isset($_GET['lang']) && !empty($_GET['lang'])) ? $_GET['lang'] : 'en';
+  $languages = language_list();
+
   $query_filters = events_event_get_query_filters();
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
@@ -412,6 +421,18 @@ function events_event_fetch_events() {
 
           $event['start'] = $date_start->format(DATE_FORMAT_DATETIME);
           $event['end'] = $date_end->format(DATE_FORMAT_DATETIME);
+        }
+
+        // Make sure link contains the right language.
+        $event['lang'] = $lang_code;
+        if ($lang_code != 'en' && array_key_exists($lang_code, $languages)) {
+          $event['url'] = url('node/' . $nid, array(
+            'absolute' => TRUE,
+            'query' => array(
+              'date' => substr($event['start_raw'], 0, 10),
+            ),
+            'language' => $languages[$lang_code],
+          ));
         }
 
         unset($event['start_raw']);
