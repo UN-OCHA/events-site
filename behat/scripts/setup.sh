@@ -1,6 +1,6 @@
 composer install
 ln -s ../html/sites sites
-wget -N https://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip
+wget -N https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 cd ../html/sites/all/themes/custom/ocha-basic
 npm install
