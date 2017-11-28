@@ -491,7 +491,7 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
       'title' => $node->title,
       'start' => $date_start->format(DATE_FORMAT_DATETIME),
       'end' => $date_end->format(DATE_FORMAT_DATETIME),
-      'allDay' => $date['value'] == $date['value2'],
+      'allDay' => date_is_all_day($date['value'], $date['value2']),
       'url' => url('node/' . $node->nid, array(
         'absolute' => TRUE,
         'query' => array(
