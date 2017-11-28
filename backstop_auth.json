@@ -19,6 +19,7 @@
       "label": "node-add-ev-event",
       "url": "http://localhost:8080/node/add/ev-event",
       "cookiePath": "backstop_data/engine_scripts/cookies.json",
+      "cookieProtocol": "http",
       "readySelector": "footer",
       "removeSelectors": [
         "#admin-menu"
