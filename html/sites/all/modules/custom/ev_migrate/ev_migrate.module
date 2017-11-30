@@ -260,11 +260,11 @@ function ev_migrate_process_row($row, $prefix = '') {
   $event->title = $row['title'];
 
   $needs_update = $needs_update || $event->created != $row['created'];
-  $event->field_event_source_created[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
+  $event->field_event_source_created[LANGUAGE_NONE][0]['value'] = $row['created'];
   $event->created = $row['created'];
 
   $needs_update = $needs_update || $event->changed != $row['changed'];
-  $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
+  $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = $row['changed'];
   $event->changed = $row['changed'];
 
   $needs_update = $needs_update || !isset($event->field_event_source_url[LANGUAGE_NONE][0]['value']) || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['url'];

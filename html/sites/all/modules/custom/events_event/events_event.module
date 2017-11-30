@@ -1505,16 +1505,9 @@ function _events_event_ev_source_info($node, $view_mode, $langcode) {
     ), array('context' => 'events'));
   }
 
-  // First created.
-  if (isset($node->field_event_source_created[LANGUAGE_NONE][0]['value'])) {
-    $lines[] = t('Imported: %date', array(
-      '%date' => format_date($node->field_event_source_created[LANGUAGE_NONE][0]['value'], 'custom', 'd F Y'),
-    ), array('context' => 'events'));
-  }
-
   // Last updated.
   if (isset($node->field_event_source_updated[LANGUAGE_NONE][0]['value'])) {
-    $lines[] = t('Updated: %date', array(
+    $lines[] = t('Last updated: %date', array(
       '%date' => format_date($node->field_event_source_updated[LANGUAGE_NONE][0]['value'], 'custom', 'd F Y'),
     ), array('context' => 'events'));
   }
