@@ -139,7 +139,7 @@ function ev_migrate_events() {
     }
   }
 
-  variable_set('ev_migrate_stop_processing', TRUE);
+  variable_set('ev_migrate_stop_processing_hrinfo', TRUE);
 };
 
 /**
@@ -267,7 +267,7 @@ function ev_migrate_process_row($row, $prefix = '') {
   $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
   $event->changed = $row['changed'];
 
-  $needs_update = $needs_update || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['url'];
+  $needs_update = $needs_update || !isset($event->field_event_source_url[LANGUAGE_NONE][0]['value']) || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['url'];
   $event->field_event_source_url[LANGUAGE_NONE][0]['value'] = $row['url'];
 
   $source_term = ev_migrate_get_term('HumanitarianResponse.info', 'ev_source');
