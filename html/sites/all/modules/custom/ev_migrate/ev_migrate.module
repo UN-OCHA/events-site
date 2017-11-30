@@ -124,7 +124,17 @@ function ev_migrate_events() {
       foreach ($data as $row) {
         ev_migrate_process_row($row, 'hrinfo-');
       }
+
+      // Increment page.
       variable_set('ev_migrate_page_hrinfo', $page + 1);
+
+      // Update last sync.
+      $source_term = ev_migrate_get_term('HumanitarianResponse.info', 'ev_source');
+      if ($source_term) {
+        $source_term->field_source_last_sync[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
+        taxonomy_term_save($source_term);
+      }
+
       return;
     }
   }
@@ -241,6 +251,7 @@ function ev_migrate_process_row($row, $prefix = '') {
     $event->promote = FALSE;
     $event->comment = FALSE;
     $event->log = 'Event imported from ' . $row['url'];
+    $event->field_event_source_created[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
   }
 
   $event->revision = TRUE;
@@ -249,10 +260,18 @@ function ev_migrate_process_row($row, $prefix = '') {
   $event->title = $row['title'];
 
   $needs_update = $needs_update || $event->created != $row['created'];
+  $event->field_event_source_created[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
   $event->created = $row['created'];
 
   $needs_update = $needs_update || $event->changed != $row['changed'];
+  $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
   $event->changed = $row['changed'];
+
+  $needs_update = $needs_update || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['url'];
+  $event->field_event_source_url[LANGUAGE_NONE][0]['value'] = $row['url'];
+
+  $source_term = ev_migrate_get_term('HumanitarianResponse.info', 'ev_source');
+  $event->field_event_source[LANGUAGE_NONE][0]['tid'] = $source_term->tid;
 
   $event->ev_migrate_created = $event->created;
   $event->ev_migrate_changed = $event->changed;
