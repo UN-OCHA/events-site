@@ -1328,6 +1328,11 @@ function events_event_field_extra_fields() {
     'description' => t('Display recurring info for an event.', array(), array('context' => 'events')),
     'weight' => 2,
   );
+  $extra['node']['ev_event']['display']['ev_source_info'] = array(
+    'label' => t('Display source info', array(), array('context' => 'events')),
+    'description' => t('Display source info for an event.', array(), array('context' => 'events')),
+    'weight' => 2,
+  );
 
   return $extra;
 }
@@ -1377,6 +1382,13 @@ function events_event_node_view($node, $view_mode, $langcode) {
       && $extrafields[$extrafield_name]['visible']) {
     $node->content[$extrafield_name] = _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_date);
   }
+
+  $extrafield_name = 'ev_source_info';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_source_info($node, $view_mode, $langcode);
+  }
 }
 
 /**
@@ -1408,7 +1420,7 @@ function _events_event_ev_page_heading($node, $view_mode, $langcode, $current_da
 }
 
 /**
- * Fisplay recurring info.
+ * Display recurring info.
  */
 function _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_date = '') {
   // Check if it's recurring.
@@ -1459,6 +1471,66 @@ function _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_
   $output .= $first_started;
   $output .= $next_occurence;
   $output .= $all_repeats;
+  $output .= '</div>';
+
+  return array(
+    '#markup' => $output,
+  );
+}
+
+/**
+ * Display source info.
+ */
+function _events_event_ev_source_info($node, $view_mode, $langcode) {
+  $lines = array();
+
+  if (!isset($node->field_event_source[LANGUAGE_NONE][0]['tid'])) {
+    return;
+  }
+
+  // Load source term.
+  $term = taxonomy_term_load($node->field_event_source[LANGUAGE_NONE][0]['tid']);
+  if ($term) {
+    $lines[] = $term->name;
+  }
+  else {
+    return;
+  }
+
+  // Link to source event.
+  if (isset($node->field_event_source_url[LANGUAGE_NONE][0]['value'])) {
+    $lines[] = t('Source: <a target="_blank" href="@source_url">@source_name</a>', array(
+      '@source_url' => url($node->field_event_source_url[LANGUAGE_NONE][0]['value']),
+      '@source_name' => $node->title,
+    ), array('context' => 'events'));
+  }
+
+  // First created.
+  if (isset($node->field_event_source_created[LANGUAGE_NONE][0]['value'])) {
+    $lines[] = t('Imported: %date', array(
+      '%date' => format_date($node->field_event_source_created[LANGUAGE_NONE][0]['value'], 'custom', 'd F Y'),
+    ), array('context' => 'events'));
+  }
+
+  // Last updated.
+  if (isset($node->field_event_source_updated[LANGUAGE_NONE][0]['value'])) {
+    $lines[] = t('Updated: %date', array(
+      '%date' => format_date($node->field_event_source_updated[LANGUAGE_NONE][0]['value'], 'custom', 'd F Y'),
+    ), array('context' => 'events'));
+  }
+
+  // Last synced.
+  if (!empty($lines)) {
+    $lines[] = t('Last checked: %date', array(
+      '%date' => format_interval(REQUEST_TIME - $term->field_source_last_sync[LANGUAGE_NONE][0]['value'], 2, $langcode),
+    ), array('context' => 'events'));
+  }
+
+  $output = '<div class="field info-source">';
+  $output .= '<div class="field-label">' . t('Source', array(), array('context' => 'events')) . '</div>';
+  foreach ($lines as $line) {
+    $output .= '<div class="info-source--line">' . $line . '</div>';
+  }
   $output .= '</div>';
 
   return array(
