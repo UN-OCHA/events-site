@@ -410,7 +410,7 @@ function events_event_field_default_field_instances() {
         'formatter_settings' => array(),
         'size' => 60,
       ),
-      'type' => 'field_extrawidgets_read_only',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 14,
     ),
   );
@@ -456,7 +456,7 @@ function events_event_field_default_field_instances() {
         'formatter' => 'number_unformatted',
         'formatter_settings' => array(),
       ),
-      'type' => 'field_extrawidgets_read_only',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 13,
     ),
   );
@@ -701,14 +701,14 @@ function events_event_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'options',
+      'module' => 'field_extrawidgets',
       'settings' => array(
         'apply_chosen' => '',
         'display_empty' => 1,
         'formatter' => 'taxonomy_term_reference_plain',
         'formatter_settings' => array(),
       ),
-      'type' => 'options_select',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 15,
     ),
   );
@@ -716,6 +716,7 @@ function events_event_field_default_field_instances() {
   // Exported field_instance: 'node-ev_event-field_event_source_created'.
   $field_instances['node-ev_event-field_event_source_created'] = array(
     'bundle' => 'ev_event',
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -756,7 +757,7 @@ function events_event_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'date',
+      'module' => 'field_extrawidgets',
       'settings' => array(
         'display_all_day' => 0,
         'increment' => 1,
@@ -768,7 +769,7 @@ function events_event_field_default_field_instances() {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
-      'type' => 'date_text',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 19,
     ),
   );
@@ -776,6 +777,7 @@ function events_event_field_default_field_instances() {
   // Exported field_instance: 'node-ev_event-field_event_source_updated'.
   $field_instances['node-ev_event-field_event_source_updated'] = array(
     'bundle' => 'ev_event',
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -816,7 +818,7 @@ function events_event_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'date',
+      'module' => 'field_extrawidgets',
       'settings' => array(
         'display_all_day' => 0,
         'increment' => 1,
@@ -828,7 +830,7 @@ function events_event_field_default_field_instances() {
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
-      'type' => 'date_text',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 20,
     ),
   );
@@ -865,11 +867,11 @@ function events_event_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'text',
+      'module' => 'field_extrawidgets',
       'settings' => array(
         'size' => 60,
       ),
-      'type' => 'text_textfield',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 16,
     ),
   );
