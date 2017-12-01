@@ -376,6 +376,11 @@ function events_event_fetch_documents() {
  * Page callback for events.
  */
 function events_event_fetch_events() {
+  $timers = array(
+    'total' => microtime(TRUE),
+    'searchapi' => microtime(TRUE),
+  );
+
   $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
   $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
@@ -396,11 +401,13 @@ function events_event_fetch_events() {
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
   $data = events_event_fetch_events_from_search_api($start, $end, $query_filters);
+  $timers['searchapi'] = microtime(TRUE) - $timers['searchapi'];
   $nids = array_flip($data['nids']);
 
   $events = array();
 
   // Load stored event data.
+  $timers['storedevents'] = microtime(TRUE);
   if (!empty($nids)) {
     $result = db_select('events_event_data', 'e')
         ->fields('e', array('nid', 'data'))
@@ -446,9 +453,11 @@ function events_event_fetch_events() {
       }
     }
   }
+  $timers['storedevents'] = microtime(TRUE) - $timers['storedevents'];
 
   // Check if data is missing.
   if (!empty($nids)) {
+    $timers['missingevents'] = microtime(TRUE);
     $event_nodes = node_load_multiple(array_keys($nids));
     foreach ($event_nodes as $event_node) {
       $event_data = events_event_build_api_structure($event_node, $timezone);
@@ -463,9 +472,11 @@ function events_event_fetch_events() {
         $events[] = $event;
       }
     }
+    $timers['missingevents'] = microtime(TRUE) - $timers['missingevents'];
   }
 
-  events_event_json_output($events);
+  $timers['total'] = microtime(TRUE) - $timers['total'];
+  events_event_json_output($events, $timers);
 }
 
 /**
@@ -1704,9 +1715,12 @@ function _events_event_render_dates_as_string($dates) {
 /**
  * Output as JSON.
  */
-function events_event_json_output($data) {
+function events_event_json_output($data, $timers = array()) {
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
+  foreach ($timers as $timer_key => $timer_value) {
+    drupal_add_http_header('X-Timer-' . $timer_key, 1000 * $timer_value);
+  }
   if (variable_get('events_event_page_cache', 60)) {
     drupal_add_http_header('Cache-Control', 'public, max-age=' . variable_get('events_event_page_cache', 60));
   }
