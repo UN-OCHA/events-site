@@ -1206,6 +1206,9 @@ class SearchApiDbService extends SearchApiAbstractService {
 
       $this->setQuerySort($query, $db_query, $fields);
 
+      if (function_exists('events_event_search_api_db_query_alter')) {
+		events_event_search_api_db_query_alter($db_query, $db_query);
+	  }
       $result = $db_query->execute();
 
       foreach ($result as $row) {
