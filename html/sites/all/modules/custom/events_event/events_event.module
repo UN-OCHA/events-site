@@ -1764,7 +1764,7 @@ function events_event_json_output($data, $timers = array()) {
   global $_events_event_search_api_query;
   if (isset($_events_event_search_api_query)) {
     foreach ($_events_event_search_api_query as $key => $query) {
-      drupal_add_http_header('X-Search-Api-Query-' . $key, $query);
+      drupal_add_http_header('X-Search-Api-Query-q' . $key, str_replace("\n", "", $query));
     }
   }
 
