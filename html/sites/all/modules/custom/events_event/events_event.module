@@ -480,24 +480,24 @@ function events_event_fetch_events() {
 }
 
 /**
- * Implements hook_search_api_db_query_alter.
+ * Implements hook_search_api_db_query_alter().
  */
 function events_event_search_api_db_query_alter($db_query, $query) {
   $clone = clone $db_query;
   if (method_exists($clone, 'preExecute')) {
-     $clone->preExecute();
-   }
-   $sql = (string) $clone;
-   $quoted = array();
-   $connection = Database::getConnection();
-   foreach ((array) $clone->arguments() as $key => $val) {
-     $quoted[$key] = $connection->quote($val);
-   }
-   $sql = strtr($sql, $quoted);
-   if (!isset($GLOBALS['search_api_query'])) {
-     $GLOBALS['search_api_query'] = array();
-   }
-   $GLOBALS['search_api_query'][] = $sql;
+    $clone->preExecute();
+  }
+  $sql = (string) $clone;
+  $quoted = array();
+  $connection = Database::getConnection();
+  foreach ((array) $clone->arguments() as $key => $val) {
+    $quoted[$key] = $connection->quote($val);
+  }
+  $sql = strtr($sql, $quoted);
+  if (!isset($GLOBALS['search_api_query'])) {
+    $GLOBALS['search_api_query'] = array();
+  }
+  $GLOBALS['search_api_query'][] = $sql;
 }
 
 /**
