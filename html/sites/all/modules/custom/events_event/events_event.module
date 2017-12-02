@@ -287,10 +287,11 @@ function events_event_calendar() {
 /**
  * Fetch events from search api.
  */
-function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array(), $facets_only = FALSE) {
+function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array(), $fetch_facets = FALSE) {
   $index = search_api_index_load('un_events');
   $query = new SearchApiQuery($index);
 
+  // Build filters.
   $filter = $query->createFilter('AND');
   if ($start) {
     $filter->condition('field_event_date:value', $start, '>=');
@@ -306,22 +307,25 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   }
 
   $query->filter($filter);
-  if ($facets_only) {
+
+  // Either fetch results or facets.
+  if ($fetch_facets) {
     $query->range(0, 0);
+    $query->setOption('skip result count', TRUE);
   }
   else {
-    $query->setOption('search_api_facets', FALSE);
+    $query->setOption('skip result count', TRUE);
+    $query->setOption('disable_search_api_facets', TRUE);
   }
 
   // Add an easy sort.
   $query->sort('search_api_id', 'ASC');
 
-  // No need for a count.
-  $query->setOption('skip result count', TRUE);
+  // Execute query.
   $results = $query->execute();
 
   // Load events.
-  if (!$facets_only) {
+  if (!$fetch_facets) {
     $nids = array_keys($results['results']);
   }
   else {
@@ -330,7 +334,7 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
 
   // Process facets.
   $facets = array();
-  if (isset($results['search_api_facets'])) {
+  if ($fetch_facets && isset($results['search_api_facets'])) {
     $term_fields = events_event_exported_term_fields();
     foreach ($results['search_api_facets'] as $key => $facet_info) {
       if (!array_key_exists($key, $term_fields)) {
@@ -408,7 +412,7 @@ function events_event_fetch_events() {
   $query_filters = events_event_get_query_filters();
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters);
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE);
   if (isset($data['performance'])) {
     $timers = array_merge($timers, $data['performance']);
   }
@@ -514,6 +518,17 @@ function events_event_search_api_db_query_alter($db_query, $query) {
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function events_event_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'search_api_query_alter') {
+    $group = $implementations['events_event'];
+    unset($implementations['events_event']);
+    $implementations['events_event'] = $group;
+  }
+}
+
+/**
  * Implements hook_search_api_query_alter().
  */
 function events_event_search_api_query_alter($query) {
@@ -522,6 +537,11 @@ function events_event_search_api_query_alter($query) {
     $_events_event_search_api_query = array();
   }
   $_events_event_search_api_query[] = (string) $query;
+
+  // Disable facets during search.
+  if ($query->getOption('disable_search_api_facets')) {
+    $query->setOption('search_api_facets', FALSE);
+  }
 }
 
 /**
@@ -620,7 +640,7 @@ function events_event_to_ical() {
   // Start from beginning of last month.
   $start = strtotime('first day of last month', time());
 
-  $data = events_event_fetch_events_from_search_api($start, '', $query_filters);
+  $data = events_event_fetch_events_from_search_api($start, '', $query_filters, FALSE);
   $nids = array_flip($data['nids']);
 
   $events = array();
