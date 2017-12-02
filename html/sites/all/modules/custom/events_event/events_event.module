@@ -309,6 +309,9 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   if ($facets_only) {
     $query->range(0, 0);
   }
+  else {
+    $query->setOption('search_api_facets', FALSE);
+  }
 
   // Add an easy sort.
   $query->sort('search_api_id', 'ASC');
