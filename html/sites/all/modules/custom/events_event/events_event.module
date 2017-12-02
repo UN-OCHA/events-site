@@ -308,7 +308,6 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   $query->filter($filter);
   if ($facets_only) {
     $query->range(0, 0);
-    $query->setOption('search_api_facets', TRUE);
   }
   else {
     $query->setOption('search_api_facets', FALSE);
