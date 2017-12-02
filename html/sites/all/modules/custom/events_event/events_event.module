@@ -480,6 +480,27 @@ function events_event_fetch_events() {
 }
 
 /**
+ * Implements hook_search_api_db_query_alter().
+ */
+function events_event_search_api_db_query_alter($db_query, $query) {
+  $clone = clone $db_query;
+  if (method_exists($clone, 'preExecute')) {
+    $clone->preExecute();
+  }
+  $sql = (string) $clone;
+  $quoted = array();
+  $connection = Database::getConnection();
+  foreach ((array) $clone->arguments() as $key => $val) {
+    $quoted[$key] = $connection->quote($val);
+  }
+  $sql = strtr($sql, $quoted);
+  if (!isset($GLOBALS['search_api_query'])) {
+    $GLOBALS['search_api_query'] = array();
+  }
+  $GLOBALS['search_api_query'][] = $sql;
+}
+
+/**
  * Build data structure for API calls.
  */
 function events_event_build_api_structure($node, $timezone = 'UTC') {
@@ -1718,9 +1739,17 @@ function _events_event_render_dates_as_string($dates) {
 function events_event_json_output($data, $timers = array()) {
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
+
+  if (isset($GLOBALS['search_api_query'])) {
+    foreach ($GLOBALS['search_api_query'] as $key => $query) {
+      drupal_add_http_header('X-Query-' . $key, $query);
+    }
+  }
+
   foreach ($timers as $timer_key => $timer_value) {
     drupal_add_http_header('X-Timer-' . $timer_key, 1000 * $timer_value);
   }
+
   if (variable_get('events_event_page_cache', 60)) {
     drupal_add_http_header('Cache-Control', 'public, max-age=' . variable_get('events_event_page_cache', 60));
   }
