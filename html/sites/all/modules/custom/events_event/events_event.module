@@ -483,6 +483,8 @@ function events_event_fetch_events() {
  * Implements hook_search_api_db_query_alter().
  */
 function events_event_search_api_db_query_alter($db_query, $query) {
+  global $search_api_query;
+
   $clone = clone $db_query;
   if (method_exists($clone, 'preExecute')) {
     $clone->preExecute();
@@ -494,10 +496,21 @@ function events_event_search_api_db_query_alter($db_query, $query) {
     $quoted[$key] = $connection->quote($val);
   }
   $sql = strtr($sql, $quoted);
-  if (!isset($GLOBALS['search_api_query'])) {
-    $GLOBALS['search_api_query'] = array();
+  if (!isset($search_api_query)) {
+    $search_api_query = array();
   }
-  $GLOBALS['search_api_query'][] = $sql;
+  $search_api_query[] = $sql;
+}
+
+/**
+ * Implements hook_search_api_query_alter().
+ */
+function events_event_search_api_query_alter($query) {
+  global $search_api_query;
+  if (!isset($search_api_query)) {
+    $search_api_query = array();
+  }
+  $search_api_query[] = (string) $query;
 }
 
 /**
@@ -1740,9 +1753,10 @@ function events_event_json_output($data, $timers = array()) {
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
 
-  if (isset($GLOBALS['search_api_query'])) {
-    foreach ($GLOBALS['search_api_query'] as $key => $query) {
-      drupal_add_http_header('X-Query-' . $key, $query);
+  global $search_api_query;
+  if (isset($search_api_query)) {
+    foreach ($search_api_query as $key => $query) {
+      drupal_add_http_header('X-Search-Api-Query-' . $key, $query);
     }
   }
 
