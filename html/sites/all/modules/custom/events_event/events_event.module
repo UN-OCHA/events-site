@@ -448,13 +448,8 @@ function events_event_fetch_events() {
         // Make sure link contains the right language.
         $event['lang'] = $lang_code;
         if ($lang_code != 'en' && array_key_exists($lang_code, $languages)) {
-          $event['url'] = url('node/' . $nid, array(
-            'absolute' => TRUE,
-            'query' => array(
-              'date' => substr($event['start_raw'], 0, 10),
-            ),
-            'language' => $languages[$lang_code],
-          ));
+          global $base_url;
+          $event['url'] = $base_url . '/' . $lang_code . '/node/' . $nid . '?date=' . substr($event['start_raw'], 0, 10);
         }
 
         unset($event['start_raw']);
@@ -495,29 +490,6 @@ function events_event_fetch_events() {
 }
 
 /**
- * Implements hook_search_api_db_query_alter().
- */
-function events_event_search_api_db_query_alter($db_query, $query) {
-  global $_events_event_search_api_query;
-
-  $clone = clone $db_query;
-  if (method_exists($clone, 'preExecute')) {
-    $clone->preExecute();
-  }
-  $sql = (string) $clone;
-  $quoted = array();
-  $connection = Database::getConnection();
-  foreach ((array) $clone->arguments() as $key => $val) {
-    $quoted[$key] = $connection->quote($val);
-  }
-  $sql = strtr($sql, $quoted);
-  if (!isset($_events_event_search_api_query)) {
-    $_events_event_search_api_query = array();
-  }
-  $_events_event_search_api_query[] = $sql;
-}
-
-/**
  * Implements hook_module_implements_alter().
  */
 function events_event_module_implements_alter(&$implementations, $hook) {
@@ -532,12 +504,6 @@ function events_event_module_implements_alter(&$implementations, $hook) {
  * Implements hook_search_api_query_alter().
  */
 function events_event_search_api_query_alter($query) {
-  global $_events_event_search_api_query;
-  if (!isset($_events_event_search_api_query)) {
-    $_events_event_search_api_query = array();
-  }
-  $_events_event_search_api_query[] = (string) $query;
-
   // Disable facets during search.
   if ($query->getOption('disable_search_api_facets')) {
     $query->setOption('search_api_facets', FALSE);
@@ -1781,23 +1747,22 @@ function _events_event_render_dates_as_string($dates) {
  * Output as JSON.
  */
 function events_event_json_output($data, $timers = array()) {
+  // Allow cross origin requests.
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
 
-  global $_events_event_search_api_query;
-  if (isset($_events_event_search_api_query)) {
-    foreach ($_events_event_search_api_query as $key => $query) {
-      drupal_add_http_header('X-Search-Api-Query-q' . $key, str_replace("\n", " ", $query));
-    }
-  }
-
-  foreach ($timers as $timer_key => $timer_value) {
-    drupal_add_http_header('X-Timer-' . $timer_key, 1000 * $timer_value);
-  }
-
+  // Add caching header.
   if (variable_get('events_event_page_cache', 60)) {
     drupal_add_http_header('Cache-Control', 'public, max-age=' . variable_get('events_event_page_cache', 60));
   }
+
+  // Display API timers.
+  if (variable_get('events_event_display_api_timers', FALSE)) {
+    foreach ($timers as $timer_key => $timer_value) {
+      drupal_add_http_header('X-Timer-' . $timer_key, 1000 * $timer_value);
+    }
+  }
+
   drupal_json_output($data);
 }
 
