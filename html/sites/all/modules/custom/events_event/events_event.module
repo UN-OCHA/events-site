@@ -448,13 +448,8 @@ function events_event_fetch_events() {
         // Make sure link contains the right language.
         $event['lang'] = $lang_code;
         if ($lang_code != 'en' && array_key_exists($lang_code, $languages)) {
-          $event['url'] = url('node/' . $nid, array(
-            'absolute' => TRUE,
-            'query' => array(
-              'date' => substr($event['start_raw'], 0, 10),
-            ),
-            'language' => $languages[$lang_code],
-          ));
+          global $base_url;
+          $event['url'] = $base_url . '/' . $lang_code . '/node/' . $nid . '?date=' . substr($event['start_raw'], 0, 10);
         }
 
         unset($event['start_raw']);
