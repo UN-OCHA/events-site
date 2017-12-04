@@ -33,6 +33,8 @@ function _ev_migrate_reliefweb_fetch($limit = 0, $offset = 0) {
 
   $url = $endpoint . '?' . drupal_http_build_query($params);
 
+  ev_migrate_log('Getting data from ' . $url);
+
   $request = drupal_http_request($url);
   if (isset($request->data)) {
     $response = drupal_json_decode($request->data);
