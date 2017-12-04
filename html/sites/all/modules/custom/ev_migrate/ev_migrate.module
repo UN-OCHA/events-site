@@ -48,15 +48,16 @@ function _ev_migrate_events_from_reliefweb() {
   module_load_include('inc', 'ev_migrate', 'ev_migrate.reliefweb');
 
   // Migrate n batches.
-  for ($i = 0; $i < variable_get('ev_migrate_num_of_runs', 2); $i++) {
+  $page = variable_get('ev_migrate_page_reliefweb', 0);
+  for ($i = 0; $i < variable_get('ev_migrate_num_of_runs', 10); $i++) {
     $limit = 20;
-    $page = variable_get('ev_migrate_page_reliefweb', 0);
     $offset = $limit * $page;
     $data = _ev_migrate_reliefweb_fetch($limit, $offset);
     if (!empty($data)) {
       foreach ($data as $row) {
         ev_migrate_process_row_reliefweb($row, 'reliefweb-');
       }
+      $page++;
       variable_set('ev_migrate_page_reliefweb', $page++);
     }
     else {
