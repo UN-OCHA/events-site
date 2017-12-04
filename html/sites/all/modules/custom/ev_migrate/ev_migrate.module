@@ -57,6 +57,7 @@ function _ev_migrate_events_from_reliefweb() {
       foreach ($data as $row) {
         ev_migrate_process_row_reliefweb($row, 'reliefweb-');
       }
+      $page++;
       variable_set('ev_migrate_page_reliefweb', $page++);
     }
     else {
