@@ -11,6 +11,9 @@ function ev_migrate_log($message) {
   if (function_exists('drush_log')) {
     drush_log($message);
   }
+  elseif (function_exists('dpm')) {
+    dpm($message);
+  }
   else {
     watchdog('Event migrate', $message);
   }
@@ -23,6 +26,55 @@ function ev_migrate_cron() {
   if (variable_get('ev_migrate_sync_from_hrinfo', FALSE)) {
     _ev_migrate_events_from_hrinfo();
   }
+  if (variable_get('ev_migrate_sync_from_reliefweb', FALSE)) {
+    _ev_migrate_events_from_reliefweb();
+  }
+}
+
+/**
+ * Sync from Reliefweb.
+ */
+function _ev_migrate_events_from_reliefweb() {
+  $last_run = variable_get('ev_migrate_last_run_reliefweb', 0);
+  if ((REQUEST_TIME - $last_run) >= 7 * 86400) {
+    // Reset kill switch if needed.
+    if (variable_get('ev_migrate_stop_processing_reliefweb', FALSE)) {
+      variable_del('ev_migrate_stop_processing_reliefweb');
+      variable_set('ev_migrate_page_reliefweb', 0);
+    }
+  }
+
+  if (variable_get('ev_migrate_stop_processing_reliefweb', FALSE)) {
+    return;
+  }
+
+  module_load_include('inc', 'ev_migrate', 'ev_migrate.reliefweb');
+
+  // Migrate n batches.
+  for ($i = 0; $i < variable_get('ev_migrate_num_of_runs', 10); $i++) {
+    $limit = 20;
+    $page = variable_get('ev_migrate_page_reliefweb', 0);
+    $offset = $limit * $page;
+    $data = _ev_migrate_reliefweb_fetch($limit, $offset);
+    if (!empty($data)) {
+      foreach ($data as $row) {
+        ev_migrate_process_row_reliefweb($row, 'reliefweb-');
+      }
+      variable_set('ev_migrate_page_reliefweb', $page++);
+    }
+    else {
+      variable_set('ev_migrate_stop_processing_reliefweb', TRUE);
+    }
+  }
+
+  // Update last sync.
+  $source_term = ev_migrate_get_term('ReliefWeb.int', 'ev_source');
+  if ($source_term) {
+    $source_term->field_source_last_sync[LANGUAGE_NONE][0]['value'] = REQUEST_TIME;
+    taxonomy_term_save($source_term);
+  }
+
+  variable_set('ev_migrate_last_run_hrinfo', REQUEST_TIME);
 }
 
 /**
