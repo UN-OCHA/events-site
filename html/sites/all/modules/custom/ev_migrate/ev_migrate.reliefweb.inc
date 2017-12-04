@@ -96,8 +96,8 @@ function ev_migrate_process_row_reliefweb($row, $prefix = '') {
   $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = strtotime($row['fields']['date']['changed']);
   $event->changed = strtotime($row['fields']['date']['changed']);
 
-  $needs_update = $needs_update || !isset($event->field_event_source_url[LANGUAGE_NONE][0]['value']) || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['url'];
-  $event->field_event_source_url[LANGUAGE_NONE][0]['value'] = $row['url'];
+  $needs_update = $needs_update || !isset($event->field_event_source_url[LANGUAGE_NONE][0]['value']) || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['fields']['url'];
+  $event->field_event_source_url[LANGUAGE_NONE][0]['value'] = $row['fields']['url'];
 
   $source_term = ev_migrate_get_term('ReliefWeb.int', 'ev_source');
   $event->field_event_source[LANGUAGE_NONE][0]['tid'] = $source_term->tid;
