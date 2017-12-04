@@ -11,9 +11,6 @@ function ev_migrate_log($message) {
   if (function_exists('drush_log')) {
     drush_log($message);
   }
-  elseif (module_exists('devel') && function_exists('dpm')) {
-    dpm($message);
-  }
   else {
     watchdog('Event migrate', $message);
   }
@@ -56,7 +53,6 @@ function _ev_migrate_events_from_reliefweb() {
     $page = variable_get('ev_migrate_page_reliefweb', 0);
     $offset = $limit * $page;
     $data = _ev_migrate_reliefweb_fetch($limit, $offset);
-    dpm($data);
     if (!empty($data)) {
       foreach ($data as $row) {
         ev_migrate_process_row_reliefweb($row, 'reliefweb-');
