@@ -119,7 +119,7 @@ function ev_migrate_process_row_reliefweb($row, $prefix = '') {
   // They are all trainings.
   if ($category = ev_migrate_get_term('Training', 'ev_category')) {
     $needs_update = $needs_update || $event->field_event_category[LANGUAGE_NONE][0]['tid'] != $category->tid;
-    $event->field_event_category[LANGUAGE_NONE][]['tid'] = $category->tid;
+    $event->field_event_category[LANGUAGE_NONE][0]['tid'] = $category->tid;
   }
 
   if (isset($row['fields']['body'])) {
