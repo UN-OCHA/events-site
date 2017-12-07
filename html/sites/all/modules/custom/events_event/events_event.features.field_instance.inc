@@ -249,7 +249,7 @@ function events_event_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 23,
+        'weight' => 24,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -380,10 +380,9 @@ function events_event_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 26,
+        'type' => 'hidden',
+        'weight' => 27,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -411,7 +410,7 @@ function events_event_field_default_field_instances() {
         'formatter_settings' => array(),
         'size' => 60,
       ),
-      'type' => 'field_extrawidgets_read_only',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 14,
     ),
   );
@@ -427,7 +426,7 @@ function events_event_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 25,
+        'weight' => 26,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -457,7 +456,7 @@ function events_event_field_default_field_instances() {
         'formatter' => 'number_unformatted',
         'formatter_settings' => array(),
       ),
-      'type' => 'field_extrawidgets_read_only',
+      'type' => 'field_extrawidgets_hidden',
       'weight' => 13,
     ),
   );
@@ -638,7 +637,7 @@ function events_event_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 24,
+        'weight' => 25,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -668,6 +667,212 @@ function events_event_field_default_field_instances() {
       ),
       'type' => 'field_extrawidgets_read_only',
       'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_source'.
+  $field_instances['node-ev_event-field_event_source'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 28,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_source',
+    'label' => 'Source',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'apply_chosen' => '',
+        'display_empty' => 1,
+        'formatter' => 'taxonomy_term_reference_plain',
+        'formatter_settings' => array(),
+      ),
+      'type' => 'field_extrawidgets_hidden',
+      'weight' => 15,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_source_created'.
+  $field_instances['node-ev_event-field_event_source_created'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 32,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_source_created',
+    'label' => 'First imported at',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'entity_translation_sync' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'display_all_day' => 0,
+        'increment' => 1,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'no_fieldset' => 0,
+        'repeat_collapsed' => 0,
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'field_extrawidgets_hidden',
+      'weight' => 19,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_source_updated'.
+  $field_instances['node-ev_event-field_event_source_updated'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 33,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_source_updated',
+    'label' => 'Last updated at',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'entity_translation_sync' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'display_all_day' => 0,
+        'increment' => 1,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'no_fieldset' => 0,
+        'repeat_collapsed' => 0,
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'field_extrawidgets_hidden',
+      'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'node-ev_event-field_event_source_url'.
+  $field_instances['node-ev_event-field_event_source_url'] = array(
+    'bundle' => 'ev_event',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 29,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_event_source_url',
+    'label' => 'Source URL',
+    'required' => 0,
+    'settings' => array(
+      'entity_translation_sync' => FALSE,
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'field_extrawidgets',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'field_extrawidgets_hidden',
+      'weight' => 16,
     ),
   );
 
@@ -1127,6 +1332,60 @@ function events_event_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-ev_source-field_source_last_sync'.
+  $field_instances['taxonomy_term-ev_source-field_source_last_sync'] = array(
+    'bundle' => 'ev_source',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => FALSE,
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 0,
+      ),
+    ),
+    'ds_extras_field_template' => '',
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_source_last_sync',
+    'label' => 'Last sync',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'entity_translation_sync' => FALSE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'display_all_day' => 0,
+        'increment' => 1,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'no_fieldset' => 0,
+        'repeat_collapsed' => 0,
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-ev_theme-field_external_id'.
   $field_instances['taxonomy_term-ev_theme-field_external_id'] = array(
     'bundle' => 'ev_theme',
@@ -1175,7 +1434,10 @@ function events_event_field_default_field_instances() {
   t('Documents');
   t('External Id');
   t('File');
+  t('First imported at');
   t('HRInfo nid');
+  t('Last sync');
+  t('Last updated at');
   t('Legend color');
   t('Location');
   t('Location details');
@@ -1184,6 +1446,8 @@ function events_event_field_default_field_instances() {
   t('Organization');
   t('Original theme');
   t('Parent tids');
+  t('Source');
+  t('Source URL');
   t('Theme');
 
   return $field_instances;
