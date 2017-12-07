@@ -17,7 +17,7 @@
   "scenarios": [
     {
       "label": "node-add-ev-event",
-      "url": "http://localhost:8080/node/add/ev-event",
+      "url": "%%URI%%/node/add/ev-event",
       "cookiePath": "backstop_data/engine_scripts/cookies.json",
       "readySelector": "footer",
       "removeSelectors": [

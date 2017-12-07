@@ -17,7 +17,7 @@
   "scenarios": [
     {
       "label": "homepage",
-      "url": "http://localhost:8080/",
+      "url": "%%URI%%",
       "removeSelectors": [
         "#admin-menu",
         "#messages"
