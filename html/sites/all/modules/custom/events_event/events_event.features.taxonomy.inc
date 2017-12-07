@@ -65,6 +65,14 @@ function events_event_taxonomy_default_vocabularies() {
       'module' => 'taxonomy',
       'weight' => 0,
     ),
+    'ev_source' => array(
+      'name' => 'Source',
+      'machine_name' => 'ev_source',
+      'description' => '',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => 0,
+    ),
     'ev_theme' => array(
       'name' => 'Theme',
       'machine_name' => 'ev_theme',

@@ -323,6 +323,7 @@ function events_event_strongarm() {
   $strongarm->value = array(
     'ev_category' => TRUE,
     'ev_document_type' => TRUE,
+    'ev_source' => FALSE,
   );
   $export['entity_translation_taxonomy'] = $strongarm;
 
@@ -366,13 +367,13 @@ function events_event_strongarm() {
       'display' => array(
         'ev_local_time' => array(
           'default' => array(
-            'weight' => '21',
+            'weight' => '22',
             'visible' => FALSE,
           ),
         ),
         'ev_user_time' => array(
           'default' => array(
-            'weight' => '22',
+            'weight' => '23',
             'visible' => FALSE,
           ),
         ),
@@ -391,6 +392,12 @@ function events_event_strongarm() {
         'ev_page_recurring' => array(
           'default' => array(
             'weight' => '1',
+            'visible' => TRUE,
+          ),
+        ),
+        'ev_source_info' => array(
+          'default' => array(
+            'weight' => '13',
             'visible' => TRUE,
           ),
         ),

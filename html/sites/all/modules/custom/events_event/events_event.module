@@ -194,6 +194,8 @@ function events_event_exported_term_fields() {
  * Page callback for calendar.
  */
 function events_event_calendar() {
+  global $language;
+
   $settings = array(
     'timeout' => 25000,
     'base_url' => '',
@@ -219,6 +221,9 @@ function events_event_calendar() {
     'events' => array(
       'url' => 'api/v0/fetch-events',
       'type' => 'GET',
+      'data' => array(
+        'lang' => $language->language,
+      ),
     ),
     'categories' => _events_event_fetch_categories(),
   );
@@ -282,10 +287,11 @@ function events_event_calendar() {
 /**
  * Fetch events from search api.
  */
-function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array(), $facets_only = FALSE) {
+function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array(), $fetch_facets = FALSE) {
   $index = search_api_index_load('un_events');
   $query = new SearchApiQuery($index);
 
+  // Build filters.
   $filter = $query->createFilter('AND');
   if ($start) {
     $filter->condition('field_event_date:value', $start, '>=');
@@ -301,15 +307,25 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   }
 
   $query->filter($filter);
-  if ($facets_only) {
+
+  // Either fetch results or facets.
+  if ($fetch_facets) {
     $query->range(0, 0);
+    $query->setOption('skip result count', TRUE);
+  }
+  else {
+    $query->setOption('skip result count', TRUE);
+    $query->setOption('disable_search_api_facets', TRUE);
   }
 
+  // Add an easy sort.
   $query->sort('search_api_id', 'ASC');
+
+  // Execute query.
   $results = $query->execute();
 
   // Load events.
-  if (!$facets_only) {
+  if (!$fetch_facets) {
     $nids = array_keys($results['results']);
   }
   else {
@@ -318,7 +334,7 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
 
   // Process facets.
   $facets = array();
-  if (isset($results['search_api_facets'])) {
+  if ($fetch_facets && isset($results['search_api_facets'])) {
     $term_fields = events_event_exported_term_fields();
     foreach ($results['search_api_facets'] as $key => $facet_info) {
       if (!array_key_exists($key, $term_fields)) {
@@ -358,6 +374,7 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   return array(
     'facets' => $facets,
     'nids' => $nids,
+    'performance' => $results['performance'],
   );
 }
 
@@ -371,6 +388,11 @@ function events_event_fetch_documents() {
  * Page callback for events.
  */
 function events_event_fetch_events() {
+  $timers = array(
+    'total' => microtime(TRUE),
+    'searchapi' => microtime(TRUE),
+  );
+
   $start = (isset($_GET['start']) && !empty($_GET['start'])) ? strtotime($_GET['start']) : strtotime('first day of this month', time());
   $end = (isset($_GET['end']) && !empty($_GET['end'])) ? strtotime($_GET['end']) : strtotime('last day of this month', time());
   if ($start > $end) {
@@ -383,15 +405,24 @@ function events_event_fetch_events() {
   $start = $start - (60 * 60 * 24) - ($start % 86400);
   $end = $end + (60 * 60 * 24) - ($end % 86400);
 
+  // Handle language links.
+  $lang_code = (isset($_GET['lang']) && !empty($_GET['lang'])) ? $_GET['lang'] : 'en';
+  $languages = language_list();
+
   $query_filters = events_event_get_query_filters();
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters);
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE);
+  if (isset($data['performance'])) {
+    $timers = array_merge($timers, $data['performance']);
+  }
+  $timers['searchapi'] = microtime(TRUE) - $timers['searchapi'];
   $nids = array_flip($data['nids']);
 
   $events = array();
 
   // Load stored event data.
+  $timers['storedevents'] = microtime(TRUE);
   if (!empty($nids)) {
     $result = db_select('events_event_data', 'e')
         ->fields('e', array('nid', 'data'))
@@ -414,6 +445,13 @@ function events_event_fetch_events() {
           $event['end'] = $date_end->format(DATE_FORMAT_DATETIME);
         }
 
+        // Make sure link contains the right language.
+        $event['lang'] = $lang_code;
+        if ($lang_code != 'en' && array_key_exists($lang_code, $languages)) {
+          global $base_url;
+          $event['url'] = $base_url . '/' . $lang_code . '/node/' . $nid . '?date=' . substr($event['start_raw'], 0, 10);
+        }
+
         unset($event['start_raw']);
         unset($event['end_raw']);
         unset($event['timezone_db']);
@@ -425,9 +463,11 @@ function events_event_fetch_events() {
       }
     }
   }
+  $timers['storedevents'] = microtime(TRUE) - $timers['storedevents'];
 
   // Check if data is missing.
   if (!empty($nids)) {
+    $timers['missingevents'] = microtime(TRUE);
     $event_nodes = node_load_multiple(array_keys($nids));
     foreach ($event_nodes as $event_node) {
       $event_data = events_event_build_api_structure($event_node, $timezone);
@@ -442,9 +482,32 @@ function events_event_fetch_events() {
         $events[] = $event;
       }
     }
+    $timers['missingevents'] = microtime(TRUE) - $timers['missingevents'];
   }
 
-  events_event_json_output($events);
+  $timers['total'] = microtime(TRUE) - $timers['total'];
+  events_event_json_output($events, $timers);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function events_event_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'search_api_query_alter') {
+    $group = $implementations['events_event'];
+    unset($implementations['events_event']);
+    $implementations['events_event'] = $group;
+  }
+}
+
+/**
+ * Implements hook_search_api_query_alter().
+ */
+function events_event_search_api_query_alter($query) {
+  // Disable facets during search.
+  if ($query->getOption('disable_search_api_facets')) {
+    $query->setOption('search_api_facets', FALSE);
+  }
 }
 
 /**
@@ -470,7 +533,7 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
       'title' => $node->title,
       'start' => $date_start->format(DATE_FORMAT_DATETIME),
       'end' => $date_end->format(DATE_FORMAT_DATETIME),
-      'allDay' => $date['value'] == $date['value2'],
+      'allDay' => date_is_all_day(str_replace('T', ' ', $date['value']), str_replace('T', ' ', $date['value'])),
       'url' => url('node/' . $node->nid, array(
         'absolute' => TRUE,
         'query' => array(
@@ -543,7 +606,7 @@ function events_event_to_ical() {
   // Start from beginning of last month.
   $start = strtotime('first day of last month', time());
 
-  $data = events_event_fetch_events_from_search_api($start, '', $query_filters);
+  $data = events_event_fetch_events_from_search_api($start, '', $query_filters, FALSE);
   $nids = array_flip($data['nids']);
 
   $events = array();
@@ -1307,6 +1370,11 @@ function events_event_field_extra_fields() {
     'description' => t('Display recurring info for an event.', array(), array('context' => 'events')),
     'weight' => 2,
   );
+  $extra['node']['ev_event']['display']['ev_source_info'] = array(
+    'label' => t('Display source info', array(), array('context' => 'events')),
+    'description' => t('Display source info for an event.', array(), array('context' => 'events')),
+    'weight' => 2,
+  );
 
   return $extra;
 }
@@ -1356,6 +1424,13 @@ function events_event_node_view($node, $view_mode, $langcode) {
       && $extrafields[$extrafield_name]['visible']) {
     $node->content[$extrafield_name] = _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_date);
   }
+
+  $extrafield_name = 'ev_source_info';
+  if (isset($extrafields[$extrafield_name])
+      && isset($extrafields[$extrafield_name]['visible'])
+      && $extrafields[$extrafield_name]['visible']) {
+    $node->content[$extrafield_name] = _events_event_ev_source_info($node, $view_mode, $langcode);
+  }
 }
 
 /**
@@ -1387,7 +1462,7 @@ function _events_event_ev_page_heading($node, $view_mode, $langcode, $current_da
 }
 
 /**
- * Fisplay recurring info.
+ * Display recurring info.
  */
 function _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_date = '') {
   // Check if it's recurring.
@@ -1446,6 +1521,59 @@ function _events_event_ev_page_recurring($node, $view_mode, $langcode, $current_
 }
 
 /**
+ * Display source info.
+ */
+function _events_event_ev_source_info($node, $view_mode, $langcode) {
+  $lines = array();
+
+  if (!isset($node->field_event_source[LANGUAGE_NONE][0]['tid'])) {
+    return;
+  }
+
+  // Load source term.
+  $term = taxonomy_term_load($node->field_event_source[LANGUAGE_NONE][0]['tid']);
+  if ($term) {
+    $lines[] = $term->name;
+  }
+  else {
+    return;
+  }
+
+  // Link to source event.
+  if (isset($node->field_event_source_url[LANGUAGE_NONE][0]['value'])) {
+    $lines[] = t('Source: <a target="_blank" href="@source_url">@source_name</a>', array(
+      '@source_url' => url($node->field_event_source_url[LANGUAGE_NONE][0]['value']),
+      '@source_name' => $node->title,
+    ), array('context' => 'events'));
+  }
+
+  // Last updated.
+  if (isset($node->field_event_source_updated[LANGUAGE_NONE][0]['value'])) {
+    $lines[] = t('Last updated: %date', array(
+      '%date' => format_date($node->field_event_source_updated[LANGUAGE_NONE][0]['value'], 'custom', 'd F Y'),
+    ), array('context' => 'events'));
+  }
+
+  // Last synced.
+  if (!empty($lines)) {
+    $lines[] = t('Last checked: %date', array(
+      '%date' => format_interval(REQUEST_TIME - $term->field_source_last_sync[LANGUAGE_NONE][0]['value'], 2, $langcode),
+    ), array('context' => 'events'));
+  }
+
+  $output = '<div class="field info-source">';
+  $output .= '<div class="field-label">' . t('Source', array(), array('context' => 'events')) . '</div>';
+  foreach ($lines as $line) {
+    $output .= '<div class="info-source--line">' . $line . '</div>';
+  }
+  $output .= '</div>';
+
+  return array(
+    '#markup' => $output,
+  );
+}
+
+/**
  * Display date in user and local time.
  */
 function _events_event_ev_display_date_time($node, $view_mode, $langcode, $current_date = '') {
@@ -1482,18 +1610,19 @@ function _events_event_ev_local_time($node, $view_mode, $langcode, $current_date
     }
   }
 
+  $all_day = date_is_all_day($date_start->format('Y-m-d H:i:s'), $date_end->format('Y-m-d H:i:s'));
   $dates = array(
     'show_remaining_days' => FALSE,
     'value' => array(
-      'formatted' => $date_start->format('d F Y H:i'),
+      'formatted' => $all_day ? $date_start->format('d F Y') : $date_start->format('d F Y H:i'),
       'formatted_date' => $date_start->format('d F Y'),
-      'formatted_time' => $date_start->format('H:i'),
+      'formatted_time' => $all_day ? '' : $date_start->format('H:i'),
       'formatted_timezone' => $date['timezone'],
     ),
     'value2' => array(
-      'formatted' => $date_end->format('d F Y H:i'),
+      'formatted' => $all_day ? $date_end->format('d F Y') : $date_end->format('d F Y H:i'),
       'formatted_date' => $date_end->format('d F Y'),
-      'formatted_time' => $date_end->format('H:i'),
+      'formatted_time' => $all_day ? '' : $date_end->format('H:i'),
       'formatted_timezone' => $date['timezone'],
     ),
   );
@@ -1618,12 +1747,23 @@ function _events_event_render_dates_as_string($dates) {
 /**
  * Output as JSON.
  */
-function events_event_json_output($data) {
+function events_event_json_output($data, $timers = array()) {
+  // Allow cross origin requests.
   drupal_add_http_header('Access-Control-Allow-Origin', '*');
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
+
+  // Add caching header.
   if (variable_get('events_event_page_cache', 60)) {
     drupal_add_http_header('Cache-Control', 'public, max-age=' . variable_get('events_event_page_cache', 60));
   }
+
+  // Display API timers.
+  if (variable_get('events_event_display_api_timers', FALSE)) {
+    foreach ($timers as $timer_key => $timer_value) {
+      drupal_add_http_header('X-Timer-' . $timer_key, 1000 * $timer_value);
+    }
+  }
+
   drupal_json_output($data);
 }
 
