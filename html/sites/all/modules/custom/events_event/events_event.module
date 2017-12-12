@@ -20,6 +20,13 @@ function events_event_menu_alter(&$items) {
  * Implements hook_menu().
  */
 function events_event_menu() {
+  $items['select-location'] = array(
+    'title' => 'Select location',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('events_event_select_location_form'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['calendar'] = array(
     'title' => 'Calendar',
     'page callback' => 'events_event_calendar',
@@ -1803,6 +1810,14 @@ function events_event_get_query_filters() {
         );
       }
     }
+
+    // Allow forced filters using GET parameters.
+    if (isset($_GET['f_' . $term_field_info['short_key']])) {
+      $query_filters[$term_field] = array(
+        'value' => $_GET['f_' . $term_field_info['short_key']],
+        'forced' => TRUE,
+      );
+    }
   }
 
   return $query_filters;
@@ -2006,4 +2021,39 @@ function events_event_search_api_alter_callback_info() {
   );
 
   return $callbacks;
+}
+
+/**
+ * Allow the user to select a location.
+ */
+function events_event_select_location_form($form, $form_state) {
+  $data = events_event_fetch_events_from_search_api('', '', array(), TRUE);
+  $options = array();
+
+  if (isset($data['facets']['loc']['values'])) {
+    $options = $data['facets']['loc']['values'];
+  }
+
+  $form = array();
+
+  $form['loc'] = array(
+    '#type' => 'select',
+    '#label' => t('Select location', array(), array('context' => 'events')),
+    '#options' => $options,
+    '#required' => TRUE,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Set location', array(), array('context' => 'events')),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler to allow the user to select a location.
+ */
+function events_event_select_location_form_submit($form, $form_state) {
+  drupal_goto('calendar', array('query' => array('f_loc' => $form_state['values']['loc'])));
 }
