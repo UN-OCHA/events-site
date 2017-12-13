@@ -7,7 +7,7 @@ button, input[type="submit"] {
 	box-shadow: none;
 }
 
-.btn-primary, .form-actions input[type="submit"] {
+.btn-primary, input[type="submit"].form-submit {
 	border-radius: 4px;
 	background: $primary-bg-color;
 	text-transform: uppercase;

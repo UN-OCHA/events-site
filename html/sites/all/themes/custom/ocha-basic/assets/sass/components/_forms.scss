@@ -306,6 +306,48 @@ div.vertical-tabs {
 
 }
 
+#events-event-select-location-form {
+	text-align: right;
+	margin: $base-unit*2 auto $base-unit*5 auto;
+	background: $light-bg-color;
+	padding: $base-unit*1.5;
+	max-width: 600px;
+
+	label {
+		margin-bottom: $base-unit;
+	}
+
+	.form-submit {
+		vertical-align: middle;
+	}
+}
+
+.form-item-loc {
+	margin-bottom: $base-unit*1.5;
+	text-align: left;
+	padding: 0;
+
+	.chosen-single {
+		padding: $base-unit;
+	}
+
+	.chosen-container .chosen-single div b {
+		line-height: $base-unit*5;
+	}
+}
+
+@include media-query(sm) {
+
+	#events-event-select-location-form {
+		padding: $base-unit*2;
+	}
+
+	.form-item-loc {
+		margin-bottom: $base-unit*2;
+	}
+
+}
+
 /* Hide text format options */
 .text-format-wrapper {
 	.form-item {
