@@ -25,6 +25,10 @@
 		}
 
 	}
+
+	&.error {
+		background-image: none;
+	}
 }
 
 .chosen-container-single.chosen-container-active {
