@@ -755,7 +755,7 @@ var evCalendar = function ($) {
     settings.sidebarOpen = !settings.sidebarOpen;
   }
 
-  function _updateState (isFiltering) {
+  function _updateState(isFiltering) {
     var currentFilters = evFilters.settings.eventFilters ? evFilters.settings.eventFilters : {};
 
     if (!isFiltering) {
@@ -909,13 +909,25 @@ function chosenA11y (select, name, label) {
       var fullCal = jQuery('#fullcalendar');
       fullCal.css('flex', '0 0 70%');
 
-      jQuery('<div id="mini-cal"></div>').insertAfter('#fullcalendar');
-      var miniCal = jQuery('#mini-cal');
+      jQuery('<div id="mini-cal-wrapper"><div><input type="text" name="full" id="full-text-search-string"><button id="full-text-search">Search</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
 
-      miniCal.css('flex', '0 0 25%')
+      var fullTextSsearch = jQuery('#full-text-search');
+      fullTextSsearch.click(function () {
+        var str = jQuery('#full-text-search-string').val();
+        if (str) {
+          evFilters.settings.eventFilters['full'] = str;
+
+          evCalendar.updateState(true);
+          evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
+        }
+      });
+
+      var miniCalWrapper = jQuery('#mini-cal-wrapper');
+      miniCalWrapper.css('flex', '0 0 25%')
         .css('margin-top', '75px')
         .css('border', 'solid');
 
+      var miniCal = jQuery('#mini-cal');
       miniCal.fullCalendar({
           'header': {
             'left': 'prev today next',
