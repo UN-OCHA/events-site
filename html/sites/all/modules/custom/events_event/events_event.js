@@ -714,7 +714,7 @@ var evCalendar = function ($) {
         'type': 'listrev',
         'buttonText': Drupal.t('Past events', {}, {context: 'events'}),
         'duration': {
-          'days': 90
+          'days': 7
         },
         'validRange': function(currentDate) {
           return {
@@ -723,7 +723,7 @@ var evCalendar = function ($) {
         },
         'visibleRange': function(currentDate) {
           return {
-            start: currentDate.clone().add(-90, 'days'),
+            start: currentDate.clone().add(-7, 'days'),
             end: currentDate.clone()
           };
         }
@@ -755,7 +755,7 @@ var evCalendar = function ($) {
     settings.sidebarOpen = !settings.sidebarOpen;
   }
 
-  function _updateState (isFiltering) {
+  function _updateState(isFiltering) {
     var currentFilters = evFilters.settings.eventFilters ? evFilters.settings.eventFilters : {};
 
     if (!isFiltering) {
@@ -903,40 +903,57 @@ function chosenA11y (select, name, label) {
       });
 
       // Add min cal.
-      var content = jQuery('.content');
-      content.css('display', 'flex');
-
       var fullCal = jQuery('#fullcalendar');
-      fullCal.css('flex', '0 0 70%');
 
-      jQuery('<div id="mini-cal"></div>').insertAfter('#fullcalendar');
+      // jQuery('<div id="mini-cal-wrapper"><div><input type="text" name="full" id="full-text-search-string"><button id="full-text-search">Search</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
+      jQuery('<div id="mini-cal-wrapper"><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
+/*
+      var fullTextSsearch = jQuery('#full-text-search');
+      fullTextSsearch.click(function () {
+        var str = jQuery('#full-text-search-string').val();
+        if (str) {
+          evFilters.settings.eventFilters['full'] = str;
+
+          evCalendar.updateState(true);
+          evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
+        }
+      });
+*/
+
       var miniCal = jQuery('#mini-cal');
-
-      miniCal.css('flex', '0 0 25%')
-        .css('margin-top', '75px')
-        .css('border', 'solid');
-
       miniCal.fullCalendar({
-          'header': {
-            'left': 'prev today next',
-            'center': 'title',
-            'right': ''
-          },
-          'firstDay': 1,
-          'defaultView': 'month',
-          'weekends': true,
-          height: 'auto',
-          aspectRatio: 1.2,
+        'header': {
+          'left': 'title, prev today next',
+          'center': '',
+          'right': ''
+        },
+        'firstDay': 1,
+        'defaultView': 'month',
+        'weekends': true,
+        height: 'auto',
+        aspectRatio: 1.2,
 
-      	'validRange': function(currentDate) {
-      	  return {
-      		start: currentDate.clone()
-      	  };
-      	},
-
-          dayClick: function(date, jsEvent, view) {
-      		fullCal.fullCalendar('gotoDate', date);
+        dayClick: function(date, jsEvent, view) {
+          // Pat events.
+          if (date.isBefore(moment())) {
+            date.add('-6', 'days');
+            if (view != 'past') {
+              fullCal.fullCalendar('changeView', 'past', date);
+            }
+            else {
+              fullCal.fullCalendar('gotoDate', date);
+            }
+            return;
           }
+
+          // Upcoming events.
+          if (view !== 'upcoming') {
+            fullCal.fullCalendar('changeView', 'upcoming', date);
+          }
+          else {
+            fullCal.fullCalendar('gotoDate', date);
+          }
+        }
       });
     }
 
