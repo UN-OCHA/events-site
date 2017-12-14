@@ -28,13 +28,14 @@ var evExports = function ($) {
       settings.icalInfo = $('<p class="calendar-export__ical-info">* ' + icalMsg + '</p>');
 
       settings.icalBtn.attr('id', 'ical-btn');
-      evCalendar.settings.$calendar.after(settings.icalInfo);
+      //evCalendar.settings.$calendar.after(settings.icalInfo);
       settings.icalInfo.hide();
       if (evCalendar.settings.state.view === 'past') {
         button.text(settings.icalLabel + ' *');
         settings.icalInfo.show();
       }
       icalLinkHolder.append('<p class="calendar-export__ical-link-label">' + Drupal.t('ICAL link', {}, {context: 'events'}) + '</p>');
+      icalLinkHolder.append(settings.icalInfo);
       icalLinkHolder.append(settings.icalLink);
       icalLinkHolder.append(copyBtn);
       listItem.append(icalLinkHolder);
@@ -923,9 +924,9 @@ function chosenA11y (select, name, label) {
       var miniCal = jQuery('#mini-cal');
       miniCal.fullCalendar({
         'header': {
-          'left': 'title, prev today next',
-          'center': '',
-          'right': ''
+          'left': 'title',
+          'center': false,
+          'right': 'prev today next'
         },
         'firstDay': 1,
         'defaultView': 'month',

@@ -642,7 +642,31 @@
 
 #mini-cal-wrapper {
 	flex: 0 0 25%;
+
 	.fc-toolbar {
 		margin-top: 0;
+	}
+
+	.fc-toolbar .fc-left {
+		padding-top: 5px;
+	}
+
+	.fc-scroller {
+		min-height: auto;
+	}
+
+	.fc-right {
+		display: block;
+		.fc-button {
+			width: auto;
+		}
+	}
+
+	.fc-basic-view .fc-body .fc-row {
+    min-height: 2em;
+	}
+
+	.fc-row .fc-content-skeleton td {
+    cursor: pointer;
 	}
 }
