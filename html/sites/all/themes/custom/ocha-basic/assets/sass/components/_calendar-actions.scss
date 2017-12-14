@@ -623,3 +623,26 @@
 	}
 
 }
+
+// ES-121.
+#fullcalendar .fc-header-toolbar,
+.calendar-view-selector {
+	display: none;
+}
+
+.content {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 35px;
+}
+
+#fullcalendar {
+	flex: 0 0 70%;
+}
+
+#mini-cal-wrapper {
+	flex: 0 0 25%;
+	.fc-toolbar {
+		margin-top: 0;
+	}
+}
