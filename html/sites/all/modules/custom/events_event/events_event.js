@@ -901,6 +901,43 @@ function chosenA11y (select, name, label) {
       $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder', function (e) {
         e.stopPropagation();
       });
+
+      // Add min cal.
+      var content = jQuery('.content');
+      content.css('display', 'flex');
+
+      var fullCal = jQuery('#fullcalendar');
+      fullCal.css('flex', '0 0 70%');
+
+      jQuery('<div id="mini-cal"></div>').insertAfter('#fullcalendar');
+      var miniCal = jQuery('#mini-cal');
+
+      miniCal.css('flex', '0 0 25%')
+        .css('margin-top', '75px')
+        .css('border', 'solid');
+
+      miniCal.fullCalendar({
+          'header': {
+            'left': 'prev today next',
+            'center': 'title',
+            'right': ''
+          },
+          'firstDay': 1,
+          'defaultView': 'month',
+          'weekends': true,
+          height: 'auto',
+          aspectRatio: 1.2,
+
+      	'validRange': function(currentDate) {
+      	  return {
+      		start: currentDate.clone()
+      	  };
+      	},
+
+          dayClick: function(date, jsEvent, view) {
+      		fullCal.fullCalendar('gotoDate', date);
+          }
+      });
     }
 
   };
