@@ -194,6 +194,15 @@ function events_event_exported_term_fields() {
       'node_field' => 'field_event_documents',
       'multifield_field' => 'field_document_type',
     ),
+    'full' => array(
+      'label' => t('Search', array(), array('context' => 'events')),
+      'has_parents' => FALSE,
+      'short_key' => 'full',
+      'value_key' => '',
+      'bundle' => '',
+      'exposed' => TRUE,
+      'fulltext' => TRUE,
+    ),
   );
 }
 
@@ -294,7 +303,7 @@ function events_event_calendar() {
 /**
  * Fetch events from search api.
  */
-function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array(), $fetch_facets = FALSE) {
+function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $filters = array(), $fetch_facets = FALSE, $fulltext = '') {
   $index = search_api_index_load('un_events');
   $query = new SearchApiQuery($index);
 
@@ -323,6 +332,10 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   else {
     $query->setOption('skip result count', TRUE);
     $query->setOption('disable_search_api_facets', TRUE);
+
+    if (!empty($fulltext)) {
+      $query->keys($fulltext);
+    }
   }
 
   // Add an easy sort.
@@ -345,6 +358,11 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
     $term_fields = events_event_exported_term_fields();
     foreach ($results['search_api_facets'] as $key => $facet_info) {
       if (!array_key_exists($key, $term_fields)) {
+        continue;
+      }
+
+      // Skip full text fields.
+      if (isset($term_fields[$key]['fulltext']) && $term_fields[$key]['fulltext']) {
         continue;
       }
 
@@ -419,7 +437,9 @@ function events_event_fetch_events() {
   $query_filters = events_event_get_query_filters();
   $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
-  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE);
+  $fulltext = isset($_GET['full']) ? $_GET['full'] : '';
+
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, $fulltext);
   if (isset($data['performance'])) {
     $timers = array_merge($timers, $data['performance']);
   }
@@ -554,6 +574,11 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
     );
 
     foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
+      // Skip full text fields.
+      if (isset($term_field_info['fulltext']) && $term_field_info['fulltext']) {
+        continue;
+      }
+
       $event[$term_field_info['short_key']] = array();
       if (isset($node->{$term_field}[LANGUAGE_NONE][0]['tid'])) {
         foreach ($node->{$term_field}[LANGUAGE_NONE] as $child) {
@@ -1781,10 +1806,16 @@ function events_event_get_query_filters() {
   $query_filters = array();
   $term_fields = events_event_exported_term_fields();
   foreach ($term_fields as $term_field => $term_field_info) {
+    // Stop processing if it's a fulll text field.
+    if (isset($term_field_info['fulltext']) && $term_field_info['fulltext']) {
+      continue;
+    }
+
     $query_filters[$term_field] = array(
       'value' => isset($_GET[$term_field]) ? $_GET[$term_field] : (isset($_GET[$term_field_info['short_key']]) ? $_GET[$term_field_info['short_key']] : ''),
       'forced' => FALSE,
     );
+
     if (!empty($query_filters[$term_field]['value'])) {
       if (!is_numeric($query_filters[$term_field]['value'])) {
         header('HTTP/1.1 400 ' . $query_filters[$term_field]['value'] . ' is an integer.', TRUE, 400);
