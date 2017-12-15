@@ -2069,7 +2069,7 @@ function events_event_select_location_form($form, $form_state) {
 
   $form['loc'] = array(
     '#type' => 'select',
-    '#label' => t('Select location', array(), array('context' => 'events')),
+    '#title' => t('Select location', array(), array('context' => 'events')),
     '#options' => $options,
     '#required' => TRUE,
   );
