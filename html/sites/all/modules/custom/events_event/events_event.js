@@ -625,6 +625,16 @@ var evCalendar = function ($) {
 
     $.extend(settings.$settings.events, {
       cache: true,
+      data: function() {
+        var f = 'full';
+        if (evFilters.settings.eventFilters.hasOwnProperty(f) && typeof evFilters.settings.eventFilters[f] !== 'undefined' && evFilters.settings.eventFilters[f] !== '') {
+          return {
+            full: evFilters.settings.eventFilters[f]
+          };
+        }
+
+        return {};
+      },
       success: function() {
         $('.fc-view').removeClass('fc-view--error');
         $('.fc-loading-message, .fc-loading-message--error').remove();
@@ -768,6 +778,7 @@ var evCalendar = function ($) {
       }
       evFilters.update(currentFilters);
     }
+
     $.extend(settings.state, currentFilters);
     var path = '?';
     for (var f in settings.state) {
@@ -792,7 +803,8 @@ var evCalendar = function ($) {
   return {
     init: _init,
     settings: settings,
-    updateState: _updateState
+    updateState: _updateState,
+    parseQuery: _parseQuery
   };
 
 }(jQuery);
@@ -904,24 +916,30 @@ function chosenA11y (select, name, label) {
       });
 
       // Add min cal.
-      var fullCal = jQuery('#fullcalendar');
+      var fullCal = evCalendar.settings.$calendar;
+      var qsObj = evCalendar.parseQuery(window.location.search);
+      var fullText = '';
+      if (qsObj.hasOwnProperty('full')) {
+        fullText = qsObj['full'];
+      }
 
-      // jQuery('<div id="mini-cal-wrapper"><div><input type="text" name="full" id="full-text-search-string"><button id="full-text-search">Search</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
-      jQuery('<div id="mini-cal-wrapper"><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
-/*
-      var fullTextSsearch = jQuery('#full-text-search');
+      $('<div id="mini-cal-wrapper"><div><input type="text" name="full" id="full-text-search-string" value="' + fullText + '"><button id="full-text-search">Search</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
+
+      var fullTextSsearch = $('#full-text-search');
       fullTextSsearch.click(function () {
-        var str = jQuery('#full-text-search-string').val();
+        var str = $('#full-text-search-string').val();
         if (str) {
           evFilters.settings.eventFilters['full'] = str;
-
-          evCalendar.updateState(true);
-          evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
         }
-      });
-*/
+        else {
+          evFilters.settings.eventFilters['full'] = '';
+        }
 
-      var miniCal = jQuery('#mini-cal');
+        evCalendar.updateState(true);
+        evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+      });
+
+      var miniCal = $('#mini-cal');
       miniCal.fullCalendar({
         'header': {
           'left': 'title',
@@ -935,7 +953,7 @@ function chosenA11y (select, name, label) {
         aspectRatio: 1.2,
 
         dayClick: function(date, jsEvent, view) {
-          // Pat events.
+          // Past events.
           if (date.isBefore(moment())) {
             date.add('-6', 'days');
             if (view != 'past') {

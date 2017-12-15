@@ -255,6 +255,7 @@ function events_event_calendar() {
   $query_filters = events_event_get_query_filters();
 
   foreach (events_event_exported_term_fields() as $term_field => $term_field_info) {
+    // Do not export hidden filters.
     if (!$term_field_info['exposed']) {
       continue;
     }
@@ -270,6 +271,12 @@ function events_event_calendar() {
       // List of default values for the exposed filters.
       if (isset($query_filters[$term_field])) {
         $settings['defaultFilters'][$term_field_info['short_key']] = $query_filters[$term_field]['value'];
+      }
+      elseif (isset($term_field_info['fulltext']) && $term_field_info['fulltext']) {
+        $settings['defaultFilters'][$term_field_info['short_key']] = '';
+
+        // Add full text filters to data parameters for fetch.
+        $settings['events']['data'][$term_field_info['short_key']] = '';
       }
     }
   }
@@ -485,6 +492,7 @@ function events_event_fetch_events() {
         unset($event['rrule']);
         unset($event['changed']);
         unset($event['created']);
+        unset($event['full']);
 
         $events[] = $event;
       }
@@ -505,6 +513,7 @@ function events_event_fetch_events() {
         unset($event['rrule']);
         unset($event['changed']);
         unset($event['created']);
+        unset($event['full']);
 
         $events[] = $event;
       }
