@@ -2086,5 +2086,5 @@ function events_event_select_location_form($form, $form_state) {
  * Submit handler to allow the user to select a location.
  */
 function events_event_select_location_form_submit($form, $form_state) {
-  drupal_goto('calendar', array('query' => array('f_loc' => $form_state['values']['loc'])));
+  drupal_goto('calendar', array('query' => array('loc' => $form_state['values']['loc'])));
 }
