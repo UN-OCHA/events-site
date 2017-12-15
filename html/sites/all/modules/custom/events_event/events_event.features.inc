@@ -73,7 +73,9 @@ function events_event_default_search_api_index() {
         "field_event_disasters" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_event_documents" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "multifield" },
         "field_event_documents:field_document_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_info:value" : { "type" : "text" },
         "field_event_location" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_location_details" : { "type" : "text" },
         "field_event_organization" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_event_theme" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "search_api_language" : { "type" : "string" },
@@ -274,6 +276,16 @@ function events_event_default_search_api_server() {
             "table" : "search_api_db_un_events_field_event_theme",
             "column" : "value",
             "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "field_event_info:value" : {
+            "table" : "search_api_db_un_events_text",
+            "type" : "text",
+            "boost" : "1.0"
+          },
+          "field_event_location_details" : {
+            "table" : "search_api_db_un_events_text",
+            "type" : "text",
             "boost" : "1.0"
           }
         }
