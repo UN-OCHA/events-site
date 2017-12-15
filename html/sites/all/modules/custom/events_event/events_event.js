@@ -926,7 +926,7 @@ function chosenA11y (select, name, label) {
       $('<div id="mini-cal-wrapper"><div><input type="text" name="full" id="full-text-search-string" value="' + fullText + '"><button id="full-text-search">Search</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
 
       var fullTextSsearch = $('#full-text-search');
-      fullTextSsearch.click(function () {
+      var executeSearch = function () {
         var str = $('#full-text-search-string').val();
         if (str) {
           evFilters.settings.eventFilters['full'] = str;
@@ -937,6 +937,14 @@ function chosenA11y (select, name, label) {
 
         evCalendar.updateState(true);
         evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+      };
+
+      fullTextSsearch.click(executeSearch);
+      $('#full-text-search-string').keydown(function(e) {
+        if (e.which == 13) {
+          executeSearch();
+          e.preventDefault();
+        }
       });
 
       var miniCal = $('#mini-cal');
