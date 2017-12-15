@@ -2080,14 +2080,14 @@ function events_event_select_location_form($form, $form_state) {
 
   $form['loc'] = array(
     '#type' => 'select',
-    '#title' => t('Select location', array(), array('context' => 'events')),
+    '#title' => t('Search for humanitarian events near you', array(), array('context' => 'events')),
     '#options' => $options,
     '#required' => TRUE,
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Set location', array(), array('context' => 'events')),
+    '#value' => t('Search', array(), array('context' => 'events')),
   );
 
   return $form;
