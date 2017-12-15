@@ -220,6 +220,8 @@ function events_event_calendar() {
       'center' => 'title',
       'right' => 'month,agendaWeek,agendaDay,listYear,upcoming,past',
     ),
+    'height' => auto,
+    'contentHeight' => auto,
     'editable' => FALSE,
     'eventLimit' => TRUE,
     'firstDay' => 1,
