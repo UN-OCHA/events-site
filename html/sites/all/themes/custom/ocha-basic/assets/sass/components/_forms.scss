@@ -306,15 +306,28 @@ div.vertical-tabs {
 
 }
 
+/* Home page search */
 #events-event-select-location-form {
 	text-align: right;
 	margin: $base-unit*2 auto $base-unit*5 auto;
-	background: $light-bg-color;
-	padding: $base-unit*1.5;
 	max-width: 600px;
 
+	.form-item {
+		background: none;
+	}
+
 	label {
-		margin-bottom: $base-unit;
+		margin-bottom: $base-unit*2;
+		@include font-size($medium-font-size);
+		font-family: $heading-font;
+		font-weight: 300;
+		color: $heading-text-color;
+
+		.form-required {
+			@include font-size($small-font-size);
+			color: $heading-text-color;
+			vertical-align: text-top;
+		}
 	}
 
 	.form-submit {
@@ -340,6 +353,14 @@ div.vertical-tabs {
 
 	#events-event-select-location-form {
 		padding: $base-unit*2;
+
+		label {
+			@include font-size($large-font-size);
+
+			.form-required {
+				line-height: 30px;
+			}
+		}
 	}
 
 	.form-item-loc {
