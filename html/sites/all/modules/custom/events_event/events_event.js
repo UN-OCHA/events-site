@@ -923,7 +923,7 @@ function chosenA11y (select, name, label) {
         fullText = qsObj['full'];
       }
 
-      $('<div id="mini-cal-wrapper"><div><input type="text" name="full" id="full-text-search-string" value="' + fullText + '"><button id="full-text-search">Search</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
+      $('<div id="mini-cal-wrapper"><div class="mini-cal-search-wrapper"><label for="full-text-search-string">' + Drupal.t('Search', {}, {context: 'events'}) + '</label><input type="text" name="full" id="full-text-search-string" value="' + fullText + '"><button id="full-text-search">' + Drupal.t('Search', {}, {context: 'events'}) + '</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
 
       var fullTextSsearch = $('#full-text-search');
       var executeSearch = function () {
