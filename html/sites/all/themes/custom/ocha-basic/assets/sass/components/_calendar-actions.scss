@@ -657,7 +657,7 @@
 	}
 
 	.fc-right {
-		display: block;
+		display: flex;
 		.fc-button {
 			width: auto;
 		}
@@ -670,4 +670,25 @@
 	.fc-row .fc-content-skeleton td {
     cursor: pointer;
 	}
+}
+
+
+
+
+.mini-cal-search {
+	position: relative;
+	margin-bottom: $base-unit;
+}
+
+.mini-cal-search__input {
+	width: 100%;
+}
+
+.mini-cal-search__btn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: $base-unit*4;
+	height: 100%;
+	justify-content: center;
 }
