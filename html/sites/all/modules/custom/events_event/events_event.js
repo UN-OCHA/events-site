@@ -962,7 +962,7 @@ function chosenA11y (select, name, label) {
 
         dayClick: function(date, jsEvent, view) {
           // Past events.
-          if (date.isBefore(moment())) {
+          if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
             date.add('-6', 'days');
             if (view != 'past') {
               fullCal.fullCalendar('changeView', 'past', date);
