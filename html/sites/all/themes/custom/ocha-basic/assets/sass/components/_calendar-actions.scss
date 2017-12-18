@@ -625,7 +625,8 @@
 }
 
 // ES-121.
-#fullcalendar .fc-header-toolbar,
+#fullcalendar .fc-header-toolbar .fc-left,
+#fullcalendar .fc-header-toolbar .fc-toolbar-controls,
 .calendar-view-selector {
 	display: none;
 }
