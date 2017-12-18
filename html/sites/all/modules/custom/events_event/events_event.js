@@ -948,6 +948,32 @@ function chosenA11y (select, name, label) {
       });
 
       var miniCal = $('#mini-cal');
+      var currentRange = {
+        start: moment().format('Y-MM-DD'),
+        end: moment().add('6', 'days').format('Y-MM-DD')
+      };
+
+      if (qsObj.hasOwnProperty('date')) {
+        var d = moment(qsObj.date);
+        if (qsObj.hasOwnProperty('view')) {
+          if (qsObj['view'] === 'past') {
+            currentRange.end = d.format('Y-MM-DD');
+            d.add('-6', 'days');
+            currentRange.start = d.format('Y-MM-DD');
+          }
+          else {
+            currentRange.start = d.format('Y-MM-DD');
+            d.add('6', 'days');
+            currentRange.end = d.format('Y-MM-DD');
+          }
+        }
+        else {
+          currentRange.start = d.format('Y-MM-DD');
+          d.add('6', 'days');
+          currentRange.end = d.format('Y-MM-DD');
+        }
+      }
+
       miniCal.fullCalendar({
         'header': {
           'left': 'title',
@@ -960,16 +986,34 @@ function chosenA11y (select, name, label) {
         height: 'auto',
         aspectRatio: 1.2,
 
+        dayRender: function(date, cell) {
+          console.log(currentRange);
+          console.log(date.format('Y-MM-DD'));
+          if (date.format('Y-MM-DD') >= currentRange.start && date.format('Y-MM-DD') <= currentRange.end) {
+            cell.css('background-color', 'red');
+          }
+          else {
+            cell.css('background-color', 'inherit');
+          }
+        },
+
         dayClick: function(date, jsEvent, view) {
           // Past events.
           if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
+            currentRange.end = date.format('Y-MM-DD');
             date.add('-6', 'days');
+            currentRange.start = date.format('Y-MM-DD');
             if (view != 'past') {
               fullCal.fullCalendar('changeView', 'past', date);
             }
             else {
               fullCal.fullCalendar('gotoDate', date);
             }
+
+            var listView = miniCal.fullCalendar('getView');
+            listView.unrenderDates();
+            listView.renderDates();
+
             return;
           }
 
@@ -980,6 +1024,14 @@ function chosenA11y (select, name, label) {
           else {
             fullCal.fullCalendar('gotoDate', date);
           }
+
+          currentRange.start = date.format('Y-MM-DD');
+          date.add('6', 'days');
+          currentRange.end = date.format('Y-MM-DD');
+
+          var listView = miniCal.fullCalendar('getView');
+          listView.unrenderDates();
+          listView.renderDates();
         }
       });
     }
