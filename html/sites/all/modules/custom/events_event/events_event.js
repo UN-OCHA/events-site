@@ -28,7 +28,6 @@ var evExports = function ($) {
       settings.icalInfo = $('<p class="calendar-export__ical-info">* ' + icalMsg + '</p>');
 
       settings.icalBtn.attr('id', 'ical-btn');
-      //evCalendar.settings.$calendar.after(settings.icalInfo);
       settings.icalInfo.hide();
       if (evCalendar.settings.state.view === 'past') {
         button.text(settings.icalLabel + ' *');
@@ -889,6 +888,172 @@ var evTimeZone = function ($) {
 
 }(jQuery);
 
+
+/**
+ * Mini Calendar
+ */
+var evMiniCalendar = function ($) {
+  'use strict';
+
+  function _buildMiniCal (qsObj) {
+    var fullText = qsObj.hasOwnProperty('full') ? qsObj.full : '';
+    var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
+    var searchInput = '<input type="text" name="full" class="mini-cal-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search', {}, {context: 'events'}) + '">';
+    var searchButton = '<button id="full-text-search" class="btn-icon mini-cal-search__btn"><i class="icon icon-search"></i><span class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</span></button>';
+
+    $('<div id="mini-cal-wrapper"><div class="mini-cal-search">' + searchLabel + searchInput + searchButton + '</div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
+  }
+
+  function _executeSearch () {
+    var str = $('#full-text-search-string').val();
+    if (str) {
+      evFilters.settings.eventFilters.full = str;
+    } else {
+      evFilters.settings.eventFilters.full = '';
+    }
+
+    evCalendar.updateState(true);
+    evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+  }
+
+  function _formatControls (cal) {
+    cal.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
+      .addClass('sr-only')
+      .text(Drupal.t('Previous', {}, {context: 'events'}))
+      .after('<i class="icon-arrow-left"></i>');
+    cal.find('.fc-next-button span').removeClass('fc-icon fc-icon-right-single-arrow')
+      .addClass('sr-only')
+      .text(Drupal.t('Next', {}, {context: 'events'}))
+      .after('<i class="icon-arrow-right"></i>');
+  }
+
+  function _getCurrentRange (qsObj) {
+    var currentRange = {
+      start: moment().format('Y-MM-DD'),
+      end: moment().add('6', 'days').format('Y-MM-DD')
+    };
+
+    if (qsObj.hasOwnProperty('date')) {
+      var d = moment(qsObj.date);
+      if (qsObj.hasOwnProperty('view')) {
+        if (qsObj.view === 'past') {
+          currentRange.end = d.format('Y-MM-DD');
+          d.add('-6', 'days');
+          currentRange.start = d.format('Y-MM-DD');
+        }
+        else {
+          currentRange.start = d.format('Y-MM-DD');
+          d.add('6', 'days');
+          currentRange.end = d.format('Y-MM-DD');
+        }
+      }
+      else {
+        currentRange.start = d.format('Y-MM-DD');
+        d.add('6', 'days');
+        currentRange.end = d.format('Y-MM-DD');
+      }
+    }
+
+    return currentRange;
+  }
+
+  function _init () {
+    var fullCal = evCalendar.settings.$calendar;
+    var qsObj = evCalendar.parseQuery(window.location.search);
+    var fullTextSearch = $('#full-text-search');
+    var currentRange = _getCurrentRange(qsObj);
+    _buildMiniCal(qsObj);
+    var miniCal = $('#mini-cal');
+
+
+    fullTextSearch.click(_executeSearch);
+    $('#full-text-search-string').keydown(function(e) {
+      if (e.which == 13) {
+        _executeSearch();
+        e.preventDefault();
+      }
+    });
+
+    miniCal.fullCalendar({
+      'header': {
+        'left': 'title',
+        'center': false,
+        'right': 'prev today next'
+      },
+      'firstDay': 1,
+      'defaultView': 'month',
+      'weekends': true,
+      height: 'auto',
+      aspectRatio: 1.2,
+
+      dayRender: function(date, cell) {
+        /* Add keyboard accessibility */
+        $(cell).attr('tabindex', '0').on('keypress', function(e) {
+          if (e.which === 32 || e.which === 13) {
+            e.preventDefault();
+            var day = $(this);
+            var down = new $.Event('mousedown');
+            var up = new $.Event("mouseup");
+            var eventParams = { which: 1, pageX: day.offset().left, pageY: day.offset().top, originalEvent: {} };
+            day.trigger($.extend(true, {}, down, eventParams));
+            day.trigger($.extend(true, {}, up, eventParams));
+          }
+        });
+
+        /* highlight selected range */
+        if (date.format('Y-MM-DD') >= currentRange.start && date.format('Y-MM-DD') <= currentRange.end) {
+          cell.css('background-color', 'red');
+        } else {
+          cell.css('background-color', 'inherit');
+        }
+      },
+
+      dayClick: function(date, jsEvent, view) {
+        var listView = miniCal.fullCalendar('getView');
+        // Past events.
+        if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
+          currentRange.end = date.format('Y-MM-DD');
+          date.add('-6', 'days');
+          currentRange.start = date.format('Y-MM-DD');
+          if (view != 'past') {
+            fullCal.fullCalendar('changeView', 'past', date);
+          }
+          else {
+            fullCal.fullCalendar('gotoDate', date);
+          }
+
+          listView.unrenderDates();
+          listView.renderDates();
+
+          return;
+        }
+
+        // Upcoming events.
+        if (view !== 'upcoming') {
+          fullCal.fullCalendar('changeView', 'upcoming', date);
+        }
+        else {
+          fullCal.fullCalendar('gotoDate', date);
+        }
+
+        currentRange.start = date.format('Y-MM-DD');
+        date.add('6', 'days');
+        currentRange.end = date.format('Y-MM-DD');
+
+        listView.unrenderDates();
+        listView.renderDates();
+      }
+    });
+
+    _formatControls(miniCal);
+  }
+
+  return {
+    init: _init
+  };
+
+}(jQuery);
+
 /* Adds labels, names & ids to Chosen search inputs */
 function chosenA11y (select, name, label) {
   var input = select.next('.chosen-container').find('.chosen-search-input');
@@ -909,131 +1074,13 @@ function chosenA11y (select, name, label) {
       evFilters.init();
       evTimeZone.init();
       evExports.init();
+      evMiniCalendar.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
       $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder', function (e) {
         e.stopPropagation();
       });
 
-      // Add min cal.
-      var fullCal = evCalendar.settings.$calendar;
-      var qsObj = evCalendar.parseQuery(window.location.search);
-      var fullText = '';
-      if (qsObj.hasOwnProperty('full')) {
-        fullText = qsObj['full'];
-      }
-
-      $('<div id="mini-cal-wrapper"><div class="mini-cal-search-wrapper"><label for="full-text-search-string">' + Drupal.t('Search', {}, {context: 'events'}) + '</label><input type="text" name="full" id="full-text-search-string" value="' + fullText + '"><button id="full-text-search">' + Drupal.t('Search', {}, {context: 'events'}) + '</button></div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
-
-      var fullTextSsearch = $('#full-text-search');
-      var executeSearch = function () {
-        var str = $('#full-text-search-string').val();
-        if (str) {
-          evFilters.settings.eventFilters['full'] = str;
-        }
-        else {
-          evFilters.settings.eventFilters['full'] = '';
-        }
-
-        evCalendar.updateState(true);
-        evCalendar.settings.$calendar.fullCalendar('refetchEvents');
-      };
-
-      fullTextSsearch.click(executeSearch);
-      $('#full-text-search-string').keydown(function(e) {
-        if (e.which == 13) {
-          executeSearch();
-          e.preventDefault();
-        }
-      });
-
-      var miniCal = $('#mini-cal');
-      var currentRange = {
-        start: moment().format('Y-MM-DD'),
-        end: moment().add('6', 'days').format('Y-MM-DD')
-      };
-
-      if (qsObj.hasOwnProperty('date')) {
-        var d = moment(qsObj.date);
-        if (qsObj.hasOwnProperty('view')) {
-          if (qsObj['view'] === 'past') {
-            currentRange.end = d.format('Y-MM-DD');
-            d.add('-6', 'days');
-            currentRange.start = d.format('Y-MM-DD');
-          }
-          else {
-            currentRange.start = d.format('Y-MM-DD');
-            d.add('6', 'days');
-            currentRange.end = d.format('Y-MM-DD');
-          }
-        }
-        else {
-          currentRange.start = d.format('Y-MM-DD');
-          d.add('6', 'days');
-          currentRange.end = d.format('Y-MM-DD');
-        }
-      }
-
-      miniCal.fullCalendar({
-        'header': {
-          'left': 'title',
-          'center': false,
-          'right': 'prev today next'
-        },
-        'firstDay': 1,
-        'defaultView': 'month',
-        'weekends': true,
-        height: 'auto',
-        aspectRatio: 1.2,
-
-        dayRender: function(date, cell) {
-          console.log(currentRange);
-          console.log(date.format('Y-MM-DD'));
-          if (date.format('Y-MM-DD') >= currentRange.start && date.format('Y-MM-DD') <= currentRange.end) {
-            cell.css('background-color', 'red');
-          }
-          else {
-            cell.css('background-color', 'inherit');
-          }
-        },
-
-        dayClick: function(date, jsEvent, view) {
-          // Past events.
-          if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
-            currentRange.end = date.format('Y-MM-DD');
-            date.add('-6', 'days');
-            currentRange.start = date.format('Y-MM-DD');
-            if (view != 'past') {
-              fullCal.fullCalendar('changeView', 'past', date);
-            }
-            else {
-              fullCal.fullCalendar('gotoDate', date);
-            }
-
-            var listView = miniCal.fullCalendar('getView');
-            listView.unrenderDates();
-            listView.renderDates();
-
-            return;
-          }
-
-          // Upcoming events.
-          if (view !== 'upcoming') {
-            fullCal.fullCalendar('changeView', 'upcoming', date);
-          }
-          else {
-            fullCal.fullCalendar('gotoDate', date);
-          }
-
-          currentRange.start = date.format('Y-MM-DD');
-          date.add('6', 'days');
-          currentRange.end = date.format('Y-MM-DD');
-
-          var listView = miniCal.fullCalendar('getView');
-          listView.unrenderDates();
-          listView.renderDates();
-        }
-      });
     }
 
   };
