@@ -524,10 +524,6 @@ input[type="text"].calendar-search__input {
     overflow: auto;
 
     p {
-      height: $base-unit*3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       margin: 0;
       float: left;
       max-width: calc(100% - 120px);
