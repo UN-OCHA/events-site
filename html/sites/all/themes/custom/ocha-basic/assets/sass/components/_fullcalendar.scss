@@ -262,6 +262,9 @@ button.fc-prev-button, button.fc-next-button {
 button.fc-next-button {
 	margin-left: $base-unit/2!important;
 }
+button.fc-prev-button {
+	margin-right: $base-unit/2!important;
+}
 
 /* Buttons Groups
 --------------------------------------------------------------------------------------------------*/
@@ -843,7 +846,6 @@ display: none;
 --------------------------------------------------------------------------------------------------*/
 
 .fc-toolbar {
-	margin-top: $base-unit*4;
 	min-height: $base-unit*4;
 }
 
@@ -860,9 +862,7 @@ display: none;
 }
 
 .fc-toolbar-controls {
-	position: absolute;
-  bottom: -$base-unit*5.5;
-  left: -$base-unit;
+	display: none;
 }
 
 .fc-toolbar .fc-left {
@@ -886,7 +886,6 @@ display: none;
 }
 
 .fc-toolbar .fc-right {
-	display: none;
 
 	.fc-button-group {
 		width: 100%;
@@ -894,9 +893,8 @@ display: none;
 }
 
 .fc-toolbar .fc-center {
-	position: absolute;
-	top: $base-unit/2;
-	left: 0;
+	display: flex;
+	align-items: center;
 }
 
 /* the things within each left/right/center section */
@@ -914,6 +912,13 @@ display: none;
 .fc-toolbar h2 {
 	margin: 0 !important;
 }
+
+#fullcalendar .fc-toolbar h2 {
+	padding-left: $base-unit*4.5;
+	line-height: $base-unit*4;
+	@include font-size($small-font-size);
+}
+
 
 /* button layering (for border precedence) */
 
@@ -1543,11 +1548,98 @@ td.fc-list-item-title {
 	padding-left: $base-unit*4;
 }
 
+#fullcalendar .fc-header-toolbar .fc-left {
+  display: none;
+}
+
+// Mini Calendar
+.mini-cal.loaded {
+	display: none;
+
+	.open & {
+		display: block;
+	}
+}
+
+.mini-cal-container {
+	position: absolute;
+	top: $base-unit*4;
+	left: 0;
+	width: 100%;
+}
+
+.mini-cal-btn {
+	position: absolute;
+	top: -34px;
+	left: 0;
+	width: $base-unit*4;
+  height: $base-unit*4;
+  justify-content: center;
+
+  .open & {
+  	background: $primary-bg-color;
+  	color: $light-text-color;
+  }
+}
+
+.mini-cal {
+	position: relative;
+	background: white;
+	margin-left: -$base-unit*2;
+	margin-right: -$base-unit*2;
+	padding: $base-unit*2;
+	z-index: map-get($zindex, dropdown);
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,.25);
+
+  .fc-toolbar {
+    margin-top: 0;
+
+    .fc-right {
+	    display: flex;
+	    float: right;
+
+	    .fc-button {
+	      width: auto;
+	    }
+	  }
+  }
+
+  .fc-toolbar .fc-left {
+    padding-top: 5px;
+    float: left;
+  }
+
+  .fc-today-button {
+  	margin-left: 0!important;
+  	padding-bottom: 2px;
+  }
+
+  .fc-scroller {
+    min-height: auto;
+  }
+
+  .fc-basic-view .fc-body .fc-row {
+    min-height: 2em;
+  }
+
+  .fc-row .fc-content-skeleton td {
+    cursor: pointer;
+  }
+
+  .fc-day.current {
+  	background: #93d5ff;
+  }
+}
+
 
 @include media-query(sm) {
 
 	.fc-day-grid-event .fc-content {
 		white-space: initial;
+	}
+
+	#fullcalendar .fc-toolbar h2 {
+		@include font-size($medium-font-size);
 	}
 
 }
@@ -1581,15 +1673,8 @@ td.fc-list-item-title {
 	  padding-left: 14px;
 	}
 
-	.fc-toolbar-controls {
-		display: inline-block;
-		position: static;
-		margin-right: $base-unit*1.5;
-	}
-
 	.fc-toolbar {
 		position: relative;
-		margin-top: $base-unit*3;
 
 		.fc-center {
 			position: relative;
@@ -1635,6 +1720,43 @@ td.fc-list-item-title {
 		}
 	}
 
+	#fullcalendar .fc-toolbar h2 {
+		padding-left: 0;
+	}
+
+	#fullcalendar {
+	  flex: 0 0 65%;
+	  padding-right: $base-unit*2;
+	}
+
+	//mini cal
+	.mini-cal-container {
+		flex: 0 0 35%;
+		position: relative;
+		top: auto;
+		max-width: 320px;
+	}
+
+	.mini-cal.loaded {
+		display: block;
+	}
+
+	.mini-cal {
+		box-shadow: none;
+		margin: 0;
+		padding: 0;
+		z-index: map-get($zindex, default);
+
+
+		.fc-toolbar {
+			padding: $base-unit*.75 0;
+		}
+	}
+
+	.mini-cal-btn {
+		display: none;
+	}
+
 }
 
 @include media-query(lg) {
@@ -1643,6 +1765,10 @@ td.fc-list-item-title {
 		float: right;
 		margin-bottom: 0;
 		height: $base-unit*4;
+	}
+
+	.mini-cal-container {
+		max-width: 390px;
 	}
 
 }
