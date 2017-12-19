@@ -343,7 +343,7 @@ var evFilters = function ($) {
   function _buildHTML () {
     settings.filtersWrapperInner = $('<div class="calendar-filters__inner dropdown-menu clearfix"></div>');
     var currentFiltersWrapper = $('<div class="calendar-filters__current hidden"></div>');
-    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Filter events', {}, {context: 'events'})+ '</button>';
+    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Add Filters', {}, {context: 'events'})+ '</button>';
     var clearBtn = '<button type="button" class="calendar-filters__clear btn-icon"><i class="icon-cancel"></i>Clear filters</button>';
     evCalendar.settings.filtersContainer.append(filtersHeading).append(settings.filtersWrapperInner).append(currentFiltersWrapper);
     currentFiltersWrapper.append('<p />').append(clearBtn);
@@ -573,19 +573,12 @@ var evCalendar = function ($) {
     settings.actionsContainer.before(sidebarBtn);
     $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);
     settings.sidebarOpen = false;
-    settings.viewToggleContainer = $('<div class="calendar-view-selector"></div>');
-    settings.viewToggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown"/>');
-    settings.viewToggle.html(Drupal.t('Showing', {}, {context: 'events'}) + ': <span></span>');
-    settings.viewToggle.attr('aria-haspopup', 'true');
-    settings.viewToggle.attr('aria-expanded', 'false');
   }
 
   function _formatViewSettings () {
     var content = $('.fc-toolbar .fc-right .fc-button-group');
     content.removeClass('fc-button-group').addClass('dropdown-menu').attr('aria-labelledby', 'viewSelector');
     content.find('button').removeClass('fc-state-default');
-    settings.viewToggleContainer.append(settings.viewToggle).append(content);
-    settings.actionsContainer.append(settings.viewToggleContainer);
   }
 
   function _init () {
@@ -776,11 +769,6 @@ var evCalendar = function ($) {
   }
 
   function _updateViewSettings () {
-    $('.calendar-view-selector .fc-button').removeClass('fc-state-active');
-    var selected = $('.calendar-view-selector .fc-' + settings.state.view + '-button');
-    selected.addClass('fc-state-active');
-    var label = selected.text() ? selected.text() : settings.state.view;
-    settings.viewToggle.find('span').text(label);
     evExports.update();
   }
 
@@ -880,25 +868,9 @@ var evTimeZone = function ($) {
 var evMiniCalendar = function ($) {
   'use strict';
 
-  function _buildMiniCal (qsObj) {
-    var fullText = qsObj.hasOwnProperty('full') ? qsObj.full : '';
-    var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
-    var searchInput = '<input type="text" name="full" class="mini-cal-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search', {}, {context: 'events'}) + '">';
-    var searchButton = '<button id="full-text-search" class="btn-icon mini-cal-search__btn"><i class="icon icon-search"></i><span class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</span></button>';
-
-    $('<div id="mini-cal-wrapper"><div class="mini-cal-search">' + searchLabel + searchInput + searchButton + '</div><div id="mini-cal"></div></div>').insertAfter('#fullcalendar');
-  }
-
-  function _executeSearch () {
-    var str = $('#full-text-search-string').val();
-    if (str) {
-      evFilters.settings.eventFilters.full = str;
-    } else {
-      evFilters.settings.eventFilters.full = '';
-    }
-
-    evCalendar.updateState(true);
-    evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+  function _buildMiniCal () {
+    var button = '<button type="button" data-toggle="dropdown" class="btn-icon mini-cal-btn"><span class="sr-only">Select date</span><i class="icon icon-calendar"></i></button>';
+    $('<div class="mini-cal-container">' + button + '<div id="mini-cal" class="mini-cal"></div></div>').insertAfter('#fullcalendar');
   }
 
   function _formatControls (cal) {
@@ -945,19 +917,10 @@ var evMiniCalendar = function ($) {
   function _init () {
     var fullCal = evCalendar.settings.$calendar;
     var qsObj = evCalendar.parseQuery(window.location.search);
-    var fullTextSearch = $('#full-text-search');
+
     var currentRange = _getCurrentRange(qsObj);
     _buildMiniCal(qsObj);
     var miniCal = $('#mini-cal');
-
-
-    fullTextSearch.click(_executeSearch);
-    $('#full-text-search-string').keydown(function(e) {
-      if (e.which == 13) {
-        _executeSearch();
-        e.preventDefault();
-      }
-    });
 
     miniCal.fullCalendar({
       'header': {
@@ -987,9 +950,9 @@ var evMiniCalendar = function ($) {
 
         /* highlight selected range */
         if (date.format('Y-MM-DD') >= currentRange.start && date.format('Y-MM-DD') <= currentRange.end) {
-          cell.css('background-color', 'red');
+          cell.addClass('current');
         } else {
-          cell.css('background-color', 'inherit');
+          cell.removeClass('current');
         }
       },
 
@@ -1030,6 +993,7 @@ var evMiniCalendar = function ($) {
       }
     });
 
+    $('#mini-cal').addClass('loaded'); // Add class to hide initially on mobile after the calendar has loaded
     _formatControls(miniCal);
 
     // Show correct month in mini calendar.
@@ -1064,6 +1028,51 @@ var evMiniCalendar = function ($) {
 
 }(jQuery);
 
+/**
+ * Search
+ */
+var evSearch = function ($) {
+  'use strict';
+
+  function _buildSearch () {
+    var qsObj = evCalendar.parseQuery(window.location.search);
+    var fullText = qsObj.hasOwnProperty('full') ? qsObj.full : '';
+    var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
+    var searchInput = '<input type="text" name="full" class="calendar-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search', {}, {context: 'events'}) + '">';
+    var searchButton = '<button id="full-text-search" class="btn-icon calendar-search__btn"><i class="icon icon-search"></i><span class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</span></button>';
+
+    $('<div class="calendar-search">' + searchLabel + searchInput + searchButton + '</div>').insertAfter('.calendar-actions__close');
+  }
+
+  function _executeSearch () {
+    var str = $('#full-text-search-string').val();
+    evFilters.settings.eventFilters.full = str || '';
+    evCalendar.updateState(true);
+    evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+  }
+
+  function _handleSearch () {
+    var fullTextSearch = $('#full-text-search');
+    fullTextSearch.on('click', _executeSearch);
+    $('#full-text-search-string').keydown(function(e) {
+      if (e.which == 13) {
+        e.preventDefault();
+        _executeSearch();
+      }
+    });
+  }
+
+  function _init () {
+    _buildSearch();
+    _handleSearch();
+  }
+
+  return {
+    init: _init
+  };
+
+}(jQuery);
+
 /* Adds labels, names & ids to Chosen search inputs */
 function chosenA11y (select, name, label) {
   var input = select.next('.chosen-container').find('.chosen-search-input');
@@ -1085,9 +1094,10 @@ function chosenA11y (select, name, label) {
       evTimeZone.init();
       evExports.init();
       evMiniCalendar.init();
+      evSearch.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder', function (e) {
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder, .mini-cal .fc-button', function (e) {
         e.stopPropagation();
       });
 
