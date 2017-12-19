@@ -551,7 +551,6 @@ var evCalendar = function ($) {
 
     $('.fc-toolbar .fc-today-button').html('<span>' + Drupal.t('Go to', {}, {context: 'events'}) + ' </span>' + $('.fc-today-button').text());
     _formatViewSettings();
-
   }
 
   function _buildHTML () {
@@ -1032,6 +1031,31 @@ var evMiniCalendar = function ($) {
     });
 
     _formatControls(miniCal);
+
+    // Show correct month in mini calendar.
+    if (currentRange.start) {
+      miniCal.fullCalendar('gotoDate', currentRange.start);
+    }
+    var listView = miniCal.fullCalendar('getView');
+    listView.unrenderDates();
+    listView.renderDates();
+
+    miniCal.find('.fc-today-button')
+      .attr('disabled', false)
+      .click(function () {
+        var date = moment();
+        miniCal.fullCalendar('gotoDate', date);
+
+        currentRange.start = date.format('Y-MM-DD');
+        date.add('6', 'days');
+        currentRange.end = date.format('Y-MM-DD');
+
+        var listView = miniCal.fullCalendar('getView');
+        listView.unrenderDates();
+        listView.renderDates();
+
+        fullCal.fullCalendar('changeView', 'upcoming', date);
+      });
   }
 
   return {
