@@ -1040,8 +1040,14 @@ var evSearch = function ($) {
     var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
     var searchInput = '<input type="text" name="full" class="calendar-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search', {}, {context: 'events'}) + '">';
     var searchButton = '<button id="full-text-search" class="btn-icon calendar-search__btn"><i class="icon icon-search"></i><span class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</span></button>';
+    var searchClearButton = '<button id="full-text-clear-search" class="hidden btn-icon calendar-search__clear"><i class="icon icon-clear"></i><span class="sr-only">' + Drupal.t('Clear search', {}, {context: 'events'}) + '</span></button>';
 
-    $('<div class="calendar-search">' + searchLabel + searchInput + searchButton + '</div>').insertAfter('.calendar-actions__close');
+    $('<div class="calendar-search">' + searchLabel + searchInput + searchButton + searchClearButton + '</div>').insertAfter('.calendar-actions__close');
+
+    // Make clear button visible if needed.
+    if (fullText.length) {
+      $('#full-text-clear-search').removeClass('hidden');
+    }
   }
 
   function _executeSearch () {
@@ -1049,11 +1055,20 @@ var evSearch = function ($) {
     evFilters.settings.eventFilters.full = str || '';
     evCalendar.updateState(true);
     evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+    $('#full-text-clear-search').removeClass('hidden');
+  }
+
+  function _clearSearch () {
+    $('#full-text-search-string').val('');
+    evFilters.settings.eventFilters.full = '';
+    evCalendar.updateState(true);
+    evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+    $('#full-text-clear-search').addClass('hidden');
   }
 
   function _handleSearch () {
-    var fullTextSearch = $('#full-text-search');
-    fullTextSearch.on('click', _executeSearch);
+    $('#full-text-search').on('click', _executeSearch);
+    $('#full-text-clear-search').on('click', _clearSearch);
     $('#full-text-search-string').keydown(function(e) {
       if (e.which == 13) {
         e.preventDefault();
