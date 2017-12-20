@@ -1049,7 +1049,8 @@ var evMiniCalendar = function ($) {
   }
 
   return {
-    init: _init
+    init: _init,
+    gotoDate: _gotoDate
   };
 
 }(jQuery);
@@ -1114,6 +1115,104 @@ var evSearch = function ($) {
 
 }(jQuery);
 
+/**
+ * DateRange
+ */
+var evDateRange = function ($) {
+  'use strict';
+
+  // Add options.
+  var optionsDateRange = {
+    'thisWeek': {
+      key: 'thisWeek',
+      start: '2017-12-18',
+      end: '2017-12-24',
+      label: Drupal.t('This week', {}, {context: 'events'})
+    },
+    'last30': {
+      key: 'last30',
+      start: '2017-11-18',
+      end: '2017-12-18',
+      label: Drupal.t('Last 30 days', {}, {context: 'events'})
+    }
+  };
+
+  function _buildFilter () {
+    var filter = $('<div class="calendar-filters--date-range processed block-views"></div>');
+    var filterContainer = $('<div class="calendar-actions__section" />');
+    var filterButton = $('<button type="button" class="calendar-filters__button">' + Drupal.t('Filter by date range', {}, {context: 'events'}) + '</button>');
+    var backButton = $('<button type="button" class="calendar-actions__btn">' + Drupal.t('Back', {}, {context: 'events'}) + '</button>');
+
+    var newLabel = $('<label for="filter-date-range">' + Drupal.t('Filter by date range', {}, {context: 'events'}) + '</label>');
+    var newSelect = $('<select class="chosen-enable" data-type="date-range" id="filter-date-range"></select>');
+    var emptyOption = $('<option value="">' + Drupal.t('- Any -', {}, {context: 'events'}) + '</option>');
+    newSelect.append(emptyOption);
+
+    for (var o in optionsDateRange) {
+      var option = optionsDateRange[o];
+      var newOption = $('<option value="daterange:' + option.key + '">' + option.label + '</option>');
+      newSelect.append(newOption);
+    }
+
+    filterContainer.append(backButton).append(newLabel).append(newSelect);
+    filter.append(filterButton).append(filterContainer);
+
+    var filtersWrapperInner = $('.calendar-filters__inner');
+    filtersWrapperInner.append(filter);
+
+    _registerChosenEvents(newSelect);
+  }
+
+  function _buildHTML () {
+    _buildFilter();
+  }
+
+  function _changeFilter (e) {
+    if (e.target.value) {
+      var data = e.target.value;
+      var parts = data.split(':');
+
+      var date = moment(optionsDateRange[parts[1]].start);
+
+      evMiniCalendar.gotoDate(date);
+
+      evCalendar.updateState(true);
+      evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
+    }
+  }
+
+  function _registerChosenEvents (newSelect) {
+    if (Drupal.behaviors && Drupal.behaviors.chosen) {
+      Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
+      newSelect.change(function(e) {
+        _changeFilter(e);
+        setTimeout(function () {
+          document.activeElement.blur();
+          newSelect.trigger('chosen:close');
+        },100);
+      }).on('chosen:close', function () {
+        newSelect.parent('.calendar-actions__section').removeClass('active');
+      });
+      newSelect.chosen();
+
+      var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
+      chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
+
+      // unbind touchstart event so can scroll filters on mobile without triggering them
+      newSelect.next('.chosen-container').off('touchstart.chosen');
+    }
+  }
+
+  function _init () {
+    _buildHTML();
+  }
+
+  return {
+    init: _init
+  };
+
+}(jQuery);
+
 /* Adds labels, names & ids to Chosen search inputs */
 function chosenA11y (select, name, label) {
   var input = select.next('.chosen-container').find('.chosen-search-input');
@@ -1136,6 +1235,7 @@ function chosenA11y (select, name, label) {
       evExports.init();
       evMiniCalendar.init();
       evSearch.init();
+      evDateRange.init();
 
       // Prevent the filters etc dropdowns closing when click on their contents
       $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder, .mini-cal .fc-button', function (e) {
