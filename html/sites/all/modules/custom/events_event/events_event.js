@@ -680,6 +680,24 @@ var evCalendar = function ($) {
     });
 
     $.extend(settings.$settings.views, {
+      'listRange': {
+        'type': 'list',
+        'buttonText': Drupal.t('List', {}, {context: 'events'}),
+        'visibleRange': function(currentDate) {
+          var range = evMiniCalendar.currentRange();
+          if (typeof range.start !== 'undefined') {
+            var end = moment(range.end).add(1, 'days');
+            return {
+              start: evMiniCalendar.currentRange().start,
+              end: end
+            };
+          }
+          return {
+            start: evMiniCalendar.currentRange().start,
+            end: evMiniCalendar.currentRange().end
+          };
+        }
+      },
       'upcoming': {
         'type': 'list',
         'buttonText': Drupal.t('Upcoming', {}, {context: 'events'}),
@@ -920,12 +938,28 @@ var evMiniCalendar = function ($) {
     return currentRange;
   }
 
-  function _gotoDate(date) {
+  function _gotoDate(date, end) {
     var fullCal = evCalendar.settings.$calendar;
     var miniCal = $('#mini-cal');
 
     var listView = miniCal.fullCalendar('getView');
     var view = listView.name;
+
+    if (typeof end !== 'undefined') {
+      currentRange.start = date.format('Y-MM-DD');
+      currentRange.end = end.format('Y-MM-DD');
+
+      // Update full calendar.
+      fullCal.fullCalendar('changeView', 'listRange', date);
+
+      // Update mini calendar.
+      miniCal.fullCalendar('gotoDate', date);
+
+      listView.unrenderDates();
+      listView.renderDates();
+
+      return;
+    }
 
     // Past events.
     if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
@@ -938,6 +972,8 @@ var evMiniCalendar = function ($) {
       else {
         fullCal.fullCalendar('gotoDate', date);
       }
+
+      miniCal.fullCalendar('gotoDate', date);
 
       listView.unrenderDates();
       listView.renderDates();
@@ -956,6 +992,8 @@ var evMiniCalendar = function ($) {
     currentRange.start = date.format('Y-MM-DD');
     date.add('6', 'days');
     currentRange.end = date.format('Y-MM-DD');
+
+    miniCal.fullCalendar('gotoDate', date);
 
     listView.unrenderDates();
     listView.renderDates();
@@ -1050,7 +1088,8 @@ var evMiniCalendar = function ($) {
 
   return {
     init: _init,
-    gotoDate: _gotoDate
+    gotoDate: _gotoDate,
+    currentRange: _getCurrentRange
   };
 
 }(jQuery);
@@ -1172,12 +1211,9 @@ var evDateRange = function ($) {
       var data = e.target.value;
       var parts = data.split(':');
 
-      var date = moment(optionsDateRange[parts[1]].start);
-
-      evMiniCalendar.gotoDate(date);
-
-      evCalendar.updateState(true);
-      evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
+      var start = moment(optionsDateRange[parts[1]].start);
+      var end = moment(optionsDateRange[parts[1]].end);
+      evMiniCalendar.gotoDate(start, end);
     }
   }
 
