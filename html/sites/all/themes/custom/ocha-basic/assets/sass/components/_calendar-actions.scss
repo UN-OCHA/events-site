@@ -321,6 +321,16 @@ input[type="text"].calendar-search__input {
   z-index: map-get($zindex, default);
 }
 
+.calendar-search__clear {
+  position: absolute;
+  top: 0;
+  right: $base-unit*4;
+  width: $base-unit*4;
+  height: 100%;
+  justify-content: center;
+  z-index: map-get($zindex, default);
+}
+
 @include media-query(md) {
 
   .block-views {
