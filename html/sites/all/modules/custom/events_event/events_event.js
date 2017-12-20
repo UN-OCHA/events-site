@@ -1064,7 +1064,7 @@ var evSearch = function ($) {
     var qsObj = evCalendar.parseQuery(window.location.search);
     var fullText = qsObj.hasOwnProperty('full') ? qsObj.full : '';
     var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
-    var searchInput = '<input type="text" name="full" class="calendar-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search', {}, {context: 'events'}) + '">';
+    var searchInput = '<input type="text" name="full" class="calendar-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search within these events', {}, {context: 'events'}) + '">';
     var searchButton = '<button id="full-text-search" class="btn-icon calendar-search__btn"><i class="icon icon-search"></i><span class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</span></button>';
     var searchClearButton = '<button id="full-text-clear-search" class="hidden btn-icon icon-cancel calendar-search__clear"><i class="icon icon-clear"></i><span class="sr-only">' + Drupal.t('Clear search', {}, {context: 'events'}) + '</span></button>';
 
