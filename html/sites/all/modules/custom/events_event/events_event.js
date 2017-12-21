@@ -1164,15 +1164,63 @@ var evDateRange = function ($) {
   var optionsDateRange = {
     'thisWeek': {
       key: 'thisWeek',
-      start: '2017-12-18',
-      end: '2017-12-24',
+      start: moment().utcOffset(0).startOf('isoWeek').format('Y-MM-DD'),
+      end: moment().utcOffset(0).endOf('isoWeek').format('Y-MM-DD'),
       label: Drupal.t('This week', {}, {context: 'events'})
+    },
+    'nextWeek': {
+      key: 'nextWeek',
+      start: moment().utcOffset(0).add(7, 'days').startOf('isoWeek').format('Y-MM-DD'),
+      end: moment().utcOffset(0).add(7, 'days').endOf('isoWeek').format('Y-MM-DD'),
+      label: Drupal.t('Next week', {}, {context: 'events'})
+    },
+    'prevWeek': {
+      key: 'prevWeek',
+      start: moment().utcOffset(0).subtract(7, 'days').startOf('isoWeek').format('Y-MM-DD'),
+      end: moment().utcOffset(0).subtract(7, 'days').endOf('isoWeek').format('Y-MM-DD'),
+      label: Drupal.t('Last week', {}, {context: 'events'})
+    },
+    'thisMonth': {
+      key: 'thisMonth',
+      start: moment().utcOffset(0).startOf('month').format('Y-MM-DD'),
+      end: moment().utcOffset(0).endOf('month').format('Y-MM-DD'),
+      label: Drupal.t('This month', {}, {context: 'events'})
+    },
+    'nextMonth': {
+      key: 'nextMonth',
+      start: moment().utcOffset(0).add(1, 'month').startOf('month').format('Y-MM-DD'),
+      end: moment().utcOffset(0).add(1, 'month').endOf('month').format('Y-MM-DD'),
+      label: Drupal.t('Next month', {}, {context: 'events'})
+    },
+    'prevMonth': {
+      key: 'prevMonth',
+      start: moment().utcOffset(0).subtract(1, 'month').startOf('month').format('Y-MM-DD'),
+      end: moment().utcOffset(0).subtract(1, 'month').endOf('month').format('Y-MM-DD'),
+      label: Drupal.t('Last month', {}, {context: 'events'})
     },
     'last30': {
       key: 'last30',
-      start: '2017-11-18',
-      end: '2017-12-18',
+      start: moment().utcOffset(0).subtract(30, 'days').format('Y-MM-DD'),
+      end: moment().utcOffset(0).format('Y-MM-DD'),
       label: Drupal.t('Last 30 days', {}, {context: 'events'})
+    },
+    'thisYear': {
+      key: 'thisYear',
+      start: moment().utcOffset(0).startOf('year').format('Y-MM-DD'),
+      end: moment().utcOffset(0).endOf('year').format('Y-MM-DD'),
+      label: Drupal.t('This year', {}, {context: 'events'})
+    },
+    'nextYear': {
+      key: 'nextYear',
+      start: moment().utcOffset(0).add(1, 'year').startOf('year').format('Y-MM-DD'),
+      end: moment().utcOffset(0).add(1, 'year').endOf('year').format('Y-MM-DD'),
+      label: Drupal.t('Next year', {}, {context: 'events'})
+    },
+    'prevYear': {
+      key: 'prevYear',
+      start: moment().utcOffset(0).subtract(1, 'year').startOf('year').format('Y-MM-DD'),
+      end: moment().utcOffset(0).subtract(1, 'year').endOf('year').format('Y-MM-DD'),
+      label: Drupal.t('Last year', {}, {context: 'events'})
     }
   };
 
@@ -1214,6 +1262,10 @@ var evDateRange = function ($) {
       var start = moment(optionsDateRange[parts[1]].start);
       var end = moment(optionsDateRange[parts[1]].end);
       evMiniCalendar.gotoDate(start, end);
+
+      // Update state.
+      evCalendar.settings.state.range = parts[1];
+      evCalendar.updateState(true);
     }
   }
 
@@ -1241,6 +1293,21 @@ var evDateRange = function ($) {
 
   function _init () {
     _buildHTML();
+
+    // Check URL parameters.
+    var qsObj = evCalendar.parseQuery(window.location.search);
+    if (qsObj.hasOwnProperty('view')) {
+      if (qsObj.view === 'listRange') {
+        var start = moment(optionsDateRange['thisWeek'].start);
+        var end = moment(optionsDateRange['thisWeek'].end);
+
+        if (qsObj.hasOwnProperty('range')) {
+          var start = moment(optionsDateRange[qsObj.range].start);
+          var end = moment(optionsDateRange[qsObj.range].end);
+        }
+        evMiniCalendar.gotoDate(start, end);
+      }
+    }
   }
 
   return {
