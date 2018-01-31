@@ -776,6 +776,17 @@ var evCalendar = function ($) {
 
     $.extend(settings.state, currentFilters);
     var path = '?';
+
+    // Only remove own query parameters.
+    for (var p in qsObj) {
+      if (Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters.hasOwnProperty(p)) {
+        delete qsObj[p];
+      }
+      else {
+        path += p + '=' + qsObj[p] + '&';
+      }
+    }
+
     for (var f in settings.state) {
       if (settings.state.hasOwnProperty(f) && typeof settings.state[f] !== 'undefined' && settings.state[f] !== '') {
         path += f + '=' + settings.state[f] + '&';
@@ -1266,6 +1277,9 @@ var evDateRange = function ($) {
       // Update state.
       evCalendar.settings.state.range = parts[1];
       evCalendar.updateState(true);
+
+      // Update filters.
+      evFilters.updateFilterSelects();
     }
   }
 
@@ -1304,8 +1318,18 @@ var evDateRange = function ($) {
         if (qsObj.hasOwnProperty('range')) {
           var start = moment(optionsDateRange[qsObj.range].start);
           var end = moment(optionsDateRange[qsObj.range].end);
+
+          // Update dropdown.
+          $('#filter-date-range')
+            .val('daterange:' + qsObj.range)
+            trigger('chosen:updated');
         }
+
+        // Update mini calendar.
         evMiniCalendar.gotoDate(start, end);
+
+        // Update filters.
+        evFilters.updateFilterSelects();
       }
     }
   }
