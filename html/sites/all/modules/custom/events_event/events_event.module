@@ -405,7 +405,7 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
       }
 
       // Sort array.
-      asort($facets[$term_fields[$key]['short_key']]['values']);
+      asort($facets[$term_fields[$key]['short_key']]['values'], SORT_NATURAL | SORT_FLAG_CASE);
     }
   }
 
