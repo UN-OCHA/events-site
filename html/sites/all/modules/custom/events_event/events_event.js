@@ -1320,8 +1320,9 @@ var evDateRange = function ($) {
           var end = moment(optionsDateRange[qsObj.range].end);
 
           // Update dropdown.
-          $('#filter-date-range').val('daterange:' + qsObj.range);
-          console.log('daterange:' + qsObj.range);
+          $('#filter-date-range')
+            .val('daterange:' + qsObj.range)
+            trigger('chosen:updated');
         }
 
         // Update mini calendar.
