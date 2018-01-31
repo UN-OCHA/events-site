@@ -1266,6 +1266,9 @@ var evDateRange = function ($) {
       // Update state.
       evCalendar.settings.state.range = parts[1];
       evCalendar.updateState(true);
+
+      // Update filters.
+      evFilters.updateFilterSelects();
     }
   }
 
