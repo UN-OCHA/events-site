@@ -88,27 +88,27 @@ function events_event_default_search_api_index() {
           "weight" : "-10",
           "settings" : { "default" : "1", "bundles" : [] }
         },
-        "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
+        "search_api_alter_add_hierarchy" : {
+          "status" : 1,
+          "weight" : "0",
+          "settings" : { "fields" : { "field_event_location:parent" : "field_event_location:parent" } }
+        },
         "search_api_alter_language_control" : {
           "status" : 0,
           "weight" : "0",
           "settings" : { "lang_field" : "", "languages" : [] }
         },
-        "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
-        "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_add_hierarchy" : {
-          "status" : 1,
-          "weight" : "0",
-          "settings" : { "fields" : { "field_event_location:parent" : "field_event_location:parent" } }
-        }
+        "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] }
       },
       "processors" : {
         "search_api_case_ignore" : {
           "status" : 1,
           "weight" : "0",
-          "settings" : { "fields" : { "title" : true } }
+          "settings" : { "fields" : { "title" : true, "field_event_info:value" : true } }
         },
         "search_api_html_filter" : {
           "status" : 0,
@@ -125,8 +125,9 @@ function events_event_default_search_api_index() {
           "weight" : "15",
           "settings" : { "fields" : {
               "title" : true,
+              "field_event_cluster" : true,
               "field_event_organization" : true,
-              "field_event_cluster" : true
+              "field_event_info:value" : true
             }
           }
         },
