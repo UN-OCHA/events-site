@@ -764,34 +764,45 @@ var evCalendar = function ($) {
   function _updateState(isFiltering) {
     var currentFilters = evFilters.settings.eventFilters ? evFilters.settings.eventFilters : {};
 
-    if (!isFiltering) {
-      var qsObj = _parseQuery(window.location.search);
-      for (var p in Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters) {
-        if (qsObj.hasOwnProperty(p)) {
-          currentFilters[p] = qsObj[p];
-        }
+    var qsObj = _parseQuery(window.location.search);
+    for (var p in Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters) {
+      if (qsObj.hasOwnProperty(p)) {
+        currentFilters[p] = qsObj[p];
       }
-      evFilters.update(currentFilters);
     }
 
-    $.extend(settings.state, currentFilters);
+    if (!isFiltering) {
+      evFilters.update(currentFilters);
+      $.extend(settings.state, currentFilters);
+    }
+
+    // Clear path.
     var path = '?';
 
     // Only remove own query parameters.
-    for (var p in qsObj) {
+    for (var p in currentFilters) {
       if (Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters.hasOwnProperty(p)) {
         delete qsObj[p];
       }
-      else {
-        path += p + '=' + qsObj[p] + '&';
+    }
+
+    // Update qsObj.
+    for (var f in settings.state) {
+      if (settings.state.hasOwnProperty(f) && typeof settings.state[f] !== 'undefined') {
+        if (settings.state[f] !== '') {
+          qsObj[f] = settings.state[f];
+        }
+        else {
+          delete qsObj[f];
+        }
       }
     }
 
-    for (var f in settings.state) {
-      if (settings.state.hasOwnProperty(f) && typeof settings.state[f] !== 'undefined' && settings.state[f] !== '') {
-        path += f + '=' + settings.state[f] + '&';
-      }
+    // Build path.
+    for (var p in qsObj) {
+      path += p + '=' + qsObj[p] + '&';
     }
+
     if (history.replaceState) {
       history.replaceState(settings.state, '', path);
     }
@@ -1010,6 +1021,23 @@ var evMiniCalendar = function ($) {
     listView.renderDates();
   }
 
+  function _clearDropDownFilter() {
+    // Update state.
+    evCalendar.settings.state.range = '';
+    evCalendar.updateState(true);
+
+    // Update filters.
+    $('#filter-date-range')
+      .val('daterange')
+      .trigger('chosen:updated');
+
+    evFilters.update({
+      'range': ''
+    })
+
+    evFilters.updateFilterSelects();
+  }
+
   function _init () {
     var fullCal = evCalendar.settings.$calendar;
     var qsObj = evCalendar.parseQuery(window.location.search);
@@ -1053,6 +1081,7 @@ var evMiniCalendar = function ($) {
       },
 
       dayClick: function(date, jsEvent, view) {
+        _clearDropDownFilter();
         _gotoDate(date);
       }
     });
@@ -1072,6 +1101,7 @@ var evMiniCalendar = function ($) {
       .attr('disabled', false)
       .click(function () {
         var date = moment();
+        _clearDropDownFilter();
         _gotoDate(date);
       });
 
@@ -1083,6 +1113,7 @@ var evMiniCalendar = function ($) {
             date = moment();
           }
         }
+        _clearDropDownFilter();
         _gotoDate(date);
       });
       miniCal.find('.fc-next-button').click(function () {
@@ -1093,6 +1124,7 @@ var evMiniCalendar = function ($) {
             date = moment();
           }
         }
+        _clearDropDownFilter();
         _gotoDate(date);
       });
   }
@@ -1243,7 +1275,7 @@ var evDateRange = function ($) {
 
     var newLabel = $('<label for="filter-date-range">' + Drupal.t('Filter by date range', {}, {context: 'events'}) + '</label>');
     var newSelect = $('<select class="chosen-enable" data-type="date-range" id="filter-date-range"></select>');
-    var emptyOption = $('<option value="">' + Drupal.t('- Any -', {}, {context: 'events'}) + '</option>');
+    var emptyOption = $('<option value="daterange">' + Drupal.t('- Any -', {}, {context: 'events'}) + '</option>');
     newSelect.append(emptyOption);
 
     for (var o in optionsDateRange) {
@@ -1322,7 +1354,7 @@ var evDateRange = function ($) {
           // Update dropdown.
           $('#filter-date-range')
             .val('daterange:' + qsObj.range)
-            trigger('chosen:updated');
+            .trigger('chosen:updated');
         }
 
         // Update mini calendar.
