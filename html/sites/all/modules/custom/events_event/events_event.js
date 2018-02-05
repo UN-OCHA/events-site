@@ -473,7 +473,7 @@ var evFilters = function ($) {
   }
 
   function _update (filters) {
-    settings.eventFilters = $.extend({}, filters);
+    settings.eventFilters = filters;
   }
 
   function _updateCurrentFilters () {
@@ -765,17 +765,18 @@ var evCalendar = function ($) {
     var currentFilters = evFilters.settings.eventFilters ? evFilters.settings.eventFilters : {};
 
     var qsObj = _parseQuery(window.location.search);
-    for (var p in Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters) {
-      if (qsObj.hasOwnProperty(p)) {
-        currentFilters[p] = qsObj[p];
-      }
-    }
 
     if (!isFiltering) {
+      for (var p in Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters) {
+        if (qsObj.hasOwnProperty(p)) {
+          currentFilters[p] = qsObj[p];
+        }
+      }
       evFilters.update(currentFilters);
-      $.extend(settings.state, currentFilters);
     }
 
+    // Extend state wirh current filters.
+    $.extend(settings.state, currentFilters);
     // Clear path.
     var path = '?';
 

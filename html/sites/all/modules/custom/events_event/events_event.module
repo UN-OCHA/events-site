@@ -330,8 +330,13 @@ function events_event_fetch_events_from_search_api($start = NULL, $end = NULL, $
   }
 
   foreach ($filters as $key => $filter_info) {
-    if (isset($filter_info['value']) && !empty($filter_info['value'])) {
-      $filter->condition($key, $filter_info['value']);
+    if (isset($filter_info['value'])) {
+      if (!empty($filter_info['value'])) {
+        $filter->condition($key, $filter_info['value']);
+      }
+      elseif ($filter_info['value'] === FALSE) {
+        $filter->condition($key, NULL);
+      }
     }
   }
 
