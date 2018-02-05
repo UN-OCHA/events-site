@@ -50,7 +50,7 @@ function event_to_hrinfo_fetch_events() {
 
   $events = array();
 
-  // Load stored event data.
+  // Load event data.
   if (!empty($nids)) {
     $event_nodes = node_load_multiple(array_keys($nids));
     foreach ($event_nodes as $event_node) {
@@ -61,6 +61,9 @@ function event_to_hrinfo_fetch_events() {
   events_event_json_output($events);
 }
 
+/**
+ * Build data structure.
+ */
 function event_to_hrinfo_build_data($event) {
   $e = entity_metadata_wrapper('node', $event);
 
