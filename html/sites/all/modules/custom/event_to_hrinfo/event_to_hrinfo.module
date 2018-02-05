@@ -1,0 +1,115 @@
+<?php
+/**
+ * @file
+ * Code for the Event to HRInfo.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function event_to_hrinfo_menu() {
+  $items['events-to-hrinfo'] = array(
+    'title' => 'API for events to HRInfo',
+    'page callback' => 'event_to_hrinfo_fetch_events',
+    'page arguments' => array(),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Fetch events for HRInfo.
+ */
+function event_to_hrinfo_fetch_events() {
+  // Fixed date range.
+  $start = strtotime('2017-07-01');
+  $end = strtotime('now');
+
+  // Round to midnight.
+  $start = $start - (60 * 60 * 24) - ($start % 86400);
+  $end = $end + (60 * 60 * 24) - ($end % 86400);
+
+  // Limit to Ethiopia.
+  $ethiopia = events_config_get_location_term('Ethiopia');
+  $query_filters = array(
+    'field_event_location' => array('value' => $ethiopia->tid),
+    'field_event_source' => array('value' => FALSE),
+  );
+
+  // Handle language links.
+  $lang_code = 'en';
+  $languages = language_list();
+
+  $timezone = drupal_get_user_timezone();
+  $fulltext = '';
+
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, $fulltext);
+  $nids = array_flip($data['nids']);
+
+  $events = array();
+
+  // Load stored event data.
+  if (!empty($nids)) {
+    $event_nodes = node_load_multiple(array_keys($nids));
+    foreach ($event_nodes as $event_node) {
+      $events[] = event_to_hrinfo_build_data($event_node);
+    }
+  }
+
+  events_event_json_output($events);
+}
+
+function event_to_hrinfo_build_data($event) {
+  $e = entity_metadata_wrapper('node', $event);
+
+  $author = array(
+    'name' => isset($e->author->value()->realname) ? $e->author->value()->realname : $e->author->name->value(),
+    'email' => $e->author->mail->value(),
+    'timezone' => $e->author->value()->timezone,
+    'init' => $e->author->value()->init,
+    'language' => $e->author->language->value(),
+  );
+
+  $row = array(
+    'nid' => $e->getIdentifier(),
+    'title' => $e->title->value(),
+    'created' => $e->created->value(),
+    'changed' => $e->changed->value(),
+    'category' => $e->field_event_category->getIdentifier() ? $e->field_event_category->name->value() : '',
+    'date' => $e->field_event_date[0]->value(),
+    'location' => $e->field_event_location->getIdentifier() ? $e->field_event_location->name->value() : '',
+    'location_id' => $e->field_event_location->getIdentifier() ? $e->field_event_location->getIdentifier() : NULL,
+    'location_details' => $e->field_event_location_details->value(),
+    'description' => $e->field_event_info->raw(),
+    'url' => url('node/' . $e->getIdentifier(), array('absolute' => TRUE)),
+    'country' => '',
+  );
+
+  foreach ($e->field_event_theme as $theme) {
+    $row['themes'][] = $theme->name->value();
+  }
+
+  foreach ($e->field_event_disasters as $disaster) {
+    if ($disaster->value() && isset($disaster->title)) {
+      $row['disasters'][] = $disaster->title->value();
+    }
+  }
+
+  foreach ($e->field_event_organization as $organization) {
+    $row['organizations'][] = $organization->name->value();
+  }
+
+  $row['coordination_hubs'][] = $e->field_event_coordination_hub->value();
+
+  foreach ($e->field_event_cluster as $bundle) {
+    if ($bundle->value() && isset($bundle->name)) {
+      $row['bundles'][] = $bundle->name->value();
+    }
+  }
+
+  $row['author'] = $author;
+
+  return $row;
+}
