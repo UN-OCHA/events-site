@@ -58,3 +58,10 @@ function events_config_update_7007() {
     'audit_log_hybridauth',
   ));
 }
+
+/**
+ * Enable event to HRInfo.
+ */
+function events_config_update_7008() {
+  module_enable(array('event_to_hrinfo'));
+}
