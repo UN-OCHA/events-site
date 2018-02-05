@@ -17,6 +17,7 @@ function events_config_default_environment_indicator_environment() {
   $environment->name = 'Default environment';
   $environment->regexurl = '.*';
   $environment->settings = array(
+    'weight' => 10,
     'color' => '#000000',
     'text_color' => '#ffffff',
     'weight' => 99,
@@ -32,6 +33,7 @@ function events_config_default_environment_indicator_environment() {
   $environment->name = 'Local';
   $environment->regexurl = '.*local.*';
   $environment->settings = array(
+    'weight' => 10,
     'color' => '#009933',
     'text_color' => '#ffffff',
     'weight' => 10,
@@ -47,6 +49,7 @@ function events_config_default_environment_indicator_environment() {
   $environment->name = 'Staging';
   $environment->regexurl = '.*staging.*';
   $environment->settings = array(
+    'weight' => 10,
     'color' => '#cb00cd',
     'text_color' => '#ffffff',
     'weight' => 50,
