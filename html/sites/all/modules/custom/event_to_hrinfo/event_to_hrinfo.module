@@ -38,10 +38,6 @@ function event_to_hrinfo_fetch_events() {
     'field_event_source' => array('value' => FALSE),
   );
 
-  // Handle language links.
-  $lang_code = 'en';
-  $languages = language_list();
-
   $timezone = drupal_get_user_timezone();
   $fulltext = '';
 
@@ -59,6 +55,37 @@ function event_to_hrinfo_fetch_events() {
   }
 
   events_event_json_output($events);
+}
+
+/**
+ * Delete the events for HRInfo.
+ */
+function event_to_hrinfo_delete_events() {
+  // Fixed date range.
+  $start = strtotime('2017-07-01');
+  $end = strtotime('now');
+
+  // Round to midnight.
+  $start = $start - (60 * 60 * 24) - ($start % 86400);
+  $end = $end + (60 * 60 * 24) - ($end % 86400);
+
+  // Limit to Ethiopia.
+  $ethiopia = events_config_get_location_term('Ethiopia');
+  $query_filters = array(
+    'field_event_location' => array('value' => $ethiopia->tid),
+    'field_event_source' => array('value' => FALSE),
+  );
+
+  $timezone = drupal_get_user_timezone();
+  $fulltext = '';
+
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, $fulltext);
+  $nids = array_flip($data['nids']);
+
+  // Load event data.
+  if (!empty($nids)) {
+    node_delete_multiple(array_keys($nids));
+  }
 }
 
 /**
