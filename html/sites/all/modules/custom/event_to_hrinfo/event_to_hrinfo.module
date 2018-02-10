@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the Event to HRInfo.
@@ -12,7 +13,7 @@ function event_to_hrinfo_menu() {
     'title' => 'API for events to HRInfo',
     'page callback' => 'event_to_hrinfo_fetch_events',
     'page arguments' => array(),
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
@@ -38,10 +39,7 @@ function event_to_hrinfo_fetch_events() {
     'field_event_source' => array('value' => FALSE),
   );
 
-  $timezone = drupal_get_user_timezone();
-  $fulltext = '';
-
-  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, $fulltext);
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, '');
   $nids = array_flip($data['nids']);
 
   $events = array();
@@ -76,10 +74,7 @@ function event_to_hrinfo_delete_events() {
     'field_event_source' => array('value' => FALSE),
   );
 
-  $timezone = drupal_get_user_timezone();
-  $fulltext = '';
-
-  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, $fulltext);
+  $data = events_event_fetch_events_from_search_api($start, $end, $query_filters, FALSE, '');
   $nids = array_flip($data['nids']);
 
   // Load event data.

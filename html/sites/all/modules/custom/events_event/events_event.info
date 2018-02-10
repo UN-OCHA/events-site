@@ -2,7 +2,6 @@ name = Event
 description = Event
 core = 7.x
 package = Events
-version = 7.x-1.0
 dependencies[] = chosen
 dependencies[] = color_field
 dependencies[] = date

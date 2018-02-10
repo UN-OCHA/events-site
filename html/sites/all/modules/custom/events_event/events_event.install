@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the Event feature.
@@ -250,7 +251,7 @@ function events_event_update_7009() {
     $nids = array_keys($result['node']);
     $events = node_load_multiple($nids);
     foreach ($events as $event) {
-      $event->field_event_external_id['und'][0]['value'] = 'hrinfo-' . $event->field_event_hrinfo_nid['und'][0]['value'];
+      $event->field_event_external_id[LANGUAGE_NONE][0]['value'] = 'hrinfo-' . $event->field_event_hrinfo_nid[LANGUAGE_NONE][0]['value'];
       $event->do_not_send_email = TRUE;
       node_save($event);
     }
