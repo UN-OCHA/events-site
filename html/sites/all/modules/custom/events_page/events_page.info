@@ -2,7 +2,6 @@ name = Events page
 description = Events page
 core = 7.x
 package = Events
-version = 7.x-1.0
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = menu

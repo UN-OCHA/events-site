@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for Events migration.
@@ -112,7 +113,7 @@ function ev_migrate_menu() {
     'title' => 'Redirect from HR Info',
     'page callback' => 'ev_migrate_redirect_from_hrinfo',
     'page arguments' => array(1),
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
