@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the Event feature.
@@ -24,89 +25,89 @@ function events_event_menu() {
     'title' => 'Select location',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('events_event_select_location_form'),
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['calendar'] = array(
     'title' => 'Calendar',
     'page callback' => 'events_event_calendar',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/fetch-events'] = array(
     'title' => 'Fetch events',
     'page callback' => 'events_event_fetch_events',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/organisations'] = array(
     'title' => 'Fetch organisations',
     'page callback' => 'events_event_fetch_organisations',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/clusters'] = array(
     'title' => 'Fetch clusters',
     'page callback' => 'events_event_fetch_clusters',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/locations'] = array(
     'title' => 'Fetch locations',
     'page callback' => 'events_event_fetch_locations',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/countries'] = array(
     'title' => 'Fetch countries',
     'page callback' => 'events_event_fetch_countries',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/disasters'] = array(
     'title' => 'Fetch disasters',
     'page callback' => 'events_event_fetch_disasters',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/themes'] = array(
     'title' => 'Fetch themes',
     'page callback' => 'events_event_fetch_themes',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
   $items['api/v0/categories'] = array(
     'title' => 'Fetch categories',
     'page callback' => 'events_event_fetch_categories',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['api/v0/timezones'] = array(
     'title' => 'Fetch time zones',
     'page callback' => 'events_event_fetch_timezones',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
   $items['api/v0/facets'] = array(
     'title' => 'Fetch facets',
     'page callback' => 'events_event_fetch_facets',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
   $items['api/v0/documents'] = array(
     'title' => 'Fetch documents',
     'page callback' => 'events_event_fetch_documents',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
   $items['ical'] = array(
     'title' => 'Ical',
     'page callback' => 'events_event_to_ical',
-    'access callback' => TRUE,
+    'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
 
@@ -470,10 +471,10 @@ function events_event_fetch_events() {
   $timers['storedevents'] = microtime(TRUE);
   if (!empty($nids)) {
     $result = db_select('events_event_data', 'e')
-        ->fields('e', array('nid', 'data'))
-        ->condition('nid', array_keys($nids), 'IN')
-        ->execute()
-        ->fetchAllKeyed(0, 1);
+      ->fields('e', array('nid', 'data'))
+      ->condition('nid', array_keys($nids), 'IN')
+      ->execute()
+      ->fetchAllKeyed(0, 1);
 
     foreach ($result as $nid => $events_data) {
       unset($nids[$nid]);
@@ -662,14 +663,15 @@ function events_event_to_ical() {
   $nids = array_flip($data['nids']);
 
   $events = array();
+  $timezone = isset($_GET['timezone']) ? $_GET['timezone'] : drupal_get_user_timezone();
 
   // Load stored event data.
   if (!empty($nids)) {
     $result = db_select('events_event_data', 'e')
-        ->fields('e', array('nid', 'data'))
-        ->condition('nid', array_keys($nids), 'IN')
-        ->execute()
-        ->fetchAllKeyed(0, 1);
+      ->fields('e', array('nid', 'data'))
+      ->condition('nid', array_keys($nids), 'IN')
+      ->execute()
+      ->fetchAllKeyed(0, 1);
 
     foreach ($result as $nid => $events_data) {
       unset($nids[$nid]);
@@ -686,7 +688,7 @@ function events_event_to_ical() {
     }
   }
 
-  $library = libraries_load('iCalcreator');
+  libraries_load('iCalcreator');
   $config = array('unique_id' => 'Date iCal');
   $vcalendar = new vcalendar($config);
   $vcalendar->setMethod('PUBLISH');
@@ -1362,7 +1364,7 @@ function events_event_get_event_locations($node) {
 function events_event_get_event_color($node) {
   $term_field_name = 'field_event_category';
   if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
-    foreach ($terms_for_entity as $delta => $item) {
+    foreach ($terms_for_entity as $item) {
       $term_for_entity = taxonomy_term_load($item['tid']);
       if ($term_for_entity) {
         if (isset($term_for_entity->field_ev_legend_color[LANGUAGE_NONE][0]['rgb'])) {
@@ -1631,7 +1633,9 @@ function _events_event_ev_source_info($node, $view_mode, $langcode) {
 function _events_event_ev_display_date_time($node, $view_mode, $langcode, $current_date = '') {
   $local = _events_event_ev_local_time($node, $view_mode, $langcode, $current_date);
   $user = _events_event_ev_user_time($node, $view_mode, $langcode, $current_date);
+  // @codingStandardsIgnoreLine 
   $local_html = '<p><strong>' . t('Local time', array(), array('context' => 'events')) . ':</strong><br>' . $local . '</p>';
+  // @codingStandardsIgnoreLine
   $user_html = '<p><strong>' . t('Your time', array(), array('context' => 'events')) . ':</strong><br>' . $user . '</p>';
 
   return array(
@@ -1894,7 +1898,6 @@ function events_event_field_widget_form_alter(&$element, &$form_state, $context)
 
     foreach ($element['#options'] as $tid => &$option) {
       if (is_numeric($tid)) {
-        $option_label = array();
         if (isset($terms[$tid]->field_long_name[LANGUAGE_NONE][0]['value'])) {
           $option = $terms[$tid]->field_long_name[LANGUAGE_NONE][0]['value'];
         }
