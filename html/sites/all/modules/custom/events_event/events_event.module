@@ -1811,9 +1811,11 @@ function events_event_json_output($data, $timers = array()) {
 
   // Display API timers.
   if (variable_get('events_event_display_api_timers', FALSE)) {
+    $server_timers = array();
     foreach ($timers as $timer_key => $timer_value) {
-      drupal_add_http_header('X-Timer-' . $timer_key, 1000 * $timer_value);
+      $server_timers[] = $timer_key . '=' . 1000 * $timer_value;
     }
+    drupal_add_http_header('Server-Timing', implode(',', $server_timers));
   }
 
   drupal_json_output($data);
