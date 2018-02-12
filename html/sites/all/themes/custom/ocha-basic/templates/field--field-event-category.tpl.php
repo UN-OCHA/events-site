@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Template for event category field.
@@ -47,8 +48,8 @@
   <div class="field-items"<?php print $content_attributes; ?>>
     <?php foreach ($items as $delta => $item): ?>
       <div class="field-item"<?php print $item_attributes[$delta]; ?>>
-      	<i class="icon-calendar category-<?php print strtolower(render($item)); ?>"></i>
-      	<?php print render($item); ?>
+        <i class="icon-calendar category-<?php print strtolower(render($item)); ?>"></i>
+        <?php print render($item); ?>
       </div>
     <?php endforeach; ?>
   </div>
