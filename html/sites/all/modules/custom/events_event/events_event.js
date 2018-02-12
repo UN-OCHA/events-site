@@ -4,7 +4,7 @@
  */
 
 /**
- * Exports
+ * Exports.
  */
 var evExports = function ($) {
   'use strict';
@@ -13,7 +13,7 @@ var evExports = function ($) {
     icalLabel: 'ICAL'
   };
 
-  function _buildOption (text, fn) {
+  function _buildOption(text, fn) {
     var listItem = $('<li />');
     var button = $('<button type="button">' + Drupal.t(text, {}, {context: 'events'}) + '</button>');
     button.on('click', fn);
@@ -49,7 +49,7 @@ var evExports = function ($) {
     return listItem;
   }
 
-  function _init () {
+  function _init() {
     settings.exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
     var exportButton = $('<button type="button" id="export-dropdown" class="calendar-export__button calendar-actions__toggle">' + Drupal.t('Export', {}, {context: 'events'}) + '</button>');
     exportButton.attr('data-toggle', 'dropdown');
@@ -64,7 +64,7 @@ var evExports = function ($) {
     evCalendar.settings.exportContainer.append(exportButton).append(settings.exportOptionsList);
   }
 
-  function _update () {
+  function _update() {
     if (settings.icalBtn) {
       if (evCalendar.settings.state.view === 'past') {
         settings.icalBtn.text(settings.icalLabel + ' *');
@@ -76,18 +76,18 @@ var evExports = function ($) {
     }
   }
 
-  function _resetICAL () {
+  function _resetICAL() {
     settings.exportOptionsList.removeClass('show-ical');
   }
 
-  function _exportICAL () {
+  function _exportICAL() {
     var url = window.location.protocol + '//' + window.location.hostname + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
     settings.exportOptionsList.toggleClass('show-ical');
     settings.icalLink.text(url).attr('href', url);
   }
 
-  function _exportPDF () {
+  function _exportPDF() {
     var calendar = $('.fc-view-container').clone();
     var table = _formatPdfEvents(calendar);
     var filters = evFilters.getCurrentFilters();
@@ -150,17 +150,18 @@ var evExports = function ($) {
     doc.save(fileName + fileNameHeading + '.pdf');
   }
 
-  function _formatPdfEvents (calendar) {
+  function _formatPdfEvents(calendar) {
     var events = [];
     var eventsLength = 0;
     var eventsType;
     var displayEvents = [];
-    var eventsList = calendar.find('.fc-list-table'); //list view (upcoming/past events)
+    // List view (upcoming/past events).
+    var eventsList = calendar.find('.fc-list-table');
     events = eventsList.length ? eventsList.find('.fc-list-item') : calendar.find('.fc-event-container').not('.fc-helper-container').find('.fc-event');
     eventsLength = events.length;
     eventsType = eventsList.length ? 'list' : 'calendar';
 
-    //sort calendar events by date (because the dom for the calendar isnt in order)
+    // Sort calendar events by date.
     if (!eventsList.length) {
       events.sort(function (a,b) {
         return moment($(a).data('start')) - moment($(b).data('start'));
@@ -170,7 +171,7 @@ var evExports = function ($) {
     var timeSelector = eventsType === 'list' ? '.fc-list-item-time' : '.fc-time';
     var titleSelector = eventsType === 'list' ? '.fc-list-item-title a' : '.fc-title';
 
-    for (var i=0; i < eventsLength; i++) {
+    for (var i = 0; i < eventsLength; i++) {
       var event = events[i];
       var start = moment($(event).data('start'));
       var startDate = start.format('DD MMMM YYYY');
@@ -221,7 +222,7 @@ var evExports = function ($) {
     };
   }
 
-  function _getPdfFooter (data, doc) {
+  function _getPdfFooter(data, doc) {
     var createdAt = Drupal.t('Created', {}, {context: 'events'}) + ': ' + moment().format('DD MMM YYYY');
     var poweredBy = Drupal.t('Powered by Humanitarian Events. https://events.rwlabs.org', {}, {context: 'events'});
     doc.setFontSize(8);
@@ -238,7 +239,7 @@ var evExports = function ($) {
 }(jQuery);
 
 /**
- * Filters
+ * Filters.
  */
 var evFilters = function ($) {
   'use strict';
@@ -246,9 +247,10 @@ var evFilters = function ($) {
   var settings = {
   };
 
-  function _addFilterLegend (select, chosen, categories) {
+  function _addFilterLegend(select, chosen, categories) {
     var type = 'cat';
-    if (select.find('option:first-child').val() !== type) { // Only add legends to category filter
+    // Only add legends to category filter.
+    if (select.find('option:first-child').val() !== type) {
       return;
     }
     var options = $(chosen.search_results).find('li');
@@ -265,7 +267,7 @@ var evFilters = function ($) {
     }
   }
 
-  function _buildFilter (f, filterCount, facet) {
+  function _buildFilter(f, filterCount, facet) {
     var filter = $('<div class="calendar-filters--' + f + ' processed block-views"></div>');
     var filterContainer = $('<div class="calendar-actions__section" />');
     var filterButton = $('<button type="button" class="calendar-filters__button">' + facet.label + '</button>');
@@ -289,7 +291,7 @@ var evFilters = function ($) {
     }
 
     // Sort by label.
-    flipped.sort(function(a, b) {
+    flipped.sort(function (a, b) {
       return a.label.localeCompare(b.label);
     });
 
@@ -316,7 +318,7 @@ var evFilters = function ($) {
 
   }
 
-  function _buildAllFilters (facets) {
+  function _buildAllFilters(facets) {
     var filterCount = 0;
 
     for (var f in facets) {
@@ -333,23 +335,23 @@ var evFilters = function ($) {
     }
   }
 
-  function openFilter (e) {
+  function openFilter(e) {
     var section = $(e.target).next('.calendar-actions__section');
     section.addClass('active')
       .find('.chosen-container')
       .mousedown();
   }
 
-  function _buildHTML () {
+  function _buildHTML() {
     settings.filtersWrapperInner = $('<div class="calendar-filters__inner dropdown-menu clearfix"></div>');
     var currentFiltersWrapper = $('<div class="calendar-filters__current hidden"></div>');
-    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Add Filters', {}, {context: 'events'})+ '</button>';
+    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Add Filters', {}, {context: 'events'}) + '</button>';
     var clearBtn = '<button type="button" class="calendar-filters__clear btn-icon"><i class="icon-cancel"></i>Clear filters</button>';
     evCalendar.settings.filtersContainer.append(filtersHeading).append(settings.filtersWrapperInner).append(currentFiltersWrapper);
     currentFiltersWrapper.append('<p />').append(clearBtn);
   }
 
-  function _changeFilter (e) {
+  function _changeFilter(e) {
     _updateCurrentFilters();
 
     if (e.target.value) {
@@ -366,7 +368,7 @@ var evFilters = function ($) {
     }
   }
 
-  function _clearFilters () {
+  function _clearFilters() {
     for (var f in settings.defaultFilters) {
       settings.defaultFilters[f] = '';
     }
@@ -377,7 +379,7 @@ var evFilters = function ($) {
     evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
   }
 
-  function _getCurrentFilters () {
+  function _getCurrentFilters() {
     var filters = $('.calendar-filters').find('.block-views');
     var filtersLength = filters.length;
     var selectedFilters = [];
@@ -400,7 +402,7 @@ var evFilters = function ($) {
 
     for (var j = 0; j < selectedFiltersLength; j++) {
       str += selectedFilters[j].value;
-      if (j+1 < selectedFiltersLength) {
+      if (j + 1 < selectedFiltersLength) {
         str += ', ';
       }
     }
@@ -408,7 +410,7 @@ var evFilters = function ($) {
     return str;
   }
 
-  function _getFacetsUrl () {
+  function _getFacetsUrl() {
     var facetURL = '/api/v0/facets?';
     var forcedFilters = Drupal.settings.fullcalendar_api.calendarSettings.events.data;
     for (var f in forcedFilters) {
@@ -419,7 +421,7 @@ var evFilters = function ($) {
     return facetURL;
   }
 
-  function _getLegendColor (id, categories) {
+  function _getLegendColor(id, categories) {
     var categoriesLength = categories.length;
     var i = 0;
     var color;
@@ -431,12 +433,12 @@ var evFilters = function ($) {
     return color;
   }
 
-  function _init () {
+  function _init() {
     settings.defaultFilters = Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters;
     settings.eventFilters = Drupal.settings.fullcalendar_api.calendarSettings.availableFilters;
     _buildHTML();
     var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
-    $.getJSON(baseUrl + _getFacetsUrl(), function(facets) {
+    $.getJSON(baseUrl + _getFacetsUrl(), function (facets) {
       _buildAllFilters(facets);
       _update($.extend(settings.eventFilters, settings.defaultFilters));
       _updateFilterSelects();
@@ -448,10 +450,10 @@ var evFilters = function ($) {
     });
   }
 
-  function _registerChosenEvents (newSelect) {
+  function _registerChosenEvents(newSelect) {
     if (Drupal.behaviors && Drupal.behaviors.chosen) {
       Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
-      newSelect.change(function(e) {
+      newSelect.change(function (e) {
         _changeFilter(e);
         setTimeout(function () {
           document.activeElement.blur();
@@ -467,16 +469,16 @@ var evFilters = function ($) {
       var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
       chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
 
-      // unbind touchstart event so can scroll filters on mobile without triggering them
+      // Unbind touchstart for mobile.
       newSelect.next('.chosen-container').off('touchstart.chosen');
     }
   }
 
-  function _update (filters) {
+  function _update(filters) {
     settings.eventFilters = filters;
   }
 
-  function _updateCurrentFilters () {
+  function _updateCurrentFilters() {
     var currentFilters = _getCurrentFilters();
     var currentFiltersDiv = $('.calendar-filters__current');
     if (!currentFilters) {
@@ -490,7 +492,7 @@ var evFilters = function ($) {
     $('.calendar-actions').addClass('calendar-actions--filtered');
   }
 
-  function _updateFilterSelects () {
+  function _updateFilterSelects() {
     for (var f in settings.eventFilters) {
       if (settings.eventFilters[f]) {
         $('[data-type="' + f + '"]').val(f + ':' + settings.eventFilters[f]).trigger('chosen:updated');
@@ -510,14 +512,14 @@ var evFilters = function ($) {
 }(jQuery);
 
 /**
- * Calendar
+ * Calendar.
  */
 var evCalendar = function ($) {
   'use strict';
 
   var settings = {};
 
-  function _addEventDetails (event, element, view) {
+  function _addEventDetails(event, element, view) {
     // Add location.
     if (event.location) {
       if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
@@ -535,7 +537,7 @@ var evCalendar = function ($) {
     }
   }
 
-  function _formatControls () {
+  function _formatControls() {
     settings.calendarControls = $('.fc-toolbar .fc-left .fc-button-group');
     settings.calendarControls.addClass('fc-toolbar-controls');
     settings.calendarControls.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
@@ -553,7 +555,7 @@ var evCalendar = function ($) {
     _formatViewSettings();
   }
 
-  function _buildHTML () {
+  function _buildHTML() {
     settings.actionsContainer = $('<div class="calendar-actions"></div>');
     settings.filtersContainer = $('<div class="calendar-filters"></div>');
     settings.exportContainer = $('<div class="calendar-export"></div>');
@@ -575,13 +577,13 @@ var evCalendar = function ($) {
     settings.sidebarOpen = false;
   }
 
-  function _formatViewSettings () {
+  function _formatViewSettings() {
     var content = $('.fc-toolbar .fc-right .fc-button-group');
     content.removeClass('fc-button-group').addClass('dropdown-menu').attr('aria-labelledby', 'viewSelector');
     content.find('button').removeClass('fc-state-default');
   }
 
-  function _init () {
+  function _init() {
     var $calendarId = Drupal.settings.fullcalendar_api.calendarId;
     var $calendar = $('#' + $calendarId);
     if (!$calendar.length) {
@@ -602,7 +604,7 @@ var evCalendar = function ($) {
 
     $.extend(settings.$settings.events, {
       cache: true,
-      data: function() {
+      data: function () {
         var f = 'full';
         if (evFilters.settings.eventFilters.hasOwnProperty(f) && typeof evFilters.settings.eventFilters[f] !== 'undefined' && evFilters.settings.eventFilters[f] !== '') {
           return {
@@ -612,18 +614,18 @@ var evCalendar = function ($) {
 
         return {};
       },
-      success: function() {
+      success: function () {
         $('.fc-view').removeClass('fc-view--error');
         $('.fc-loading-message, .fc-loading-message--error').remove();
       },
-      error: function() {
+      error: function () {
         var errorMessage = '<div class="fc-loading-message fc-loading-message--error">' + Drupal.t('There was an error fetching events, please try again', {}, {context: 'events'}) + '</div>';
         $('.fc-view').addClass('fc-view--error').before(errorMessage);
       }
     });
 
     $.extend(settings.$settings, {
-      loading: function(isLoading, view) {
+      loading: function (isLoading, view) {
         if (isLoading) {
           var loadingMessage = '<div class="fc-loading-message">' + Drupal.t('Please wait while we fetch events', {}, {context: 'events'}) + '</div>';
           view.el.addClass('fc-view--loading').before(loadingMessage);
@@ -635,7 +637,7 @@ var evCalendar = function ($) {
         }
       },
       eventLimit: false,
-      eventRender: function(event, element, view) {
+      eventRender: function (event, element, view) {
         element.attr('data-start', event.start._i);
 
         for (var f in evFilters.settings.eventFilters) {
@@ -654,8 +656,8 @@ var evCalendar = function ($) {
           columnFormat: 'ddd DD/MM'
         }
       },
-      viewRender: function(view) {
-        // Store view.name, view.start and view.end
+      viewRender: function (view) {
+        // Store view.name, view.start and view.end.
         settings.state.view = view.name;
         settings.state.date = settings.$calendar.fullCalendar('getDate').toISOString();
         _updateState();
@@ -683,7 +685,7 @@ var evCalendar = function ($) {
       'listRange': {
         'type': 'list',
         'buttonText': Drupal.t('List', {}, {context: 'events'}),
-        'visibleRange': function(currentDate) {
+        'visibleRange': function (currentDate) {
           var range = evMiniCalendar.currentRange();
           if (typeof range.start !== 'undefined') {
             var end = moment(range.end).add(1, 'days');
@@ -704,13 +706,13 @@ var evCalendar = function ($) {
         'duration': {
           'days': 7
         },
-        'visibleRange': function(currentDate) {
+        'visibleRange': function (currentDate) {
           return {
             start: currentDate.clone(),
             end: currentDate.clone().add(7, 'days')
           };
         },
-        'validRange': function(currentDate) {
+        'validRange': function (currentDate) {
           return {
             start: currentDate.clone()
           };
@@ -722,12 +724,12 @@ var evCalendar = function ($) {
         'duration': {
           'days': 7
         },
-        'validRange': function(currentDate) {
+        'validRange': function (currentDate) {
           return {
             end: currentDate.clone()
           };
         },
-        'visibleRange': function(currentDate) {
+        'visibleRange': function (currentDate) {
           return {
             start: currentDate.clone().add(-7, 'days'),
             end: currentDate.clone()
@@ -752,7 +754,7 @@ var evCalendar = function ($) {
     return query;
   }
 
-  function _toggleSidebar () {
+  function _toggleSidebar() {
     if (!settings.actionsContainer.hasClass('active')) {
       settings.actionsContainer.find('button').not('.calendar-actions__close').first().focus();
     }
@@ -809,7 +811,7 @@ var evCalendar = function ($) {
     }
   }
 
-  function _updateViewSettings () {
+  function _updateViewSettings() {
     evExports.update();
   }
 
@@ -823,15 +825,15 @@ var evCalendar = function ($) {
 }(jQuery);
 
 /**
- * Timezone
+ * Timezone.
  */
 var evTimeZone = function ($) {
   'use strict';
 
   var settings = {};
 
-  function _buildHTML () {
-    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone', {}, {context: 'events'}) +': </button>');
+  function _buildHTML() {
+    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone', {}, {context: 'events'}) + ': </button>');
     var dropdown = $('<div class="calendar-settings__tz-dropdown dropdown-menu" aria-labelledby="timezone-dropdown"></div>');
     var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone', {}, {context: 'events'}) + '</label>');
     var select = $('<select id="timezone-selector"></select>');
@@ -843,7 +845,7 @@ var evTimeZone = function ($) {
     dropdown.append(label).append(select);
   }
 
-  function _changeTimezone (e) {
+  function _changeTimezone(e) {
     if (e.target.value) {
       var data = e.target.value;
       var filters = $.extend({}, evFilters.settings.eventFilters);
@@ -855,10 +857,10 @@ var evTimeZone = function ($) {
     }
   }
 
-  function _getTimeZones () {
+  function _getTimeZones() {
     var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
 
-    $.getJSON(baseUrl + '/api/v0/timezones', function(timezones) {
+    $.getJSON(baseUrl + '/api/v0/timezones', function (timezones) {
       var $tz = $('#timezone-selector');
       var $newtz;
       var currentTz;
@@ -882,7 +884,7 @@ var evTimeZone = function ($) {
         $tz.chosen('destroy');
         $tz.addClass('chosen-enable');
         Drupal.behaviors.chosen.attach($tz, Drupal.settings);
-        $tz.chosen().change(function(e) {
+        $tz.chosen().change(function (e) {
           _changeTimezone(e);
         });
         chosenA11y($tz, 'timezone-search', Drupal.t('Search timezones'));
@@ -891,7 +893,7 @@ var evTimeZone = function ($) {
 
   }
 
-  function _init () {
+  function _init() {
     _buildHTML();
     _getTimeZones();
   }
@@ -904,19 +906,19 @@ var evTimeZone = function ($) {
 
 
 /**
- * Mini Calendar
+ * Mini Calendar.
  */
 var evMiniCalendar = function ($) {
   'use strict';
 
   var currentRange = {};
 
-  function _buildMiniCal () {
+  function _buildMiniCal() {
     var button = '<button type="button" data-toggle="dropdown" class="btn-icon mini-cal-btn"><span class="sr-only">Select date</span><i class="icon icon-calendar"></i></button>';
     $('<div class="mini-cal-container">' + button + '<div id="mini-cal" class="mini-cal"></div></div>').insertAfter('#fullcalendar');
   }
 
-  function _formatControls (cal) {
+  function _formatControls(cal) {
     cal.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
       .addClass('sr-only')
       .text(Drupal.t('Previous', {}, {context: 'events'}))
@@ -927,7 +929,7 @@ var evMiniCalendar = function ($) {
       .after('<i class="icon-arrow-right"></i>');
   }
 
-  function _getCurrentRange (qsObj) {
+  function _getCurrentRange(qsObj) {
     if (typeof qsObj === 'undefined') {
       return currentRange;
     }
@@ -1039,7 +1041,7 @@ var evMiniCalendar = function ($) {
     evFilters.updateFilterSelects();
   }
 
-  function _init () {
+  function _init() {
     var fullCal = evCalendar.settings.$calendar;
     var qsObj = evCalendar.parseQuery(window.location.search);
 
@@ -1059,9 +1061,9 @@ var evMiniCalendar = function ($) {
       height: 'auto',
       aspectRatio: 1.2,
 
-      dayRender: function(date, cell) {
-        /* Add keyboard accessibility */
-        $(cell).attr('tabindex', '0').on('keypress', function(e) {
+      dayRender: function (date, cell) {
+        // Add keyboard accessibility.
+        $(cell).attr('tabindex', '0').on('keypress', function (e) {
           if (e.which === 32 || e.which === 13) {
             e.preventDefault();
             var day = $(this);
@@ -1076,18 +1078,20 @@ var evMiniCalendar = function ($) {
         /* highlight selected range */
         if (date.format('Y-MM-DD') >= currentRange.start && date.format('Y-MM-DD') <= currentRange.end) {
           cell.addClass('current');
-        } else {
+        }
+        else {
           cell.removeClass('current');
         }
       },
 
-      dayClick: function(date, jsEvent, view) {
+      dayClick: function (date, jsEvent, view) {
         _clearDropDownFilter();
         _gotoDate(date);
       }
     });
 
-    $('#mini-cal').addClass('loaded'); // Add class to hide initially on mobile after the calendar has loaded
+    // Add class to hide initially on mobile after the calendar has loaded.
+    $('#mini-cal').addClass('loaded');
     _formatControls(miniCal);
 
     // Show correct month in mini calendar.
@@ -1139,12 +1143,12 @@ var evMiniCalendar = function ($) {
 }(jQuery);
 
 /**
- * Search
+ * Search.
  */
 var evSearch = function ($) {
   'use strict';
 
-  function _buildSearch () {
+  function _buildSearch() {
     var qsObj = evCalendar.parseQuery(window.location.search);
     var fullText = qsObj.hasOwnProperty('full') ? qsObj.full : '';
     var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
@@ -1160,7 +1164,7 @@ var evSearch = function ($) {
     }
   }
 
-  function _executeSearch () {
+  function _executeSearch() {
     var str = $('#full-text-search-string').val();
     evFilters.settings.eventFilters.full = str || '';
     evCalendar.updateState(true);
@@ -1168,7 +1172,7 @@ var evSearch = function ($) {
     $('#full-text-clear-search').removeClass('hidden');
   }
 
-  function _clearSearch () {
+  function _clearSearch() {
     $('#full-text-search-string').val('');
     evFilters.settings.eventFilters.full = '';
     evCalendar.updateState(true);
@@ -1176,10 +1180,10 @@ var evSearch = function ($) {
     $('#full-text-clear-search').addClass('hidden');
   }
 
-  function _handleSearch () {
+  function _handleSearch() {
     $('#full-text-search').on('click', _executeSearch);
     $('#full-text-clear-search').on('click', _clearSearch);
-    $('#full-text-search-string').keydown(function(e) {
+    $('#full-text-search-string').keydown(function (e) {
       if (e.which == 13) {
         e.preventDefault();
         _executeSearch();
@@ -1187,7 +1191,7 @@ var evSearch = function ($) {
     });
   }
 
-  function _init () {
+  function _init() {
     _buildSearch();
     _handleSearch();
   }
@@ -1199,7 +1203,7 @@ var evSearch = function ($) {
 }(jQuery);
 
 /**
- * DateRange
+ * DateRange.
  */
 var evDateRange = function ($) {
   'use strict';
@@ -1268,7 +1272,7 @@ var evDateRange = function ($) {
     }
   };
 
-  function _buildFilter () {
+  function _buildFilter() {
     var filter = $('<div class="calendar-filters--date-range processed block-views"></div>');
     var filterContainer = $('<div class="calendar-actions__section" />');
     var filterButton = $('<button type="button" class="calendar-filters__button">' + Drupal.t('Filter by date range', {}, {context: 'events'}) + '</button>');
@@ -1294,11 +1298,11 @@ var evDateRange = function ($) {
     _registerChosenEvents(newSelect);
   }
 
-  function _buildHTML () {
+  function _buildHTML() {
     _buildFilter();
   }
 
-  function _changeFilter (e) {
+  function _changeFilter(e) {
     if (e.target.value) {
       var data = e.target.value;
       var parts = data.split(':');
@@ -1316,10 +1320,10 @@ var evDateRange = function ($) {
     }
   }
 
-  function _registerChosenEvents (newSelect) {
+  function _registerChosenEvents(newSelect) {
     if (Drupal.behaviors && Drupal.behaviors.chosen) {
       Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
-      newSelect.change(function(e) {
+      newSelect.change(function (e) {
         _changeFilter(e);
         setTimeout(function () {
           document.activeElement.blur();
@@ -1333,12 +1337,12 @@ var evDateRange = function ($) {
       var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
       chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
 
-      // unbind touchstart event so can scroll filters on mobile without triggering them
+      // Unbind touchstart event so scroll works on mobile.
       newSelect.next('.chosen-container').off('touchstart.chosen');
     }
   }
 
-  function _init () {
+  function _init() {
     _buildHTML();
 
     // Check URL parameters.
@@ -1374,15 +1378,15 @@ var evDateRange = function ($) {
 }(jQuery);
 
 /* Adds labels, names & ids to Chosen search inputs */
-function chosenA11y (select, name, label) {
+function chosenA11y(select, name, label) {
   var input = select.next('.chosen-container').find('.chosen-search-input');
   input.attr({name: name, id: name});
   input.before('<label for="' + name + '" class="sr-only">' + label + '</label>');
 }
 
-(function($) {
+(function ($) {
   Drupal.behaviors.eventsEvent = {
-    attach: function(context, settings) {
+    attach: function (context, settings) {
       'use strict';
 
       if (!settings.fullcalendar_api.calendarSettings) {
@@ -1397,7 +1401,7 @@ function chosenA11y (select, name, label) {
       evSearch.init();
       evDateRange.init();
 
-      // Prevent the filters etc dropdowns closing when click on their contents
+      // Prevent the filters etc dropdowns closing when click on their contents.
       $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder, .mini-cal .fc-button', function (e) {
         e.stopPropagation();
       });
