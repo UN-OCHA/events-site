@@ -81,10 +81,8 @@
  */
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-
-  <div class="content <?php if(!empty($content['field_sidebar'])): ?>row<?php endif; ?>" <?php print $content_attributes; ?>>
-
-    <div class="<?php if(!empty($content['field_sidebar'])): ?>col-md-8<?php endif; ?>">
+  <div class="content <?php  print !empty($content['field_sidebar']) ? 'row' : '' ?>" <?php print $content_attributes; ?>>
+    <div class="<?php print !empty($content['field_sidebar']) ? 'col-md-8' : '' ?>">
       <?php
         if(!empty($content['field_sidebar'])) :
           hide($content['field_sidebar']);
@@ -98,7 +96,5 @@
         <?php print render($content['field_sidebar']); ?>
       </div>
     <?php endif; ?>
-
   </div>
-
 </div>

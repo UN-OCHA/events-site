@@ -1,7 +1,6 @@
 {
     "require": {
-        "squizlabs/php_codesniffer": "1.5.*@dev",
-        "drupal/coder": "dev-7.x-2.x"
+        "drupal/coder": "^8.2"
     },
     "config": {
       "bin-dir": "bin/"
