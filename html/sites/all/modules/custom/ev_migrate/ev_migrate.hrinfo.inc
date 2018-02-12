@@ -57,6 +57,8 @@ function ev_migrate_events_from_hrinfo() {
 
 /**
  * Process event data.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 function ev_migrate_process_row_from_hrinfo($row, $prefix = '') {
   $needs_update = FALSE;
