@@ -46,6 +46,8 @@ function _ev_migrate_reliefweb_fetch($limit = 0, $offset = 0) {
 
 /**
  * Process event data.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 function ev_migrate_process_row_reliefweb($row, $prefix = '') {
   $needs_update = FALSE;
