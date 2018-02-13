@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the Event migrate.
@@ -11,4 +12,23 @@ function ev_migrate_update_7001() {
   variable_set('ev_migrate_api_url_hrinfo', variable_get('ev_migrate_api_url', ''));
   variable_set('ev_migrate_file_authentication_hrinfo', variable_get('ev_migrate_file_authentication', ''));
   variable_set('ev_migrate_shared_secret_hrinfo', variable_get('ev_migrate_shared_secret', ''));
+}
+
+/**
+ * Add term for HRInfo source.
+ */
+function ev_migrate_update_7002() {
+  if (function_exists('events_config_get_term')) {
+    events_config_get_term('HumanitarianResponse.info', 'ev_source');
+  }
+}
+
+/**
+ * Add term for ReliefWeb source.
+ */
+function ev_migrate_update_7003() {
+  if (function_exists('events_config_get_term')) {
+    events_config_get_term('ReliefWeb.int', 'ev_source');
+  }
+  variable_set('ev_migrate_sync_from_reliefweb', TRUE);
 }

@@ -73,8 +73,11 @@ function events_event_default_search_api_index() {
         "field_event_disasters" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_event_documents" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "multifield" },
         "field_event_documents:field_document_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_info:value" : { "type" : "text" },
         "field_event_location" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_location_details" : { "type" : "text" },
         "field_event_organization" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_event_source" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "field_event_theme" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "search_api_language" : { "type" : "string" },
         "title" : { "type" : "text" }
@@ -86,27 +89,27 @@ function events_event_default_search_api_index() {
           "weight" : "-10",
           "settings" : { "default" : "1", "bundles" : [] }
         },
-        "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
+        "search_api_alter_add_hierarchy" : {
+          "status" : 1,
+          "weight" : "0",
+          "settings" : { "fields" : { "field_event_location:parent" : "field_event_location:parent" } }
+        },
         "search_api_alter_language_control" : {
           "status" : 0,
           "weight" : "0",
           "settings" : { "lang_field" : "", "languages" : [] }
         },
-        "search_api_alter_add_viewed_entity" : { "status" : 0, "weight" : "0", "settings" : { "mode" : "full" } },
-        "search_api_alter_add_url" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_add_aggregation" : { "status" : 0, "weight" : "0", "settings" : [] },
-        "search_api_alter_add_hierarchy" : {
-          "status" : 1,
-          "weight" : "0",
-          "settings" : { "fields" : { "field_event_location:parent" : "field_event_location:parent" } }
-        }
+        "search_api_alter_node_access" : { "status" : 0, "weight" : "0", "settings" : [] },
+        "search_api_alter_node_status" : { "status" : 1, "weight" : "0", "settings" : [] }
       },
       "processors" : {
         "search_api_case_ignore" : {
           "status" : 1,
           "weight" : "0",
-          "settings" : { "fields" : { "title" : true } }
+          "settings" : { "fields" : { "title" : true, "field_event_info:value" : true } }
         },
         "search_api_html_filter" : {
           "status" : 0,
@@ -123,8 +126,9 @@ function events_event_default_search_api_index() {
           "weight" : "15",
           "settings" : { "fields" : {
               "title" : true,
+              "field_event_cluster" : true,
               "field_event_organization" : true,
-              "field_event_cluster" : true
+              "field_event_info:value" : true
             }
           }
         },
@@ -274,6 +278,22 @@ function events_event_default_search_api_server() {
             "table" : "search_api_db_un_events_field_event_theme",
             "column" : "value",
             "type" : "list\\u003Cinteger\\u003E",
+            "boost" : "1.0"
+          },
+          "field_event_info:value" : {
+            "table" : "search_api_db_un_events_text",
+            "type" : "text",
+            "boost" : "1.0"
+          },
+          "field_event_location_details" : {
+            "table" : "search_api_db_un_events_text",
+            "type" : "text",
+            "boost" : "1.0"
+          },
+          "field_event_source" : {
+            "table" : "search_api_db_un_events",
+            "column" : "field_event_source",
+            "type" : "integer",
             "boost" : "1.0"
           }
         }

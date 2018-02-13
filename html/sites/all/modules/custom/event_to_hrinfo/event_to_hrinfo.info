@@ -1,0 +1,5 @@
+name = Events to HR Info
+description = Endpoint to migrate events to HR Info
+core = 7.x
+package = Events
+dependencies[] = events_event

@@ -4,7 +4,7 @@
  */
 
 /**
- * Exports
+ * Exports.
  */
 var evExports = function ($) {
   'use strict';
@@ -13,7 +13,7 @@ var evExports = function ($) {
     icalLabel: 'ICAL'
   };
 
-  function _buildOption (text, fn) {
+  function _buildOption(text, fn) {
     var listItem = $('<li />');
     var button = $('<button type="button">' + Drupal.t(text, {}, {context: 'events'}) + '</button>');
     button.on('click', fn);
@@ -28,13 +28,13 @@ var evExports = function ($) {
       settings.icalInfo = $('<p class="calendar-export__ical-info">* ' + icalMsg + '</p>');
 
       settings.icalBtn.attr('id', 'ical-btn');
-      evCalendar.settings.$calendar.after(settings.icalInfo);
       settings.icalInfo.hide();
       if (evCalendar.settings.state.view === 'past') {
         button.text(settings.icalLabel + ' *');
         settings.icalInfo.show();
       }
       icalLinkHolder.append('<p class="calendar-export__ical-link-label">' + Drupal.t('ICAL link', {}, {context: 'events'}) + '</p>');
+      icalLinkHolder.append(settings.icalInfo);
       icalLinkHolder.append(settings.icalLink);
       icalLinkHolder.append(copyBtn);
       listItem.append(icalLinkHolder);
@@ -49,7 +49,7 @@ var evExports = function ($) {
     return listItem;
   }
 
-  function _init () {
+  function _init() {
     settings.exportOptionsList = $('<ul class="dropdown-menu" aria-labelledby="export-dropdown"></ul>');
     var exportButton = $('<button type="button" id="export-dropdown" class="calendar-export__button calendar-actions__toggle">' + Drupal.t('Export', {}, {context: 'events'}) + '</button>');
     exportButton.attr('data-toggle', 'dropdown');
@@ -64,7 +64,7 @@ var evExports = function ($) {
     evCalendar.settings.exportContainer.append(exportButton).append(settings.exportOptionsList);
   }
 
-  function _update () {
+  function _update() {
     if (settings.icalBtn) {
       if (evCalendar.settings.state.view === 'past') {
         settings.icalBtn.text(settings.icalLabel + ' *');
@@ -76,18 +76,18 @@ var evExports = function ($) {
     }
   }
 
-  function _resetICAL () {
+  function _resetICAL() {
     settings.exportOptionsList.removeClass('show-ical');
   }
 
-  function _exportICAL () {
+  function _exportICAL() {
     var url = window.location.protocol + '//' + window.location.hostname + '/ical?';
     url += $.param(evFilters.settings.eventFilters);
     settings.exportOptionsList.toggleClass('show-ical');
     settings.icalLink.text(url).attr('href', url);
   }
 
-  function _exportPDF () {
+  function _exportPDF() {
     var calendar = $('.fc-view-container').clone();
     var table = _formatPdfEvents(calendar);
     var filters = evFilters.getCurrentFilters();
@@ -150,17 +150,18 @@ var evExports = function ($) {
     doc.save(fileName + fileNameHeading + '.pdf');
   }
 
-  function _formatPdfEvents (calendar) {
+  function _formatPdfEvents(calendar) {
     var events = [];
     var eventsLength = 0;
     var eventsType;
     var displayEvents = [];
-    var eventsList = calendar.find('.fc-list-table'); //list view (upcoming/past events)
+    // List view (upcoming/past events).
+    var eventsList = calendar.find('.fc-list-table');
     events = eventsList.length ? eventsList.find('.fc-list-item') : calendar.find('.fc-event-container').not('.fc-helper-container').find('.fc-event');
     eventsLength = events.length;
     eventsType = eventsList.length ? 'list' : 'calendar';
 
-    //sort calendar events by date (because the dom for the calendar isnt in order)
+    // Sort calendar events by date.
     if (!eventsList.length) {
       events.sort(function (a,b) {
         return moment($(a).data('start')) - moment($(b).data('start'));
@@ -170,7 +171,7 @@ var evExports = function ($) {
     var timeSelector = eventsType === 'list' ? '.fc-list-item-time' : '.fc-time';
     var titleSelector = eventsType === 'list' ? '.fc-list-item-title a' : '.fc-title';
 
-    for (var i=0; i < eventsLength; i++) {
+    for (var i = 0; i < eventsLength; i++) {
       var event = events[i];
       var start = moment($(event).data('start'));
       var startDate = start.format('DD MMMM YYYY');
@@ -221,7 +222,7 @@ var evExports = function ($) {
     };
   }
 
-  function _getPdfFooter (data, doc) {
+  function _getPdfFooter(data, doc) {
     var createdAt = Drupal.t('Created', {}, {context: 'events'}) + ': ' + moment().format('DD MMM YYYY');
     var poweredBy = Drupal.t('Powered by Humanitarian Events. https://events.rwlabs.org', {}, {context: 'events'});
     doc.setFontSize(8);
@@ -238,7 +239,7 @@ var evExports = function ($) {
 }(jQuery);
 
 /**
- * Filters
+ * Filters.
  */
 var evFilters = function ($) {
   'use strict';
@@ -246,9 +247,10 @@ var evFilters = function ($) {
   var settings = {
   };
 
-  function _addFilterLegend (select, chosen, categories) {
+  function _addFilterLegend(select, chosen, categories) {
     var type = 'cat';
-    if (select.find('option:first-child').val() !== type) { // Only add legends to category filter
+    // Only add legends to category filter.
+    if (select.find('option:first-child').val() !== type) {
       return;
     }
     var options = $(chosen.search_results).find('li');
@@ -265,7 +267,7 @@ var evFilters = function ($) {
     }
   }
 
-  function _buildFilter (f, filterCount, facet) {
+  function _buildFilter(f, filterCount, facet) {
     var filter = $('<div class="calendar-filters--' + f + ' processed block-views"></div>');
     var filterContainer = $('<div class="calendar-actions__section" />');
     var filterButton = $('<button type="button" class="calendar-filters__button">' + facet.label + '</button>');
@@ -289,7 +291,7 @@ var evFilters = function ($) {
     }
 
     // Sort by label.
-    flipped.sort(function(a, b) {
+    flipped.sort(function (a, b) {
       return a.label.localeCompare(b.label);
     });
 
@@ -316,7 +318,7 @@ var evFilters = function ($) {
 
   }
 
-  function _buildAllFilters (facets) {
+  function _buildAllFilters(facets) {
     var filterCount = 0;
 
     for (var f in facets) {
@@ -333,23 +335,23 @@ var evFilters = function ($) {
     }
   }
 
-  function openFilter (e) {
+  function openFilter(e) {
     var section = $(e.target).next('.calendar-actions__section');
     section.addClass('active')
       .find('.chosen-container')
       .mousedown();
   }
 
-  function _buildHTML () {
+  function _buildHTML() {
     settings.filtersWrapperInner = $('<div class="calendar-filters__inner dropdown-menu clearfix"></div>');
     var currentFiltersWrapper = $('<div class="calendar-filters__current hidden"></div>');
-    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Filter events', {}, {context: 'events'})+ '</button>';
+    var filtersHeading = '<button type="button" data-toggle="dropdown" class="calendar-actions__toggle">' + Drupal.t('Add Filters', {}, {context: 'events'}) + '</button>';
     var clearBtn = '<button type="button" class="calendar-filters__clear btn-icon"><i class="icon-cancel"></i>Clear filters</button>';
     evCalendar.settings.filtersContainer.append(filtersHeading).append(settings.filtersWrapperInner).append(currentFiltersWrapper);
     currentFiltersWrapper.append('<p />').append(clearBtn);
   }
 
-  function _changeFilter (e) {
+  function _changeFilter(e) {
     _updateCurrentFilters();
 
     if (e.target.value) {
@@ -366,7 +368,7 @@ var evFilters = function ($) {
     }
   }
 
-  function _clearFilters () {
+  function _clearFilters() {
     for (var f in settings.defaultFilters) {
       settings.defaultFilters[f] = '';
     }
@@ -377,7 +379,7 @@ var evFilters = function ($) {
     evCalendar.settings.$calendar.fullCalendar('rerenderEvents');
   }
 
-  function _getCurrentFilters () {
+  function _getCurrentFilters() {
     var filters = $('.calendar-filters').find('.block-views');
     var filtersLength = filters.length;
     var selectedFilters = [];
@@ -400,7 +402,7 @@ var evFilters = function ($) {
 
     for (var j = 0; j < selectedFiltersLength; j++) {
       str += selectedFilters[j].value;
-      if (j+1 < selectedFiltersLength) {
+      if (j + 1 < selectedFiltersLength) {
         str += ', ';
       }
     }
@@ -408,7 +410,7 @@ var evFilters = function ($) {
     return str;
   }
 
-  function _getFacetsUrl () {
+  function _getFacetsUrl() {
     var facetURL = '/api/v0/facets?';
     var forcedFilters = Drupal.settings.fullcalendar_api.calendarSettings.events.data;
     for (var f in forcedFilters) {
@@ -419,7 +421,7 @@ var evFilters = function ($) {
     return facetURL;
   }
 
-  function _getLegendColor (id, categories) {
+  function _getLegendColor(id, categories) {
     var categoriesLength = categories.length;
     var i = 0;
     var color;
@@ -431,12 +433,12 @@ var evFilters = function ($) {
     return color;
   }
 
-  function _init () {
+  function _init() {
     settings.defaultFilters = Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters;
     settings.eventFilters = Drupal.settings.fullcalendar_api.calendarSettings.availableFilters;
     _buildHTML();
     var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
-    $.getJSON(baseUrl + _getFacetsUrl(), function(facets) {
+    $.getJSON(baseUrl + _getFacetsUrl(), function (facets) {
       _buildAllFilters(facets);
       _update($.extend(settings.eventFilters, settings.defaultFilters));
       _updateFilterSelects();
@@ -448,10 +450,10 @@ var evFilters = function ($) {
     });
   }
 
-  function _registerChosenEvents (newSelect) {
+  function _registerChosenEvents(newSelect) {
     if (Drupal.behaviors && Drupal.behaviors.chosen) {
       Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
-      newSelect.change(function(e) {
+      newSelect.change(function (e) {
         _changeFilter(e);
         setTimeout(function () {
           document.activeElement.blur();
@@ -467,16 +469,16 @@ var evFilters = function ($) {
       var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
       chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
 
-      // unbind touchstart event so can scroll filters on mobile without triggering them
+      // Unbind touchstart for mobile.
       newSelect.next('.chosen-container').off('touchstart.chosen');
     }
   }
 
-  function _update (filters) {
-    settings.eventFilters = $.extend({}, filters);
+  function _update(filters) {
+    settings.eventFilters = filters;
   }
 
-  function _updateCurrentFilters () {
+  function _updateCurrentFilters() {
     var currentFilters = _getCurrentFilters();
     var currentFiltersDiv = $('.calendar-filters__current');
     if (!currentFilters) {
@@ -490,7 +492,7 @@ var evFilters = function ($) {
     $('.calendar-actions').addClass('calendar-actions--filtered');
   }
 
-  function _updateFilterSelects () {
+  function _updateFilterSelects() {
     for (var f in settings.eventFilters) {
       if (settings.eventFilters[f]) {
         $('[data-type="' + f + '"]').val(f + ':' + settings.eventFilters[f]).trigger('chosen:updated');
@@ -510,14 +512,14 @@ var evFilters = function ($) {
 }(jQuery);
 
 /**
- * Calendar
+ * Calendar.
  */
 var evCalendar = function ($) {
   'use strict';
 
   var settings = {};
 
-  function _addEventDetails (event, element, view) {
+  function _addEventDetails(event, element, view) {
     // Add location.
     if (event.location) {
       if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
@@ -532,24 +534,10 @@ var evCalendar = function ($) {
         }
         element.find('.fc-content').append('<span class="fc-location">' + event.location + '</span>');
       }
-
-      // Add more details to past events.
-      if (view.name === 'past') {
-        if (event.description) {
-          element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<span class="fc-description">' + event.description + '</span>');
-        }
-        if (event.files && event.files.length > 0) {
-          var ul = $('<ul class="ev-files"></ul');
-          for (var i = 0; i < event.files.length; i++) {
-            ul.append('<li class="ev-doc-' + event.files[i].type_human.toLowerCase().replace(/[^0-9a-z]/gi,'-') + '"><a href="' + event.files[i].uri + '" target="_blank">' + event.files[i].name + '</a></li>');
-          }
-          element.find('.fc-list-item-title').append(ul);
-        }
-      }
     }
   }
 
-  function _formatControls () {
+  function _formatControls() {
     settings.calendarControls = $('.fc-toolbar .fc-left .fc-button-group');
     settings.calendarControls.addClass('fc-toolbar-controls');
     settings.calendarControls.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
@@ -565,10 +553,9 @@ var evCalendar = function ($) {
 
     $('.fc-toolbar .fc-today-button').html('<span>' + Drupal.t('Go to', {}, {context: 'events'}) + ' </span>' + $('.fc-today-button').text());
     _formatViewSettings();
-
   }
 
-  function _buildHTML () {
+  function _buildHTML() {
     settings.actionsContainer = $('<div class="calendar-actions"></div>');
     settings.filtersContainer = $('<div class="calendar-filters"></div>');
     settings.exportContainer = $('<div class="calendar-export"></div>');
@@ -588,22 +575,15 @@ var evCalendar = function ($) {
     settings.actionsContainer.before(sidebarBtn);
     $(document).on('click', '.calendar-sidebar-btn, .calendar-actions__close', _toggleSidebar);
     settings.sidebarOpen = false;
-    settings.viewToggleContainer = $('<div class="calendar-view-selector"></div>');
-    settings.viewToggle = $('<button type="button" id="viewSelector" class="calendar-actions__toggle" data-toggle="dropdown"/>');
-    settings.viewToggle.html(Drupal.t('Showing', {}, {context: 'events'}) + ': <span></span>');
-    settings.viewToggle.attr('aria-haspopup', 'true');
-    settings.viewToggle.attr('aria-expanded', 'false');
   }
 
-  function _formatViewSettings () {
+  function _formatViewSettings() {
     var content = $('.fc-toolbar .fc-right .fc-button-group');
     content.removeClass('fc-button-group').addClass('dropdown-menu').attr('aria-labelledby', 'viewSelector');
     content.find('button').removeClass('fc-state-default');
-    settings.viewToggleContainer.append(settings.viewToggle).append(content);
-    settings.actionsContainer.append(settings.viewToggleContainer);
   }
 
-  function _init () {
+  function _init() {
     var $calendarId = Drupal.settings.fullcalendar_api.calendarId;
     var $calendar = $('#' + $calendarId);
     if (!$calendar.length) {
@@ -624,18 +604,28 @@ var evCalendar = function ($) {
 
     $.extend(settings.$settings.events, {
       cache: true,
-      success: function() {
+      data: function () {
+        var f = 'full';
+        if (evFilters.settings.eventFilters.hasOwnProperty(f) && typeof evFilters.settings.eventFilters[f] !== 'undefined' && evFilters.settings.eventFilters[f] !== '') {
+          return {
+            full: evFilters.settings.eventFilters[f]
+          };
+        }
+
+        return {};
+      },
+      success: function () {
         $('.fc-view').removeClass('fc-view--error');
         $('.fc-loading-message, .fc-loading-message--error').remove();
       },
-      error: function() {
+      error: function () {
         var errorMessage = '<div class="fc-loading-message fc-loading-message--error">' + Drupal.t('There was an error fetching events, please try again', {}, {context: 'events'}) + '</div>';
         $('.fc-view').addClass('fc-view--error').before(errorMessage);
       }
     });
 
     $.extend(settings.$settings, {
-      loading: function(isLoading, view) {
+      loading: function (isLoading, view) {
         if (isLoading) {
           var loadingMessage = '<div class="fc-loading-message">' + Drupal.t('Please wait while we fetch events', {}, {context: 'events'}) + '</div>';
           view.el.addClass('fc-view--loading').before(loadingMessage);
@@ -647,7 +637,7 @@ var evCalendar = function ($) {
         }
       },
       eventLimit: false,
-      eventRender: function(event, element, view) {
+      eventRender: function (event, element, view) {
         element.attr('data-start', event.start._i);
 
         for (var f in evFilters.settings.eventFilters) {
@@ -666,8 +656,8 @@ var evCalendar = function ($) {
           columnFormat: 'ddd DD/MM'
         }
       },
-      viewRender: function(view) {
-        // Store view.name, view.start and view.end
+      viewRender: function (view) {
+        // Store view.name, view.start and view.end.
         settings.state.view = view.name;
         settings.state.date = settings.$calendar.fullCalendar('getDate').toISOString();
         _updateState();
@@ -692,19 +682,37 @@ var evCalendar = function ($) {
     });
 
     $.extend(settings.$settings.views, {
+      'listRange': {
+        'type': 'list',
+        'buttonText': Drupal.t('List', {}, {context: 'events'}),
+        'visibleRange': function (currentDate) {
+          var range = evMiniCalendar.currentRange();
+          if (typeof range.start !== 'undefined') {
+            var end = moment(range.end).add(1, 'days');
+            return {
+              start: evMiniCalendar.currentRange().start,
+              end: end
+            };
+          }
+          return {
+            start: evMiniCalendar.currentRange().start,
+            end: evMiniCalendar.currentRange().end
+          };
+        }
+      },
       'upcoming': {
         'type': 'list',
         'buttonText': Drupal.t('Upcoming', {}, {context: 'events'}),
         'duration': {
           'days': 7
         },
-        'visibleRange': function(currentDate) {
+        'visibleRange': function (currentDate) {
           return {
             start: currentDate.clone(),
             end: currentDate.clone().add(7, 'days')
           };
         },
-        'validRange': function(currentDate) {
+        'validRange': function (currentDate) {
           return {
             start: currentDate.clone()
           };
@@ -714,16 +722,16 @@ var evCalendar = function ($) {
         'type': 'listrev',
         'buttonText': Drupal.t('Past events', {}, {context: 'events'}),
         'duration': {
-          'days': 90
+          'days': 7
         },
-        'validRange': function(currentDate) {
+        'validRange': function (currentDate) {
           return {
             end: currentDate.clone()
           };
         },
-        'visibleRange': function(currentDate) {
+        'visibleRange': function (currentDate) {
           return {
-            start: currentDate.clone().add(-90, 'days'),
+            start: currentDate.clone().add(-7, 'days'),
             end: currentDate.clone()
           };
         }
@@ -746,7 +754,7 @@ var evCalendar = function ($) {
     return query;
   }
 
-  function _toggleSidebar () {
+  function _toggleSidebar() {
     if (!settings.actionsContainer.hasClass('active')) {
       settings.actionsContainer.find('button').not('.calendar-actions__close').first().focus();
     }
@@ -755,11 +763,12 @@ var evCalendar = function ($) {
     settings.sidebarOpen = !settings.sidebarOpen;
   }
 
-  function _updateState (isFiltering) {
+  function _updateState(isFiltering) {
     var currentFilters = evFilters.settings.eventFilters ? evFilters.settings.eventFilters : {};
 
+    var qsObj = _parseQuery(window.location.search);
+
     if (!isFiltering) {
-      var qsObj = _parseQuery(window.location.search);
       for (var p in Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters) {
         if (qsObj.hasOwnProperty(p)) {
           currentFilters[p] = qsObj[p];
@@ -767,45 +776,64 @@ var evCalendar = function ($) {
       }
       evFilters.update(currentFilters);
     }
+
+    // Extend state wirh current filters.
     $.extend(settings.state, currentFilters);
+    // Clear path.
     var path = '?';
-    for (var f in settings.state) {
-      if (settings.state.hasOwnProperty(f) && typeof settings.state[f] !== 'undefined' && settings.state[f] !== '') {
-        path += f + '=' + settings.state[f] + '&';
+
+    // Only remove own query parameters.
+    for (var p in currentFilters) {
+      if (Drupal.settings.fullcalendar_api.calendarSettings.defaultFilters.hasOwnProperty(p)) {
+        delete qsObj[p];
       }
     }
+
+    // Update qsObj.
+    for (var f in settings.state) {
+      if (settings.state.hasOwnProperty(f) && typeof settings.state[f] !== 'undefined') {
+        if (settings.state[f] !== '') {
+          qsObj[f] = settings.state[f];
+        }
+        else {
+          delete qsObj[f];
+        }
+      }
+    }
+
+    // Build path.
+    for (var p in qsObj) {
+      path += p + '=' + qsObj[p] + '&';
+    }
+
     if (history.replaceState) {
       history.replaceState(settings.state, '', path);
     }
   }
 
-  function _updateViewSettings () {
-    $('.calendar-view-selector .fc-button').removeClass('fc-state-active');
-    var selected = $('.calendar-view-selector .fc-' + settings.state.view + '-button');
-    selected.addClass('fc-state-active');
-    var label = selected.text() ? selected.text() : settings.state.view;
-    settings.viewToggle.find('span').text(label);
+  function _updateViewSettings() {
     evExports.update();
   }
 
   return {
     init: _init,
     settings: settings,
-    updateState: _updateState
+    updateState: _updateState,
+    parseQuery: _parseQuery
   };
 
 }(jQuery);
 
 /**
- * Timezone
+ * Timezone.
  */
 var evTimeZone = function ($) {
   'use strict';
 
   var settings = {};
 
-  function _buildHTML () {
-    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone', {}, {context: 'events'}) +': </button>');
+  function _buildHTML() {
+    var toggle = $('<button type="button" id="timezone-dropdown" class="calendar-settings__tz-button calendar-actions__toggle">' + Drupal.t('Time zone', {}, {context: 'events'}) + ': </button>');
     var dropdown = $('<div class="calendar-settings__tz-dropdown dropdown-menu" aria-labelledby="timezone-dropdown"></div>');
     var label = $('<label for="timezone-selector">' + Drupal.t('Display times from the following time zone', {}, {context: 'events'}) + '</label>');
     var select = $('<select id="timezone-selector"></select>');
@@ -817,7 +845,7 @@ var evTimeZone = function ($) {
     dropdown.append(label).append(select);
   }
 
-  function _changeTimezone (e) {
+  function _changeTimezone(e) {
     if (e.target.value) {
       var data = e.target.value;
       var filters = $.extend({}, evFilters.settings.eventFilters);
@@ -829,10 +857,10 @@ var evTimeZone = function ($) {
     }
   }
 
-  function _getTimeZones () {
+  function _getTimeZones() {
     var baseUrl = Drupal.settings.fullcalendar_api.calendarSettings.base_url;
 
-    $.getJSON(baseUrl + '/api/v0/timezones', function(timezones) {
+    $.getJSON(baseUrl + '/api/v0/timezones', function (timezones) {
       var $tz = $('#timezone-selector');
       var $newtz;
       var currentTz;
@@ -856,7 +884,7 @@ var evTimeZone = function ($) {
         $tz.chosen('destroy');
         $tz.addClass('chosen-enable');
         Drupal.behaviors.chosen.attach($tz, Drupal.settings);
-        $tz.chosen().change(function(e) {
+        $tz.chosen().change(function (e) {
           _changeTimezone(e);
         });
         chosenA11y($tz, 'timezone-search', Drupal.t('Search timezones'));
@@ -865,7 +893,7 @@ var evTimeZone = function ($) {
 
   }
 
-  function _init () {
+  function _init() {
     _buildHTML();
     _getTimeZones();
   }
@@ -876,16 +904,489 @@ var evTimeZone = function ($) {
 
 }(jQuery);
 
+
+/**
+ * Mini Calendar.
+ */
+var evMiniCalendar = function ($) {
+  'use strict';
+
+  var currentRange = {};
+
+  function _buildMiniCal() {
+    var button = '<button type="button" data-toggle="dropdown" class="btn-icon mini-cal-btn"><span class="sr-only">Select date</span><i class="icon icon-calendar"></i></button>';
+    $('<div class="mini-cal-container">' + button + '<div id="mini-cal" class="mini-cal"></div></div>').insertAfter('#fullcalendar');
+  }
+
+  function _formatControls(cal) {
+    cal.find('.fc-prev-button span').removeClass('fc-icon fc-icon-left-single-arrow')
+      .addClass('sr-only')
+      .text(Drupal.t('Previous', {}, {context: 'events'}))
+      .after('<i class="icon-arrow-left"></i>');
+    cal.find('.fc-next-button span').removeClass('fc-icon fc-icon-right-single-arrow')
+      .addClass('sr-only')
+      .text(Drupal.t('Next', {}, {context: 'events'}))
+      .after('<i class="icon-arrow-right"></i>');
+  }
+
+  function _getCurrentRange(qsObj) {
+    if (typeof qsObj === 'undefined') {
+      return currentRange;
+    }
+
+    currentRange = {
+      start: moment().format('Y-MM-DD'),
+      end: moment().add('6', 'days').format('Y-MM-DD')
+    };
+
+    if (qsObj.hasOwnProperty('date')) {
+      var d = moment(qsObj.date);
+      if (qsObj.hasOwnProperty('view')) {
+        if (qsObj.view === 'past') {
+          currentRange.end = d.format('Y-MM-DD');
+          d.add('-6', 'days');
+          currentRange.start = d.format('Y-MM-DD');
+        }
+        else {
+          currentRange.start = d.format('Y-MM-DD');
+          d.add('6', 'days');
+          currentRange.end = d.format('Y-MM-DD');
+        }
+      }
+      else {
+        currentRange.start = d.format('Y-MM-DD');
+        d.add('6', 'days');
+        currentRange.end = d.format('Y-MM-DD');
+      }
+    }
+
+    return currentRange;
+  }
+
+  function _gotoDate(date, end) {
+    var fullCal = evCalendar.settings.$calendar;
+    var miniCal = $('#mini-cal');
+
+    var listView = miniCal.fullCalendar('getView');
+    var view = listView.name;
+
+    if (typeof end !== 'undefined') {
+      currentRange.start = date.format('Y-MM-DD');
+      currentRange.end = end.format('Y-MM-DD');
+
+      // Update full calendar.
+      fullCal.fullCalendar('changeView', 'listRange', date);
+
+      // Update mini calendar.
+      miniCal.fullCalendar('gotoDate', date);
+
+      listView.unrenderDates();
+      listView.renderDates();
+
+      return;
+    }
+
+    // Past events.
+    if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
+      currentRange.end = date.format('Y-MM-DD');
+      date.add('-6', 'days');
+      currentRange.start = date.format('Y-MM-DD');
+      if (view != 'past') {
+        fullCal.fullCalendar('changeView', 'past', date);
+      }
+      else {
+        fullCal.fullCalendar('gotoDate', date);
+      }
+
+      miniCal.fullCalendar('gotoDate', date);
+
+      listView.unrenderDates();
+      listView.renderDates();
+
+      return;
+    }
+
+    // Upcoming events.
+    if (view !== 'upcoming') {
+      fullCal.fullCalendar('changeView', 'upcoming', date);
+    }
+    else {
+      fullCal.fullCalendar('gotoDate', date);
+    }
+
+    currentRange.start = date.format('Y-MM-DD');
+    date.add('6', 'days');
+    currentRange.end = date.format('Y-MM-DD');
+
+    miniCal.fullCalendar('gotoDate', date);
+
+    listView.unrenderDates();
+    listView.renderDates();
+  }
+
+  function _clearDropDownFilter() {
+    // Update state.
+    evCalendar.settings.state.range = '';
+    evCalendar.updateState(true);
+
+    // Update filters.
+    $('#filter-date-range')
+      .val('daterange')
+      .trigger('chosen:updated');
+
+    evFilters.update({
+      'range': ''
+    })
+
+    evFilters.updateFilterSelects();
+  }
+
+  function _init() {
+    var fullCal = evCalendar.settings.$calendar;
+    var qsObj = evCalendar.parseQuery(window.location.search);
+
+    var currentRange = _getCurrentRange(qsObj);
+    _buildMiniCal(qsObj);
+    var miniCal = $('#mini-cal');
+
+    miniCal.fullCalendar({
+      'header': {
+        'left': 'prev title next',
+        'center': false,
+        'right': 'today'
+      },
+      'firstDay': 1,
+      'defaultView': 'month',
+      'weekends': true,
+      height: 'auto',
+      aspectRatio: 1.2,
+
+      dayRender: function (date, cell) {
+        // Add keyboard accessibility.
+        $(cell).attr('tabindex', '0').on('keypress', function (e) {
+          if (e.which === 32 || e.which === 13) {
+            e.preventDefault();
+            var day = $(this);
+            var down = new $.Event('mousedown');
+            var up = new $.Event("mouseup");
+            var eventParams = { which: 1, pageX: day.offset().left, pageY: day.offset().top, originalEvent: {} };
+            day.trigger($.extend(true, {}, down, eventParams));
+            day.trigger($.extend(true, {}, up, eventParams));
+          }
+        });
+
+        /* highlight selected range */
+        if (date.format('Y-MM-DD') >= currentRange.start && date.format('Y-MM-DD') <= currentRange.end) {
+          cell.addClass('current');
+        }
+        else {
+          cell.removeClass('current');
+        }
+      },
+
+      dayClick: function (date, jsEvent, view) {
+        _clearDropDownFilter();
+        _gotoDate(date);
+      }
+    });
+
+    // Add class to hide initially on mobile after the calendar has loaded.
+    $('#mini-cal').addClass('loaded');
+    _formatControls(miniCal);
+
+    // Show correct month in mini calendar.
+    if (currentRange.start) {
+      miniCal.fullCalendar('gotoDate', currentRange.start);
+    }
+    var listView = miniCal.fullCalendar('getView');
+    listView.unrenderDates();
+    listView.renderDates();
+
+    miniCal.find('.fc-today-button')
+      .attr('disabled', false)
+      .click(function () {
+        var date = moment();
+        _clearDropDownFilter();
+        _gotoDate(date);
+      });
+
+      miniCal.find('.fc-prev-button').click(function () {
+        var date = miniCal.fullCalendar('getDate');
+        if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
+          date.add(1, 'months').date(0);
+          if (date.format('Y-MM-DD') >= moment().format('Y-MM-DD')) {
+            date = moment();
+          }
+        }
+        _clearDropDownFilter();
+        _gotoDate(date);
+      });
+      miniCal.find('.fc-next-button').click(function () {
+        var date = miniCal.fullCalendar('getDate');;
+        if (date.format('Y-MM-DD') < moment().format('Y-MM-DD')) {
+          date.add(1, 'months').date(0);
+          if (date.format('Y-MM-DD') >= moment().format('Y-MM-DD')) {
+            date = moment();
+          }
+        }
+        _clearDropDownFilter();
+        _gotoDate(date);
+      });
+  }
+
+  return {
+    init: _init,
+    gotoDate: _gotoDate,
+    currentRange: _getCurrentRange
+  };
+
+}(jQuery);
+
+/**
+ * Search.
+ */
+var evSearch = function ($) {
+  'use strict';
+
+  function _buildSearch() {
+    var qsObj = evCalendar.parseQuery(window.location.search);
+    var fullText = qsObj.hasOwnProperty('full') ? qsObj.full : '';
+    var searchLabel = '<label for="full-text-search-string" class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</label>';
+    var searchInput = '<input type="text" name="full" class="calendar-search__input" id="full-text-search-string" value="' + fullText + '" placeholder="' + Drupal.t('Search within these events', {}, {context: 'events'}) + '">';
+    var searchButton = '<button id="full-text-search" class="btn-icon calendar-search__btn"><i class="icon icon-search"></i><span class="sr-only">' + Drupal.t('Search', {}, {context: 'events'}) + '</span></button>';
+    var searchClearButton = '<button id="full-text-clear-search" class="hidden btn-icon icon-cancel calendar-search__clear"><i class="icon icon-clear"></i><span class="sr-only">' + Drupal.t('Clear search', {}, {context: 'events'}) + '</span></button>';
+
+    $('<div class="calendar-search">' + searchLabel + searchInput + searchButton + searchClearButton + '</div>').insertAfter('.calendar-actions__close');
+
+    // Make clear button visible if needed.
+    if (fullText.length) {
+      $('#full-text-clear-search').removeClass('hidden');
+    }
+  }
+
+  function _executeSearch() {
+    var str = $('#full-text-search-string').val();
+    evFilters.settings.eventFilters.full = str || '';
+    evCalendar.updateState(true);
+    evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+    $('#full-text-clear-search').removeClass('hidden');
+  }
+
+  function _clearSearch() {
+    $('#full-text-search-string').val('');
+    evFilters.settings.eventFilters.full = '';
+    evCalendar.updateState(true);
+    evCalendar.settings.$calendar.fullCalendar('refetchEvents');
+    $('#full-text-clear-search').addClass('hidden');
+  }
+
+  function _handleSearch() {
+    $('#full-text-search').on('click', _executeSearch);
+    $('#full-text-clear-search').on('click', _clearSearch);
+    $('#full-text-search-string').keydown(function (e) {
+      if (e.which == 13) {
+        e.preventDefault();
+        _executeSearch();
+      }
+    });
+  }
+
+  function _init() {
+    _buildSearch();
+    _handleSearch();
+  }
+
+  return {
+    init: _init
+  };
+
+}(jQuery);
+
+/**
+ * DateRange.
+ */
+var evDateRange = function ($) {
+  'use strict';
+
+  // Add options.
+  var optionsDateRange = {
+    'thisWeek': {
+      key: 'thisWeek',
+      start: moment().utcOffset(0).startOf('isoWeek').format('Y-MM-DD'),
+      end: moment().utcOffset(0).endOf('isoWeek').format('Y-MM-DD'),
+      label: Drupal.t('This week', {}, {context: 'events'})
+    },
+    'nextWeek': {
+      key: 'nextWeek',
+      start: moment().utcOffset(0).add(7, 'days').startOf('isoWeek').format('Y-MM-DD'),
+      end: moment().utcOffset(0).add(7, 'days').endOf('isoWeek').format('Y-MM-DD'),
+      label: Drupal.t('Next week', {}, {context: 'events'})
+    },
+    'prevWeek': {
+      key: 'prevWeek',
+      start: moment().utcOffset(0).subtract(7, 'days').startOf('isoWeek').format('Y-MM-DD'),
+      end: moment().utcOffset(0).subtract(7, 'days').endOf('isoWeek').format('Y-MM-DD'),
+      label: Drupal.t('Last week', {}, {context: 'events'})
+    },
+    'thisMonth': {
+      key: 'thisMonth',
+      start: moment().utcOffset(0).startOf('month').format('Y-MM-DD'),
+      end: moment().utcOffset(0).endOf('month').format('Y-MM-DD'),
+      label: Drupal.t('This month', {}, {context: 'events'})
+    },
+    'nextMonth': {
+      key: 'nextMonth',
+      start: moment().utcOffset(0).add(1, 'month').startOf('month').format('Y-MM-DD'),
+      end: moment().utcOffset(0).add(1, 'month').endOf('month').format('Y-MM-DD'),
+      label: Drupal.t('Next month', {}, {context: 'events'})
+    },
+    'prevMonth': {
+      key: 'prevMonth',
+      start: moment().utcOffset(0).subtract(1, 'month').startOf('month').format('Y-MM-DD'),
+      end: moment().utcOffset(0).subtract(1, 'month').endOf('month').format('Y-MM-DD'),
+      label: Drupal.t('Last month', {}, {context: 'events'})
+    },
+    'last30': {
+      key: 'last30',
+      start: moment().utcOffset(0).subtract(30, 'days').format('Y-MM-DD'),
+      end: moment().utcOffset(0).format('Y-MM-DD'),
+      label: Drupal.t('Last 30 days', {}, {context: 'events'})
+    },
+    'thisYear': {
+      key: 'thisYear',
+      start: moment().utcOffset(0).startOf('year').format('Y-MM-DD'),
+      end: moment().utcOffset(0).endOf('year').format('Y-MM-DD'),
+      label: Drupal.t('This year', {}, {context: 'events'})
+    },
+    'nextYear': {
+      key: 'nextYear',
+      start: moment().utcOffset(0).add(1, 'year').startOf('year').format('Y-MM-DD'),
+      end: moment().utcOffset(0).add(1, 'year').endOf('year').format('Y-MM-DD'),
+      label: Drupal.t('Next year', {}, {context: 'events'})
+    },
+    'prevYear': {
+      key: 'prevYear',
+      start: moment().utcOffset(0).subtract(1, 'year').startOf('year').format('Y-MM-DD'),
+      end: moment().utcOffset(0).subtract(1, 'year').endOf('year').format('Y-MM-DD'),
+      label: Drupal.t('Last year', {}, {context: 'events'})
+    }
+  };
+
+  function _buildFilter() {
+    var filter = $('<div class="calendar-filters--date-range processed block-views"></div>');
+    var filterContainer = $('<div class="calendar-actions__section" />');
+    var filterButton = $('<button type="button" class="calendar-filters__button">' + Drupal.t('Filter by date range', {}, {context: 'events'}) + '</button>');
+    var backButton = $('<button type="button" class="calendar-actions__btn">' + Drupal.t('Back', {}, {context: 'events'}) + '</button>');
+
+    var newLabel = $('<label for="filter-date-range">' + Drupal.t('Filter by date range', {}, {context: 'events'}) + '</label>');
+    var newSelect = $('<select class="chosen-enable" data-type="date-range" id="filter-date-range"></select>');
+    var emptyOption = $('<option value="daterange">' + Drupal.t('- Any -', {}, {context: 'events'}) + '</option>');
+    newSelect.append(emptyOption);
+
+    for (var o in optionsDateRange) {
+      var option = optionsDateRange[o];
+      var newOption = $('<option value="daterange:' + option.key + '">' + option.label + '</option>');
+      newSelect.append(newOption);
+    }
+
+    filterContainer.append(backButton).append(newLabel).append(newSelect);
+    filter.append(filterButton).append(filterContainer);
+
+    var filtersWrapperInner = $('.calendar-filters__inner');
+    filtersWrapperInner.append(filter);
+
+    _registerChosenEvents(newSelect);
+  }
+
+  function _buildHTML() {
+    _buildFilter();
+  }
+
+  function _changeFilter(e) {
+    if (e.target.value) {
+      var data = e.target.value;
+      var parts = data.split(':');
+
+      var start = moment(optionsDateRange[parts[1]].start);
+      var end = moment(optionsDateRange[parts[1]].end);
+      evMiniCalendar.gotoDate(start, end);
+
+      // Update state.
+      evCalendar.settings.state.range = parts[1];
+      evCalendar.updateState(true);
+
+      // Update filters.
+      evFilters.updateFilterSelects();
+    }
+  }
+
+  function _registerChosenEvents(newSelect) {
+    if (Drupal.behaviors && Drupal.behaviors.chosen) {
+      Drupal.behaviors.chosen.attach(newSelect, Drupal.settings);
+      newSelect.change(function (e) {
+        _changeFilter(e);
+        setTimeout(function () {
+          document.activeElement.blur();
+          newSelect.trigger('chosen:close');
+        },100);
+      }).on('chosen:close', function () {
+        newSelect.parent('.calendar-actions__section').removeClass('active');
+      });
+      newSelect.chosen();
+
+      var inputLabel = Drupal.t('Search') + ' ' + newSelect.prev('label').text();
+      chosenA11y(newSelect, newSelect.attr('id') + '-search', inputLabel);
+
+      // Unbind touchstart event so scroll works on mobile.
+      newSelect.next('.chosen-container').off('touchstart.chosen');
+    }
+  }
+
+  function _init() {
+    _buildHTML();
+
+    // Check URL parameters.
+    var qsObj = evCalendar.parseQuery(window.location.search);
+    if (qsObj.hasOwnProperty('view')) {
+      if (qsObj.view === 'listRange') {
+        var start = moment(optionsDateRange['thisWeek'].start);
+        var end = moment(optionsDateRange['thisWeek'].end);
+
+        if (qsObj.hasOwnProperty('range')) {
+          var start = moment(optionsDateRange[qsObj.range].start);
+          var end = moment(optionsDateRange[qsObj.range].end);
+
+          // Update dropdown.
+          $('#filter-date-range')
+            .val('daterange:' + qsObj.range)
+            .trigger('chosen:updated');
+        }
+
+        // Update mini calendar.
+        evMiniCalendar.gotoDate(start, end);
+
+        // Update filters.
+        evFilters.updateFilterSelects();
+      }
+    }
+  }
+
+  return {
+    init: _init
+  };
+
+}(jQuery);
+
 /* Adds labels, names & ids to Chosen search inputs */
-function chosenA11y (select, name, label) {
+function chosenA11y(select, name, label) {
   var input = select.next('.chosen-container').find('.chosen-search-input');
   input.attr({name: name, id: name});
   input.before('<label for="' + name + '" class="sr-only">' + label + '</label>');
 }
 
-(function($) {
+(function ($) {
   Drupal.behaviors.eventsEvent = {
-    attach: function(context, settings) {
+    attach: function (context, settings) {
       'use strict';
 
       if (!settings.fullcalendar_api.calendarSettings) {
@@ -896,11 +1397,15 @@ function chosenA11y (select, name, label) {
       evFilters.init();
       evTimeZone.init();
       evExports.init();
+      evMiniCalendar.init();
+      evSearch.init();
+      evDateRange.init();
 
-      // Prevent the filters etc dropdowns closing when click on their contents
-      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder', function (e) {
+      // Prevent the filters etc dropdowns closing when click on their contents.
+      $(document).on('click', '.calendar-filters .dropdown-menu, .calendar-settings .dropdown-menu, #ical-btn, #ical-copy, .calendar-export__ical-link-holder, .mini-cal .fc-button', function (e) {
         e.stopPropagation();
       });
+
     }
 
   };

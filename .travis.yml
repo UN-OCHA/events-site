@@ -5,7 +5,7 @@ addons:
   chrome: stable
 
 php:
-  - 5.6
+  - 7.1
 
 env:
   global:
@@ -17,33 +17,37 @@ env:
      - DB=sqlite
 
 before_script:
-  # Composer.
-  - sed -i '1i export PATH="$HOME/.composer/vendor/bin:$PATH"' $HOME/.bashrc
-  - source $HOME/.bashrc
-  - composer self-update
+  - cd $TRAVIS_BUILD_DIR
+  - composer install
 
   # Ensure the PHP environment is ready.
   - phpenv rehash
 
-  # Code sniff
-  - cd $TRAVIS_BUILD_DIR
-  - composer install
-  - ln -s $TRAVIS_BUILD_DIR/vendor/drupal/coder/coder_sniffer/Drupal $TRAVIS_BUILD_DIR/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/
-
   # Behat
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3
-  - cd $TRAVIS_BUILD_DIR/behat
-  - ./scripts/setup.sh
-  - cd $TRAVIS_BUILD_DIR/behat
-  - ./scripts/install.sh
-  - cd $TRAVIS_BUILD_DIR/behat
-  - $TRAVIS_BUILD_DIR/behat/chromedriver &
-  - ./scripts/startserver.sh
-  - cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/settings.travis.php
+  - # "export DISPLAY=:99.0"
+  - # "sh -e /etc/init.d/xvfb start"
+  - # sleep 3
+  - # cd $TRAVIS_BUILD_DIR/behat
+  - # ./scripts/setup.sh
+  - # cd $TRAVIS_BUILD_DIR/behat
+  - # ./scripts/install.sh
+  - # cd $TRAVIS_BUILD_DIR/behat
+  - # $TRAVIS_BUILD_DIR/behat/chromedriver &
+  - # ./scripts/startserver.sh
+  - # cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/settings.travis.php
 
 script:
-  - test -d $TRAVIS_BUILD_DIR/html/sites/all/modules/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,inc,php --ignore=*.views_default.inc,*.features.*,*.strongarm.* --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/modules/custom
-  - test -d $TRAVIS_BUILD_DIR/html/sites/all/themes/custom && $TRAVIS_BUILD_DIR/bin/phpcs --extensions=info,module,install,php --report=full --standard=Drupal $TRAVIS_BUILD_DIR/html/sites/all/themes/custom
-  - cd $TRAVIS_BUILD_DIR/behat && bin/behat --config behat.travis.yml
+  - test ! -d ./html/sites/all/modules/custom || find -L ./html/sites/all/modules/custom -name '*' -print0 | xargs -0 -n 1 -P 4 php -l
+  - test ! -d ./html/sites/all/modules/features || find -L ./html/sites/all/modules/features -name '*' -print0 | xargs -0 -n 1 -P 4 php -l
+  - test ! -d ./html/sites/all/themes/custom || find -L ./html/sites/all/themes/custom -name '*' -print0 | xargs -0 -n 1 -P 4 php -l
+
+  - ./bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
+  - test ! -d ./html/sites/all/modules/custom || ./bin/phpcs -p --report=full ./html/sites/all/modules/custom
+  - test ! -d ./html/sites/all/modules/features || ./bin/phpcs -p --report=full ./html/sites/all/modules/features
+  - test ! -d ./html/sites/all/themes/custom || ./bin/phpcs -p --report=full ./html/sites/all/themes/custom
+
+  - test ! -d ./html/sites/all/modules/custom || ./bin/phpmd ./html/sites/all/modules/custom text .phpmd.xml --suffixes=php,inc,module,install
+  - test ! -d ./html/sites/all/modules/features || ./bin/phpmd ./html/sites/all/modules/features text .phpmd.xml --suffixes=php,inc,module,install
+  - test ! -d ./html/sites/all/themes/custom || ./bin/phpmd ./html/sites/all/themes/custom text .phpmd.xml --suffixes=php,inc,module,install
+
+  - # cd ./behat && bin/behat --config behat.travis.yml
