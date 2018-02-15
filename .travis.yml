@@ -37,9 +37,9 @@ before_script:
   - # cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/settings.travis.php
 
 script:
-  - test ! -d ./html/sites/all/modules/custom || find -L ./html/sites/all/modules/custom -name '*' -print0 | xargs -0 -n 1 -P 4 php -l
-  - test ! -d ./html/sites/all/modules/features || find -L ./html/sites/all/modules/features -name '*' -print0 | xargs -0 -n 1 -P 4 php -l
-  - test ! -d ./html/sites/all/themes/custom || find -L ./html/sites/all/themes/custom -name '*' -print0 | xargs -0 -n 1 -P 4 php -l
+  - test ! -d ./html/sites/all/modules/custom || find -L ./html/sites/all/modules/custom -iregex '.*\.\(php\|module\|inc\|install\)$' -print0 | xargs -0 -n 1 -P 4 php -l
+  - test ! -d ./html/sites/all/modules/features || find -L ./html/sites/all/modules/features -iregex '.*\.\(php\|module\|inc\|install\)$' -print0 | xargs -0 -n 1 -P 4 php -l
+  - test ! -d ./html/sites/all/themes/custom || find -L ./html/sites/all/themes/custom -iregex '.*\.\(php\|module\|inc\|install\)$' -print0 | xargs -0 -n 1 -P 4 php -l
 
   - ./bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
   - test ! -d ./html/sites/all/modules/custom || ./bin/phpcs -p --report=full ./html/sites/all/modules/custom
