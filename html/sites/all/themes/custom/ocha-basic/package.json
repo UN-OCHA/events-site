@@ -9,7 +9,7 @@
     "grunt-contrib-cssmin": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-modernizr": "^1.0.2",
-    "grunt-sass": "^2.0.0",
+    "grunt-sass": "^2.1.0",
     "grunt-sass-import": "^0.2.2",
     "grunt-svgmin": "^4.0.0",
     "load-grunt-tasks": "^0.6.0"
