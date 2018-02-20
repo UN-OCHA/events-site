@@ -506,7 +506,8 @@ var evFilters = function ($) {
     settings: settings,
     init: _init,
     update: _update,
-    updateFilterSelects: _updateFilterSelects
+    updateFilterSelects: _updateFilterSelects,
+    openFilter: openFilter
   };
 
 }(jQuery);
@@ -1289,6 +1290,11 @@ var evDateRange = function ($) {
       newSelect.append(newOption);
     }
 
+    filterButton.on('click', evFilters.openFilter);
+    backButton.on('click', function () {
+      $(this).parent('.calendar-actions__section').removeClass('active');
+    });
+
     filterContainer.append(backButton).append(newLabel).append(newSelect);
     filter.append(filterButton).append(filterContainer);
 
@@ -1296,10 +1302,6 @@ var evDateRange = function ($) {
     filtersWrapperInner.append(filter);
 
     _registerChosenEvents(newSelect);
-  }
-
-  function _buildHTML() {
-    _buildFilter();
   }
 
   function _changeFilter(e) {
@@ -1343,7 +1345,7 @@ var evDateRange = function ($) {
   }
 
   function _init() {
-    _buildHTML();
+    _buildFilter();
 
     // Check URL parameters.
     var qsObj = evCalendar.parseQuery(window.location.search);
