@@ -1,0 +1,5 @@
+http://localhost:8080/
+http://localhost:8080/node/add/ev-event
+http://localhost:8080/?view=month&date=2017-07-01T00:00:00&
+http://localhost:8080/user
+http://localhost:8080/node/6862
