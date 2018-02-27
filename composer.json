@@ -11,7 +11,9 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-xml": "*",
+        "bower-asset/fullcalendar": "^3.8",
         "bower-asset/moment": "^2.20",
+        "composer/installers": "^1.5",
         "drupal/admin_denied": "^1.0",
         "drupal/admin_menu": "3.0-rc5",
         "drupal/audit_log": "1.x-dev",
@@ -121,5 +123,9 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "component-dir": "html/sites/all/libraries"
-    }
+    },
+    "scripts": {
+		"post-update-cmd": "cp -r vendor/bower-asset/* html/sites/all/libraries",
+		"post-install-cmd": "cp -r vendor/bower-asset/* html/sites/all/libraries"
+	}
 }
