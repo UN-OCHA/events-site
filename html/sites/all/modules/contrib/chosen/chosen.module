@@ -115,7 +115,7 @@ function chosen_library() {
     'website' => CHOSEN_WEBSITE_URL,
     'version' => '1.1.0',
     'js' => array(
-      $library_path . '/chosen.jquery.js' => array(),
+      $library_path . '/chosen.jquery.min.js' => array(),
     ),
   );
 
