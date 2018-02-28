@@ -50,4 +50,6 @@ script:
   - test ! -d ./html/sites/all/modules/features || ./bin/phpmd ./html/sites/all/modules/features text .phpmd.xml --suffixes=php,inc,module,install
   - test ! -d ./html/sites/all/themes/custom || ./bin/phpmd ./html/sites/all/themes/custom text .phpmd.xml --suffixes=php,inc,module,install
 
+  - test ! -d ./html/sites/all/modules/custom || ./bin/phpcpd ./html/sites/all/modules/custom --names=*.php,*.inc,*.module,*.install --names-exclude=*.features.*,*.panelizer.inc,*.views_default.inc,*.pages_default.inc,*.field_group.inc,*.strongarm.inc,*.facetapi_defaults.inc,*.ds.inc,*..inc,*.default_environment_indicator_environments.inc
+
   - # cd ./behat && bin/behat --config behat.travis.yml
