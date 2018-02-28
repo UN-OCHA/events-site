@@ -11,9 +11,6 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-xml": "*",
-        "bower-asset/fullcalendar": "^3.8",
-        "bower-asset/moment": "^2.20",
-        "composer/installers": "^1.5",
         "drupal/admin_denied": "^1.0",
         "drupal/admin_menu": "3.0-rc5",
         "drupal/audit_log": "1.x-dev",
@@ -55,8 +52,7 @@
         "drupal/token": "^1.7",
         "drupal/transliteration": "^3.2",
         "drupal/variable": "^2.5",
-        "drupal/views": "^3.18",
-        "oomphinc/composer-installers-extender": "^1.1"
+        "drupal/views": "^3.18"
     },
     "require-dev": {
         "drush/drush": "~8.0",
@@ -77,10 +73,6 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/7"
-        },
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
         }
     ],
     "minimum-stability": "stable",
@@ -90,15 +82,7 @@
             "set-d7-paths": true
         },
         "enable-patching": true,
-		"installer-types": [
-			"bower-asset",
-			"npm-asset"
-		],
         "installer-paths": {
-            "html/sites/all/libraries/{$name}/": [
-				"type:bower-asset",
-				"type:npm-asset"
-			],
             "html/": [
                 "type:drupal-core"
             ]
@@ -121,11 +105,6 @@
     "config": {
         "bin-dir": "bin/",
         "sort-packages": true,
-        "optimize-autoloader": true,
-        "component-dir": "html/sites/all/libraries"
-    },
-    "scripts": {
-		"post-update-cmd": "cp -r vendor/bower-asset/* html/sites/all/libraries",
-		"post-install-cmd": "cp -r vendor/bower-asset/* html/sites/all/libraries"
-	}
+        "optimize-autoloader": true
+    }
 }
