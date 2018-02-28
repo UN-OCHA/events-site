@@ -607,7 +607,7 @@ var evCalendar = function ($) {
       cache: true,
       data: function () {
         var f = 'full';
-        if (evFilters.settings.eventFilters.hasOwnProperty(f) && typeof evFilters.settings.eventFilters[f] !== 'undefined' && evFilters.settings.eventFilters[f] !== '') {
+        if (typeof evFilters.settings.eventFilters !== 'undefined' && evFilters.settings.eventFilters.hasOwnProperty(f) && typeof evFilters.settings.eventFilters[f] !== 'undefined' && evFilters.settings.eventFilters[f] !== '') {
           return {
             full: evFilters.settings.eventFilters[f]
           };
