@@ -1,9 +1,0 @@
-{
-  "strict": "global",
-  "globals": {
-    "Drupal": false,
-    "jsPDF": false,
-    "jQuery": false,
-    "moment": false
-  }
-}
