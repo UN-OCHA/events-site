@@ -4,3 +4,8 @@
   margin: 0.1em;
   width: 15em;
 }
+
+#locale-translate-export-po-form .form-item-context select,
+#locale-translate-export-pot-form .form-item-context select {
+  width: 15em;
+}

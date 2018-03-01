@@ -66,3 +66,20 @@ function events_config_update_7007() {
 function events_config_update_7008() {
   module_enable(array('event_to_hrinfo'));
 }
+
+/**
+ * Disable views.
+ */
+function events_config_update_7009() {
+  module_disable(array(
+    'date_views',
+    'views_ui',
+    'views',
+  ));
+
+  drupal_uninstall_modules(array(
+    'date_views',
+    'views_ui',
+    'views',
+  ));
+}

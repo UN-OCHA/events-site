@@ -1633,7 +1633,7 @@ function _events_event_ev_source_info($node, $view_mode, $langcode) {
 function _events_event_ev_display_date_time($node, $view_mode, $langcode, $current_date = '') {
   $local = _events_event_ev_local_time($node, $view_mode, $langcode, $current_date);
   $user = _events_event_ev_user_time($node, $view_mode, $langcode, $current_date);
-  // @codingStandardsIgnoreLine 
+  // @codingStandardsIgnoreLine
   $local_html = '<p><strong>' . t('Local time', array(), array('context' => 'events')) . ':</strong><br>' . $local . '</p>';
   // @codingStandardsIgnoreLine
   $user_html = '<p><strong>' . t('Your time', array(), array('context' => 'events')) . ':</strong><br>' . $user . '</p>';
