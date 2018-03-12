@@ -589,6 +589,7 @@ function events_event_build_api_structure($node, $timezone = 'UTC') {
         ),
       )),
       'backgroundColor' => events_event_get_event_color($node),
+      'category' => events_event_get_category($node),
       'location' => events_event_get_event_locations($node),
       'locationDetails' => isset($node->field_event_location_details[LANGUAGE_NONE][0]['value']) ? $node->field_event_location_details[LANGUAGE_NONE][0]['value'] : '',
       'description' => isset($node->field_event_info[LANGUAGE_NONE][0]['safe_value']) ? $node->field_event_info[LANGUAGE_NONE][0]['safe_value'] : '',
@@ -1356,6 +1357,24 @@ function events_event_get_event_locations($node) {
   }
 
   return implode(', ', $output);
+}
+
+/**
+ * Get first event category.
+ */
+function events_event_get_category($node) {
+  $term_field_name = 'field_event_category';
+  if ($terms_for_entity = field_get_items('node', $node, $term_field_name)) {
+    foreach ($terms_for_entity as $item) {
+      $term_for_entity = taxonomy_term_load($item['tid']);
+      if ($term_for_entity) {
+        if (isset($term_for_entity->field_ev_legend_color[LANGUAGE_NONE][0]['rgb'])) {
+          return $term_for_entity->name;
+        }
+      }
+    }
+  }
+  return '';
 }
 
 /**
