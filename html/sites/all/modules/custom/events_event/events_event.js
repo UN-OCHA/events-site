@@ -539,7 +539,9 @@ var evCalendar = function ($) {
 
     // Add category.
     if (event.category) {
-      element.find('.fc-event-dot').html(event.category);
+      element.find('.fc-event-dot')
+        .html(event.category)
+        .prop('title', event.category);
     }
   }
 
