@@ -52,7 +52,7 @@ Feature: See events
 
   @api
   Scenario: See the event on the homepage
-    Given I am on the homepage
+    When I go to "calendar"
     And I wait for AJAX to finish
     Then I should see "Event1"
     And I should see "Event2"

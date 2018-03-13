@@ -54,11 +54,11 @@ Feature: Create event
     And I should see the link "Edit"
 
   @api
-  Scenario: See the event on the homepage
+  Scenario: See the event on the calendar
     When I go to "node/add/ev-event"
     And for "title" I enter "xyzzy"
     And I scroll to the "#edit-submit" element
     And I press the "Save" button
-    And I am on the homepage
+    And I go to "calendar"
     And I wait for the ajax response
     Then I should see "xyzzy"

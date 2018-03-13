@@ -25,7 +25,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    * You can also pass arbitrary arguments to the
    * context constructor through behat.yml.
    */
-  public function __construct($screenshots) {
+  public function __construct($screenshots = '') {
     $this->screenshots = $screenshots ? $screenshots : '/tmp';
   }
 
@@ -34,7 +34,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    */
   public function iWaitForTheAjaxResponse()
   {
-      $this->getSession()->wait(5000, '(0 === jQuery.active)');
+    $this->getSession()->wait(5000, '(0 === jQuery.active)');
   }
 
   /**
