@@ -35,6 +35,7 @@ before_script:
   - $TRAVIS_BUILD_DIR/behat/chromedriver &
   - ./scripts/startserver.sh
   - cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/settings.travis.php
+  - cd $TRAVIS_BUILD_DIR
 
 script:
   - test ! -d ./html/sites/all/modules/custom || find -L ./html/sites/all/modules/custom -iregex '.*\.\(php\|module\|inc\|install\)$' -print0 | xargs -0 -n 1 -P 4 php -l
@@ -54,4 +55,4 @@ script:
   - test ! -d ./html/sites/all/modules/features || ./bin/phpcpd ./html/sites/all/modules/features --names=*.php,*.inc,*.module,*.install --names-exclude=*.features.*,*.panelizer.inc,*.views_default.inc,*.pages_default.inc,*.field_group.inc,*.strongarm.inc,*.facetapi_defaults.inc,*.ds.inc,*..inc,*.default_environment_indicator_environments.inc
   - test ! -d ./html/sites/all/themes/custom || ./bin/phpcpd ./html/sites/all/themes/custom --names=*.php,*.inc,*.module,*.install
 
-  - cd ./behat && bin/behat --config behat.travis.yml
+  - cd $TRAVIS_BUILD_DIR/behat && bin/behat --config behat.travis.yml
