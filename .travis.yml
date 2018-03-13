@@ -35,7 +35,7 @@ before_script:
   - $TRAVIS_BUILD_DIR/behat/chromedriver &
   - cp $TRAVIS_BUILD_DIR/html/sites/test/settings.php $TRAVIS_BUILD_DIR/html/sites/default/settings.travis.php
   - cd $TRAVIS_BUILD_DIR/html/sites/test/
-  - ../../../behat/bin/drush runserver 8888 &
+  - ../../../behat/bin/drush runserver 8888 > /dev/null 2>&1 &
   - cd $TRAVIS_BUILD_DIR
 
 script:
