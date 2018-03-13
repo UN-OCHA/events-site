@@ -1,4 +1,13 @@
 default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+            screenshots: %paths.base%/screenshots/
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
   extensions:
     Behat\MinkExtension:
       selenium2:
@@ -8,8 +17,12 @@ default:
           chrome:
               switches:
                   - "--headless"
+                  - "--disable-gpu"
+                  - "--window-size=1920,1080"
       base_url: http://localhost:8888
     Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: 'drupal'
       drupal:
         drupal_root: '../html'
       drush:
