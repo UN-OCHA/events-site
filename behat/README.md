@@ -11,8 +11,9 @@ See root .travis.yml file
 ```
 cp scripts/sites.php ../html/sites/
 cd ../html
+rm -f sites/all/test.db
 export PHP_OPTIONS="-d sendmail_path=`which true`"
-../behat/bin/drush site-install standard --db-url=sqlite://sites/all/test.db --sites-subdir=test --account-pass=admin -y
+../behat/bin/drush site-install behat --db-url=sqlite://sites/all/test.db --sites-subdir=test --account-pass=admin -y
 cd sites/test
 ../../../behat/bin/drush en events_config -y
 ../../../behat/bin/drush en events_event -y
