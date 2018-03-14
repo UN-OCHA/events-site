@@ -1,6 +1,5 @@
-name = Events
-description = Install with commonly used features pre-configured.
-version = VERSION
+name = Behat
+description = Minimal profile for Behat testing.
 core = 7.x
 dependencies[] = block
 dependencies[] = contextual
