@@ -1,17 +1,13 @@
 <?php
 /**
  * @file
- * Install, update and uninstall functions for the standard installation profile.
+ * Minimal profile for Behat testing.
  */
 
 /**
  * Implements hook_install().
- *
- * Perform actions to set up the site for this profile.
- *
- * @see system_install()
  */
-function events_install() {
+function behat_install() {
   // Add text formats.
   $filtered_html_format = array(
     'format' => 'filtered_html',
