@@ -536,6 +536,13 @@ var evCalendar = function ($) {
         element.find('.fc-content').append('<span class="fc-location">' + event.location + '</span>');
       }
     }
+
+    // Add category.
+    if (event.category) {
+      element.find('.fc-event-dot')
+        .html(event.category)
+        .prop('title', event.category);
+    }
   }
 
   function _formatControls() {

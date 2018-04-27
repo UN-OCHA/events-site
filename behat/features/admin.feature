@@ -110,6 +110,6 @@ Feature: Content Management
     And for "title" I enter "xyzzy"
     And I scroll to the "#edit-submit" element
     And I press the "Save" button
-    And I am on the homepage
+    And I go to "calendar"
     And I wait for the ajax response
     Then I should see "xyzzy"

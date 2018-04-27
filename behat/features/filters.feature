@@ -44,7 +44,7 @@ Background:
 
 @api
 Scenario: Check 'Themes' filter
-  Given I am on the homepage
+  When I go to "calendar"
   And I wait for AJAX to finish
   And I click the ".calendar-actions__toggle" element
   Then I should see "Themes"
@@ -59,7 +59,7 @@ Scenario: Check 'Themes' filter
 
 @api
 Scenario: Check 'Location of Event' filter
-  Given I am on the homepage
+  When I go to "calendar"
   And I wait for AJAX to finish
   And I click the ".calendar-actions__toggle" element
   Then I should see "Location of Event"
@@ -69,7 +69,7 @@ Scenario: Check 'Location of Event' filter
 
 @api
 Scenario: Check 'Disasters' filter
-  Given I am on the homepage
+  When I go to "calendar"
   And I wait for AJAX to finish
   And I click the ".calendar-actions__toggle" element
   Then I should see "Disasters"
@@ -79,7 +79,7 @@ Scenario: Check 'Disasters' filter
 
 @api
 Scenario: Check 'Organizations' filter
-  Given I am on the homepage
+  When I go to "calendar"
   And I wait for AJAX to finish
   And I click the ".calendar-actions__toggle" element
   Then I should see "Organizations"
@@ -89,7 +89,7 @@ Scenario: Check 'Organizations' filter
 
 @api
 Scenario: Check 'Clusters' filter
-  Given I am on the homepage
+  When I go to "calendar"
   And I wait for AJAX to finish
   And I click the ".calendar-actions__toggle" element
   Then I should see "Clusters"
@@ -99,7 +99,7 @@ Scenario: Check 'Clusters' filter
 
 @api
 Scenario: Check 'Categories' filter
-  Given I am on the homepage
+  When I go to "calendar"
   And I wait for AJAX to finish
   And I click the ".calendar-actions__toggle" element
   Then I should see "Categories"
