@@ -83,3 +83,12 @@ function events_config_update_7009() {
     'views',
   ));
 }
+
+/**
+ * Enable Maintenance 200.
+ */
+function events_config_update_7010() {
+  module_enable(array('maintenance200'));
+
+  variable_set('maintenance_mode_status', '203 Non-Authoritative Information');
+}
