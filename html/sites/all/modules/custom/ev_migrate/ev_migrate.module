@@ -74,8 +74,8 @@ function _ev_migrate_events_from_reliefweb() {
       variable_set('ev_migrate_page_reliefweb', $page++);
     }
     else {
-        _ev_migrate_send_chat_message_line('No more events to import, sleeping for a while', array('reliefweb'));
-        variable_set('ev_migrate_stop_processing_reliefweb', TRUE);
+      _ev_migrate_send_chat_message_line('No more events to import, sleeping for a while', array('reliefweb'));
+      variable_set('ev_migrate_stop_processing_reliefweb', TRUE);
     }
   }
 
