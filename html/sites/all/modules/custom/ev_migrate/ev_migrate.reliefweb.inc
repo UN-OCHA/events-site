@@ -100,6 +100,10 @@ function ev_migrate_process_row_reliefweb($row, $prefix = '') {
   $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = strtotime($row['fields']['date']['changed']);
   $event->changed = strtotime($row['fields']['date']['changed']);
 
+  if (strlen($row['fields']['url']) > 255) {
+    $parsed_url = parse_url($row['fields']['url']);
+    $row['fields']['url'] = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/node/' . $row['nid'];
+  }
   $needs_update = $needs_update || !isset($event->field_event_source_url[LANGUAGE_NONE][0]['value']) || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['fields']['url'];
   $event->field_event_source_url[LANGUAGE_NONE][0]['value'] = $row['fields']['url'];
 

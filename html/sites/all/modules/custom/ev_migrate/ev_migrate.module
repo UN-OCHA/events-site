@@ -57,12 +57,24 @@ function _ev_migrate_events_from_reliefweb() {
     $data = _ev_migrate_reliefweb_fetch($limit, $offset);
     if (!empty($data)) {
       foreach ($data as $row) {
-        ev_migrate_process_row_reliefweb($row, 'reliefweb-');
+        try {
+          ev_migrate_process_row_reliefweb($row, 'reliefweb-');
+        }
+        catch (PDOException $e) {
+          _ev_migrate_send_chat_message_line('Unexpected database error::' . $e->getMessage(), array('reliefweb', 'error'));
+          return;
+        }
+        catch (Exception $e) {
+          _ev_migrate_send_chat_message_line('Unexpected error::' . $e->getMessage(), array('reliefweb', 'error'));
+          return;
+        }
+
       }
       $page++;
       variable_set('ev_migrate_page_reliefweb', $page++);
     }
     else {
+      _ev_migrate_send_chat_message_line('No more events to import, sleeping for a while', array('reliefweb'));
       variable_set('ev_migrate_stop_processing_reliefweb', TRUE);
     }
   }
@@ -99,7 +111,17 @@ function _ev_migrate_events_from_hrinfo() {
 
   // Migrate n batches.
   for ($i = 0; $i < variable_get('ev_migrate_num_of_runs', 10); $i++) {
-    ev_migrate_events_from_hrinfo();
+    try {
+      ev_migrate_events_from_hrinfo();
+    }
+    catch (PDOException $e) {
+      _ev_migrate_send_chat_message_line('Unexpected database error::' . $e->getMessage(), array('hrinfo', 'error'));
+      return;
+    }
+    catch (Exception $e) {
+      _ev_migrate_send_chat_message_line('Unexpected error::' . $e->getMessage(), array('hrinfo', 'error'));
+      return;
+    }
   }
 
   variable_set('ev_migrate_last_run_hrinfo', REQUEST_TIME);
@@ -243,4 +265,46 @@ function _ev_migrate_system_retrieve_file($url, $destination = NULL, $managed = 
   }
 
   return $local;
+}
+
+/**
+ * Send message to chat.
+ */
+function _ev_migrate_send_chat_message($message_lines, $tags = array()) {
+  if (!variable_get('ev_migrate_chat_send_enabled', FALSE)) {
+    return;
+  }
+
+  if (empty(variable_get('ev_migrate_chat_url', ''))) {
+    return;
+  }
+
+  $tags[] = 'events';
+
+  $message = implode("\n", $message_lines);
+  $url = variable_get('ev_migrate_chat_url', '');
+  $data = array(
+    'event' => 'message',
+    'content' => $message,
+    'tags' => $tags,
+  );
+
+  $options = array(
+    'method' => 'POST',
+    'data' => json_encode($data),
+    'timeout' => 15,
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Accept' => 'application/json',
+    ),
+  );
+
+  drupal_http_request($url, $options);
+}
+
+/**
+ * Send single line to chat.
+ */
+function _ev_migrate_send_chat_message_line($line, $tags = array()) {
+  _ev_migrate_send_chat_message(array($line), $tags);
 }
