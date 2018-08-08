@@ -5,8 +5,16 @@ core = 7.x
 stylesheets[all][] = assets/css/styles.css
 scripts[] = assets/js/bootstrap-dropdown.js
 scripts[] = assets/js/clipboard.min.js
-scripts[] = assets/js/modernizr-output.js
 regions[page_top] = Page Top
 regions[content] = Content
 regions[lang_switch] = Language switcher
 regions[page_bottom] = Page Bottom
+
+;———————————————————————————————————————————————————————————————————————————————
+; Modernizr Test API
+;———————————————————————————————————————————————————————————————————————————————
+modernizr[tests][] = cssgrid_cssgridlegacy
+modernizr[tests][] = flexbox
+modernizr[tests][] = mediaqueries
+modernizr[tests][] = svg
+modernizr[tests][] = setclasses
