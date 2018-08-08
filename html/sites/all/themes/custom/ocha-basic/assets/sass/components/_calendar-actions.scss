@@ -331,7 +331,7 @@ input[type="text"].calendar-search__input {
   z-index: map-get($zindex, default);
 }
 
-@include media-query(md) {
+@include min-width(md) {
 
   .block-views {
     width: 25%;
@@ -626,7 +626,7 @@ input[type="text"].calendar-search__input {
 
 }
 
-@include media-query(lg) {
+@include min-width(lg) {
 
   .calendar-settings {
     max-width: 600px;
@@ -672,7 +672,7 @@ input[type="text"].calendar-search__input {
 
 }
 
-@include media-query(xl) {
+@include min-width(xl) {
 
 	.calendar-actions__toggle, input[type="text"].calendar-search__input {
   	@include font-size($medium-font-size);

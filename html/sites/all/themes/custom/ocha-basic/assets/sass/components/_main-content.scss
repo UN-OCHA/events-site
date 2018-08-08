@@ -8,7 +8,7 @@
 }
 
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	.main-content {
 		img {
@@ -20,7 +20,7 @@
 
 }
 
-@include media-query(md) {
+@include min-width(md) {
 
 	.main-content {
 		img {

@@ -72,7 +72,7 @@ tr.odd, tr.even {
   flex-direction: column;
 }
 
-@include media-query(md) {
+@include min-width(md) {
 
   // Display Suite layout //
   .ds-2col-stacked {

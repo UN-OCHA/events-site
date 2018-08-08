@@ -89,7 +89,7 @@
 	}
 }
 
-@include media-query(md) {
+@include min-width(md) {
 
 	.footer {
 		padding: $base-unit*5 0;

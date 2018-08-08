@@ -1,10 +1,26 @@
 name = OCHABasic
 description = A very simple OCHA branded theme
-
 core = 7.x
+
+;———————————————————————————————————————————————————————————————————————————————
+; Remove Drupal core stylesheets
+;———————————————————————————————————————————————————————————————————————————————
+stylesheets[all][] = unset/system.menus.css
+
+;———————————————————————————————————————————————————————————————————————————————
+; Stylesheets
+;———————————————————————————————————————————————————————————————————————————————
 stylesheets[all][] = assets/css/styles.css
+
+;———————————————————————————————————————————————————————————————————————————————
+; Scripts
+;———————————————————————————————————————————————————————————————————————————————
 scripts[] = assets/js/bootstrap-dropdown.js
 scripts[] = assets/js/clipboard.min.js
+
+;———————————————————————————————————————————————————————————————————————————————
+; Regions
+;———————————————————————————————————————————————————————————————————————————————
 regions[page_top] = Page Top
 regions[content] = Content
 regions[lang_switch] = Language switcher

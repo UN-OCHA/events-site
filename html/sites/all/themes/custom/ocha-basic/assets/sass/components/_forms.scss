@@ -261,7 +261,7 @@ div.vertical-tabs {
 }
 
 
-@include media-query(md) {
+@include min-width(md) {
 
 	.form-managed-file {
 		.form-file {
@@ -376,7 +376,7 @@ div.vertical-tabs {
 	}
 }
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	#events-event-select-location-form {
 		padding: $base-unit*2;
