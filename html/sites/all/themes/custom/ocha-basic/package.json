@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "OCHA Basic theme",
   "author": "UNOCHA",
+  "private": true,
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-autoprefixer": "^3.0.4",
@@ -12,5 +13,9 @@
     "grunt-sass": "^2.1.0",
     "grunt-svgmin": "^4.0.0",
     "load-grunt-tasks": "^0.6.0"
+  },
+  "engines": {
+    "node": "^8.11.3",
+    "npm": "^6.2.0"
   }
 }
