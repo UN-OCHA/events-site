@@ -1,0 +1,62 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Global
+//——————————————————————————————————————————————————————————————————————————————
+@import 'cd/cd-variables';
+@import 'cd/cd-extends';
+@import 'cd/cd-mixins';
+@import 'cd/cd-reset';
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Events: global / resets
+//——————————————————————————————————————————————————————————————————————————————
+@import 'base/_a-reset';
+@import 'base/_base';
+@import 'base/_grid';
+@import 'base/_helpers';
+@import 'base/_typography';
+
+// Instead of CD icons, Events includes extra icons not in the CD set. It also
+// lacks the social media icons so using their set makes much more sense.
+@import 'components/_icons';
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Header/Footer components
+//——————————————————————————————————————————————————————————————————————————————
+
+// Layout
+@import 'cd-layout/cd-layout';
+
+// Header
+@import 'cd-header/cd-header';
+@import 'cd-header/cd-dropdowns';
+@import 'cd-header/cd-logo';
+@import 'cd-header/cd-nav';
+@import 'cd-header/cd-search';
+@import 'cd-header/cd-sites-menu';
+@import 'cd-header/cd-sites-menu--compact';
+@import 'cd-header/cd-user-menu';
+
+// Footer
+@import 'cd-footer/cd-footer';
+@import 'cd-footer/cd-footer-copyright';
+@import 'cd-footer/cd-footer-menu';
+@import 'cd-footer/cd-footer-social';
+@import 'cd-footer/cd-mandate';
+@import 'cd-footer/cd-soft-footer';
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Events: components
+//——————————————————————————————————————————————————————————————————————————————
+@import 'components/_buttons';
+@import 'components/_calendar-actions';
+@import 'components/_chosen';
+@import 'components/_dropdown';
+@import 'components/_event';
+@import 'components/_forms';
+@import 'components/_fullcalendar';
+@import 'components/_main-content';
+@import 'components/_sidebar';
+@import 'components/_tabs';

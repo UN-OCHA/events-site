@@ -8,4 +8,4 @@ sites/*/private
 **/node_modules/
 **/.sass-cache/
 **/.DS_Store
-sites/all/themes/custom/ocha-basic/assets/css/
+sites/all/themes/custom/ocha-basic/assets/css/*.css

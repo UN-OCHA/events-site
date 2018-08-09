@@ -6,13 +6,13 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'assets/css/styles.css': 'assets/css/styles.scss'
+          'assets/css/styles.css': 'assets/sass/styles.scss'
         }
       }
     },
     watch: {
       sass: {
-        files: ['assets/css/styles.scss', 'assets/sass/**/*.scss'],
+        files: ['assets/sass/styles.scss', 'assets/sass/**/*.scss'],
         tasks: ['sass', 'autoprefixer'],
         options: {
           spawn: false,
