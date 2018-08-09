@@ -55,7 +55,7 @@ script:
   - ./scripts/install.sh
   - cd $TRAVIS_BUILD_DIR/behat
   - $TRAVIS_BUILD_DIR/behat/chromedriver &
-  - cd $TRAVIS_BUILD_DIR/html/sites/8888.localhost/
+  - cd $TRAVIS_BUILD_DIR/html/sites/8888.127.0.0.1/
   - ../../../behat/bin/drush runserver 8888 > /dev/null 2>&1 &
 
   # Commented out during https://github.com/UN-OCHA/events-site/pull/341
