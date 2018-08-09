@@ -58,6 +58,7 @@
   &:hover,
   &:focus {
     .cd-user-menu__label {
+      color: $cd-white-text-color;
       border-color: $cd-bright-border-color;
     }
   }
@@ -122,6 +123,7 @@ button.cd-user-menu__item {
   margin: 0;
   width: 125px;
   padding: 12px 24px;
+  z-index: 1000;
 
   li {
     display: block;
@@ -167,6 +169,17 @@ button.cd-user-menu__item {
 
 .cd-user-menu__dropdown-link-label {
   border-bottom: 1px solid transparent;
+}
+
+#cd-lang-toggle {
+  min-width: 46px;
+
+  .cd-user-menu__label {
+    text-transform: uppercase;
+  }
+  .icon-arrow-down {
+    right: 26px;
+  }
 }
 
 @include tablet {

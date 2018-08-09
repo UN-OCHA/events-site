@@ -1,8 +1,5 @@
 //——————————————————————————————————————————————————————————————————————————————
-// Common Design Logo in header.
-// Replace images with your site logo.
-//
-// @TODO: rename files so following ^^^instructions makes sense.
+// Common Design: Header Logo
 //——————————————————————————————————————————————————————————————————————————————
 
 // Wrap the logo in a h1 if it's the main heading for the page (e.g. on homepage).
@@ -11,28 +8,24 @@
 }
 
 .cd-site-logo {
-  background: url('../logos/ocha-logo-mobile.svg') center no-repeat;
+  $logo-height: 42;
+
   display: block;
-  width: 52px;
-  height: $cd-site-header-height;
+  // original: 348x97, but must fit header bar of 60px height plus some space.
+  width: 348px * $logo-height / 97;
+  height: $logo-height + px;
+  background: url('../images/humanitarian-events-logo.svg') center no-repeat;
+  background-size: contain;
   float: left;
 
   .cssgrid.flexbox & {
     float: none;
+    align-self: center;
   }
 
-  .no-svg & {
-    background: url('../logos/ocha-logo-mobile.png') center no-repeat;
-  }
-}
-
-@include tablet {
-  .cd-site-logo {
-    background: url('../logos/ocha-logo.svg') center no-repeat;
-    width: 186px; // width may need to be adjusted depending on logo width.
-
-    .no-svg & {
-      background: url('../logos/ocha-logo-mobile.png') center no-repeat;
-    }
+  // Frontpage behaves differently than Calendar pages and doesn't seem to pick
+  // up the flexbox `align-self` property. Manually adjust...
+  .front & {
+    margin-top: ($cd-site-header-height - $logo-height) / 2;
   }
 }

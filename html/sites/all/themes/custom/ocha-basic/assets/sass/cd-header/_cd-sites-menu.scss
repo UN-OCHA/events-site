@@ -12,7 +12,7 @@
   background: transparent;
   color: $cd-white-text-color;
   display: flex;
-  @include font-size(tiny);
+  @include font-size($small-font-size);
   height: $cd-global-header-height;
   position: relative;
   transition: background 0.3s ease;

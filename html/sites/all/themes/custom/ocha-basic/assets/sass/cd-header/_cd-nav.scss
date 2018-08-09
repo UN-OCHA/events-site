@@ -93,7 +93,7 @@
   button {
     background: none;
     border: 0;
-    @include font-size(tiny);
+    @include font-size($small-font-size);
     text-align: left;
     width: 100%;
   }

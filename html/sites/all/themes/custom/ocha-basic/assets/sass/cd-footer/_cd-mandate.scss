@@ -2,24 +2,21 @@
 // Common Design: OCHA Mandate
 //——————————————————————————————————————————————————————————————————————————————
 .cd-mandate {
- width: 100%;
+  width: 100%;
 }
 
 .cd-mandate__logo {
-  background: url('../logos/ocha-logo-white.svg') 0 center no-repeat;
+  background: url('../images/ocha-logo.svg') 0 center no-repeat;
   display: block;
-  height: 33px;
-  width: 135px;
+  height: 36px;
+  width: 150px;
   margin: 0 auto;
-
-  .no-svg & {
-    background: url('../logos/ocha-logo-white.png') 0 center no-repeat;
-  }
 }
 
 .cd-mandate__heading,
 .cd-mandate__text {
   display: block;
+  margin-bottom: 16px;
 }
 
 .cd-mandate__heading {
@@ -42,7 +39,7 @@
   .cd-mandate__logo {
     box-sizing: content-box;
     float: left;
-    margin: 16px $cd-container-padding 0 auto;
+    margin: 0 $cd-container-padding 0 auto;
     padding-right: $cd-container-padding;
     border-right: 1px solid $cd-border-color;
   }

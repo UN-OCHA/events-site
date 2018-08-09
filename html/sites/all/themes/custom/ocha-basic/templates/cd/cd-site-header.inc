@@ -4,11 +4,8 @@
     <?php include 'cd-logo.inc'; ?>
 
     <div class="cd-site-header__actions">
-
-      <?php include 'cd-search.inc'; ?>
-
-      <?php include 'cd-navigation.inc'; ?>
-
+      <?php /* include 'cd-search.inc'; */ ?>
+      <?php /* include 'cd-navigation.inc'; */ ?>
     </div>
 
   </div>

@@ -1,31 +1,12 @@
-.main-content {
-	img {
-		display: block;
-		width: 80%;
-		max-width: 280px;
-		margin: 0 auto;
-	}
-}
+//——————————————————————————————————————————————————————————————————————————————
+// Events: main content area
+//——————————————————————————————————————————————————————————————————————————————
 
+#main-content {
+  padding-top: 2em;
+  padding-bottom: 4em;
 
-@include min-width(sm) {
-
-	.main-content {
-		img {
-			float: right;
-			max-width: 40%;
-			margin: 0;
-		}
-	}
-
-}
-
-@include min-width(md) {
-
-	.main-content {
-		img {
-			max-width: 30%;
-		}
-	}
-
+  .page-heading {
+    @extend .element-invisible;
+  }
 }

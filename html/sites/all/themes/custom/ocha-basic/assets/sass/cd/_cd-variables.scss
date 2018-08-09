@@ -35,6 +35,22 @@ $cd-container-padding-xlarge: 40px;
 $cd-global-header-height: 35px;
 $cd-site-header-height: 60px;
 
+
+//——• Events-specific measurements •————————————————————————————————————————————
+
+$base-unit: 8px;
+$max-width: 1200px;
+$footer-height: 190px;
+
+// Header
+$cd-global-header-height:$base-unit*5 !default;
+$cd-site-header-height-xs:$base-unit*6 !default;
+$cd-site-header-height-md:$base-unit*7.5 !default;
+$cd-max-width: $max-width !default;
+$cd-logo-width:$base-unit*30 !default;
+
+
+
 //
 // Colours
 //
@@ -88,6 +104,44 @@ $primary-bg-color: #026CB6;
 $light-bg-color: #F2F2F2;
 $highlight-border-color: #002D80;
 $secondary-heading-text-color: #002D80;
+
+//——• Events-specific colors •——————————————————————————————————————————————————
+
+// Colour palette
+$primary-color: #007ac0;
+$secondary-color: #0d6084;
+$light-grey: #ecf1f4;
+$mid-light-grey: #b3b3b3;
+$mid-grey: #565d68;
+$dark-grey: #262A30;
+$red: #e85c41;
+
+// Background colors
+$light-bg-color: $light-grey;
+$primary-bg-color: $primary-color;
+$secondary-bg-color: $secondary-color;
+
+// Border colours
+$border-color: $mid-light-grey;
+$highlight-border-color: $secondary-color;
+$error-border-color: $red;
+$light-border-color: $light-grey;
+
+// Text colours
+$body-text-color: $mid-grey;
+$heading-text-color: $primary-color;
+$heading-text-dark-color: $dark-grey;
+$secondary-heading-text-color: $secondary-color;
+$light-text-color: white;
+$link-text-color: $secondary-color;
+$active-link-text-color: $primary-color;
+$error-text-color: $red;
+
+// Header
+$cd-highlight-color: lighten($primary-bg-color,15%) !default;
+$cd-nav-focus-bg: #F6F6F6 !default;
+
+//——————————————————————————————————————————————————————————————————————————————
 
 
 //

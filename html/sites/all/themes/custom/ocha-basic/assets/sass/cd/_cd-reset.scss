@@ -10,7 +10,7 @@
   // Setup font
   -webkit-font-smoothing: antialiased;
   font-family: $cd-font;
-  @include font-size(tiny);
+  @include font-size($small-font-size);
 
   // Set box-sizing
   box-sizing: border-box;

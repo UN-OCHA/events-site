@@ -51,21 +51,6 @@ tr.odd, tr.even {
   background: none;
 }
 
-.page-wrapper {
-  min-height: 100%;
-  margin-bottom: -$footer-height;
-
-  &:after {
-    content: "";
-    display: block;
-    height: $footer-height;
-  }
-}
-
-.invisible {
-  @extend .sr-only;
-}
-
 .region-content {
   position: relative;
   display: flex;
@@ -74,10 +59,12 @@ tr.odd, tr.even {
 
 @include min-width(md) {
 
-  // Display Suite layout //
+  // Display Suite layout
   .ds-2col-stacked {
     @include clearfix;
-    .group-left, .group-right {
+
+    .group-left,
+    .group-right {
       width: 49%;
       float: left;
       margin: 0 1% 0 0;
@@ -87,11 +74,10 @@ tr.odd, tr.even {
       margin: 0 0 0 1%;
     }
   }
-  //
 }
 
 @media print {
   #toolbar {
-    display: none!important;
+    display: none !important;
   }
 }
