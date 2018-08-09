@@ -1,0 +1,62 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Global
+//——————————————————————————————————————————————————————————————————————————————
+@import '../sass/cd/cd-variables';
+@import '../sass/cd/cd-extends';
+@import '../sass/cd/cd-mixins';
+@import '../sass/cd/cd-reset';
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Events: global / resets
+//——————————————————————————————————————————————————————————————————————————————
+@import '../sass/base/_a-reset';
+@import '../sass/base/_base';
+@import '../sass/base/_grid';
+@import '../sass/base/_helpers';
+@import '../sass/base/_typography';
+
+// Instead of CD icons, Events includes extra icons not in the CD set. It also
+// lacks the social media icons so using their set makes much more sense.
+@import '../sass/components/_icons';
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Header/Footer components
+//——————————————————————————————————————————————————————————————————————————————
+
+// Layout
+@import '../sass/cd-layout/cd-layout';
+
+// Header
+@import '../sass/cd-header/cd-header';
+@import '../sass/cd-header/cd-dropdowns';
+@import '../sass/cd-header/cd-logo';
+@import '../sass/cd-header/cd-nav';
+@import '../sass/cd-header/cd-search';
+@import '../sass/cd-header/cd-sites-menu';
+@import '../sass/cd-header/cd-sites-menu--compact';
+@import '../sass/cd-header/cd-user-menu';
+
+// Footer
+@import '../sass/cd-footer/cd-footer';
+@import '../sass/cd-footer/cd-footer-copyright';
+@import '../sass/cd-footer/cd-footer-menu';
+@import '../sass/cd-footer/cd-footer-social';
+@import '../sass/cd-footer/cd-mandate';
+@import '../sass/cd-footer/cd-soft-footer';
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Events: components
+//——————————————————————————————————————————————————————————————————————————————
+@import '../sass/components/_buttons';
+@import '../sass/components/_calendar-actions';
+@import '../sass/components/_chosen';
+@import '../sass/components/_dropdown';
+@import '../sass/components/_event';
+@import '../sass/components/_forms';
+@import '../sass/components/_fullcalendar';
+@import '../sass/components/_main-content';
+@import '../sass/components/_sidebar';
+@import '../sass/components/_tabs';
