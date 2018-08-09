@@ -261,7 +261,7 @@ div.vertical-tabs {
 }
 
 
-@include media-query(md) {
+@include min-width(md) {
 
 	.form-managed-file {
 		.form-file {
@@ -335,7 +335,7 @@ div.vertical-tabs {
 
 }
 
-/* Home page search */
+// Home page search
 #events-event-select-location-form {
 	text-align: right;
 	margin: $base-unit*2 auto $base-unit*5 auto;
@@ -376,7 +376,7 @@ div.vertical-tabs {
 	}
 }
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	#events-event-select-location-form {
 		padding: $base-unit*2;

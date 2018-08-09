@@ -38,6 +38,7 @@
         "drupal/locale_translation_context": "^1.1",
         "drupal/maintenance200": "^1.1",
         "drupal/markdown": "^1.5",
+        "drupal/modernizr": "^3.11",
         "drupal/moment": "^2.0",
         "drupal/multifield": "1.0-alpha4",
         "drupal/multifield_table": "^1.0",

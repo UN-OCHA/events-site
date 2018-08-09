@@ -83,7 +83,7 @@ dd {
 	margin-bottom: $base-unit;
 }
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	.event-heading, .node-type-page h1 {
 		@include font-size($large-font-size);

@@ -1,0 +1,184 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Variables
+//——————————————————————————————————————————————————————————————————————————————
+
+//——————————————————————————————————————————————————————————————————————————————
+// Breakpoints
+//
+// Usage is defined in the `_cd-mixins` partial.
+//——————————————————————————————————————————————————————————————————————————————
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
+
+$cd-breakpoints: (
+  tablet: map-get($grid-breakpoints, md),
+  desktop: map-get($grid-breakpoints, lg),
+  xlarge: map-get($grid-breakpoints, xl)
+);
+
+//
+// Measurements
+//
+$cd-max-body-width: 1400px;
+$cd-max-width: 1220px;
+$cd-site-padding: 8px;
+$cd-container-padding: 12px;
+$cd-container-padding-tablet: 24px;
+$cd-container-padding-xlarge: 40px;
+
+$cd-global-header-height: 35px;
+$cd-site-header-height: 60px;
+
+
+//——• Events-specific measurements •————————————————————————————————————————————
+
+$base-unit: 8px;
+$max-width: 1200px;
+$footer-height: 190px;
+
+// Header
+$cd-global-header-height:$base-unit*5 !default;
+$cd-site-header-height-xs:$base-unit*6 !default;
+$cd-site-header-height-md:$base-unit*7.5 !default;
+$cd-max-width: $max-width !default;
+$cd-logo-width:$base-unit*30 !default;
+
+
+
+//
+// Colours
+//
+// These can be substituted for your theme colors.
+//
+// @TODO: rename so they make sense when people don't use OCHA blue scheme.
+//
+$cd-ocha-blue: #026CB6;
+$cd-dark-blue: #025995;
+$cd-bright-blue: #80CBFF;
+$cd-light-blue: #9EC5E2;
+$cd-light-grey: #F2F2F2;
+$cd-mid-light-grey: #CCCCCC;
+$cd-mid-grey: #595959;
+$cd-dark-grey: #4A4A4A;
+$cd-dark-bluey-grey: #D3DDE5;
+$cd-mid-bluey-grey: #E6ECF1;
+$cd-light-bluey-grey: #F2F5F8;
+$cd-highlight-red: #EB5C6D;
+$cd-red: #BF0013;
+$cd-white: #FFFFFF;
+
+// Background colours
+$cd-site-bg-color: $cd-mid-bluey-grey;
+$cd-white-bg-color: #FFF;
+$cd-primary-bg-color: $cd-ocha-blue;
+$cd-dark-primary-bg-color: $cd-dark-blue;
+$cd-dark-bg-color: $cd-dark-bluey-grey;
+$cd-mid-bg-color: $cd-mid-bluey-grey;
+$cd-light-bg-color: $cd-light-bluey-grey;
+
+// Border colours
+$cd-border-color: $cd-mid-bluey-grey;
+$cd-bright-border-color: $cd-bright-blue;
+$cd-light-blue-border-color: $cd-light-blue;
+$cd-white-border: #FFF;
+
+// Text colours
+$cd-white-text-color: #FFF;
+$cd-default-text-color: $cd-dark-grey;
+$cd-dark-text-color: #000;
+$cd-blue-text-color: $cd-ocha-blue;
+$cd-bright-blue-text-color: $cd-bright-blue;
+
+// Block colours
+$base-unit: 8px;
+$medium-font-size: 20px;
+$base-font-size: 16px;
+$small-font-size: 14px;
+$primary-bg-color: #026CB6;
+$light-bg-color: #F2F2F2;
+$highlight-border-color: #002D80;
+$secondary-heading-text-color: #002D80;
+
+//——• Events-specific colors •——————————————————————————————————————————————————
+
+// Colour palette
+$primary-color: #007ac0;
+$secondary-color: #0d6084;
+$light-grey: #ecf1f4;
+$mid-light-grey: #b3b3b3;
+$mid-grey: #565d68;
+$dark-grey: #262A30;
+$red: #e85c41;
+
+// Background colors
+$light-bg-color: $light-grey;
+$primary-bg-color: $primary-color;
+$secondary-bg-color: $secondary-color;
+
+// Border colours
+$border-color: $mid-light-grey;
+$highlight-border-color: $secondary-color;
+$error-border-color: $red;
+$light-border-color: $light-grey;
+
+// Text colours
+$body-text-color: $mid-grey;
+$heading-text-color: $primary-color;
+$heading-text-dark-color: $dark-grey;
+$secondary-heading-text-color: $secondary-color;
+$light-text-color: white;
+$link-text-color: $secondary-color;
+$active-link-text-color: $primary-color;
+$error-text-color: $red;
+
+// Header
+$cd-highlight-color: lighten($primary-bg-color,15%) !default;
+$cd-nav-focus-bg: #F6F6F6 !default;
+
+//——————————————————————————————————————————————————————————————————————————————
+
+
+//
+// Fonts
+//
+$cd-font: sans-serif; // Same as helvetica, arial, sans-serif;
+$body-font: helvetica, arial, sans-serif;
+$heading-font: 'Open Sans', helvetica, arial, sans-serif;
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// Font sizes
+// Usage: @include font-size($base-font-size);
+//——————————————————————————————————————————————————————————————————————————————
+$small-font-size: 12;
+$base-font-size: 14;
+$medium-font-size: 16;
+$large-font-size: 30;
+
+$cd-font-sizes: (
+  tiny: 12,
+  default: 14,
+  medium: 16,
+  large: 20,
+  xlarge: 30
+);
+
+
+//——————————————————————————————————————————————————————————————————————————————
+// z-indices
+//
+// Usage: z-index: z(dropdown);
+//——————————————————————————————————————————————————————————————————————————————
+$zindex: (
+  default: 1,
+  hidden: -1,
+  sidebar: 110,
+  sidebar-underlay: 100,
+  dropdown: 200
+);

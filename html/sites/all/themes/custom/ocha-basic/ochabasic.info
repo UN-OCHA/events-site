@@ -1,12 +1,47 @@
 name = OCHABasic
 description = A very simple OCHA branded theme
-
 core = 7.x
+
+;———————————————————————————————————————————————————————————————————————————————
+; Remove Drupal core stylesheets
+;———————————————————————————————————————————————————————————————————————————————
+stylesheets[all][] = unset/system.menus.css
+
+;———————————————————————————————————————————————————————————————————————————————
+; Stylesheets
+;———————————————————————————————————————————————————————————————————————————————
 stylesheets[all][] = assets/css/styles.css
+
+;———————————————————————————————————————————————————————————————————————————————
+; Scripts
+;———————————————————————————————————————————————————————————————————————————————
 scripts[] = assets/js/bootstrap-dropdown.js
 scripts[] = assets/js/clipboard.min.js
-scripts[] = assets/js/modernizr-output.js
+
+;———————————————————————————————————————————————————————————————————————————————
+; Regions
+;———————————————————————————————————————————————————————————————————————————————
 regions[page_top] = Page Top
-regions[content] = Content
 regions[lang_switch] = Language switcher
 regions[page_bottom] = Page Bottom
+
+; CD regions
+regions[header_top] = Header top
+regions[header_search] = Header search
+regions[header_navigation] = Header navigation
+regions[content] = Content
+regions[sidebar_first] = First sidebar
+regions[footer_navigation] = Footer navigation
+regions[footer_logos] = Footer logos
+regions[footer_info] = Footer info
+regions[footer_license] = Footer license
+
+
+;———————————————————————————————————————————————————————————————————————————————
+; Modernizr Test API
+;———————————————————————————————————————————————————————————————————————————————
+modernizr[tests][] = cssgrid_cssgridlegacy
+modernizr[tests][] = flexbox
+modernizr[tests][] = mediaqueries
+modernizr[tests][] = svg
+modernizr[tests][] = setclasses
