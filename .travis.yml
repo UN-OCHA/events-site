@@ -18,9 +18,8 @@ env:
 
 before_script:
   - cd $TRAVIS_BUILD_DIR
-  - rm composer.json
-  - mv composer.travis.json composer.json
-  - composer install
+  - rm -f composer.lock
+  - COMPOSER=composer.travis.json composer install
 
   # Ensure the PHP environment is ready.
   - phpenv rehash
