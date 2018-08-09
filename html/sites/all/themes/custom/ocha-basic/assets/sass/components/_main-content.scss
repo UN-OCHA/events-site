@@ -6,7 +6,9 @@
   padding-top: 2em;
   padding-bottom: 4em;
 
-  .page-heading {
+  // Hide the page title on home/calendar
+  .front & .page-heading,
+  .page-calendar & .page-heading {
     @extend .element-invisible;
   }
 }
