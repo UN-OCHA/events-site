@@ -28,6 +28,7 @@ function ev_migrate_events_from_hrinfo() {
   $url .= '/' . $page;
   $url .= '/' . $timestamp;
   $url .= '/' . $hash;
+  $url .= '/' . variable_get('ev_migrate_highwater_mark_hrinfo', 0);
 
   // Get data.
   $request = drupal_http_request($url);
@@ -56,6 +57,7 @@ function ev_migrate_events_from_hrinfo() {
   }
 
   variable_set('ev_migrate_stop_processing_hrinfo', TRUE);
+  variable_set('ev_migrate_highwater_mark_hrinfo', REQUEST_TIME);
 };
 
 /**
