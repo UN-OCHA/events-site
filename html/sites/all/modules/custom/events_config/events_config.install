@@ -83,3 +83,10 @@ function events_config_update_7009() {
     'views',
   ));
 }
+
+/**
+ * Enable Modernizr.
+ */
+function events_config_update_7010() {
+  module_enable(array('modernizr'));
+}
