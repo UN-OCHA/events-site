@@ -35,26 +35,10 @@ module.exports = function(grunt) {
           'assets/css/styles.css': 'assets/css/styles.css'
         }
       }
-    },
-
-    modernizr: {
-      dist: {
-        crawl: false,
-        dest: 'assets/js/modernizr-output.js',
-        tests: [
-          'flexbox'
-        ],
-        options: [
-          'setClasses'
-        ],
-        uglify: true
-      }
     }
   });
 
   require('load-grunt-tasks')(grunt);
-  grunt.loadNpmTasks("grunt-modernizr"); //not picked up by load-grunt-tasks
 
-  grunt.registerTask('default', ['sass', 'autoprefixer', 'cssmin', 'modernizr']);
-
+  grunt.registerTask('default', ['sass', 'autoprefixer', 'cssmin']);
 };
