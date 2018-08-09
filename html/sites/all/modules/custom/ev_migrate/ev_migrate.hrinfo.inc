@@ -28,6 +28,7 @@ function ev_migrate_events_from_hrinfo() {
   $url .= '/' . $page;
   $url .= '/' . $timestamp;
   $url .= '/' . $hash;
+  $url .= '/' . variable_get('ev_migrate_highwater_mark_hrinfo', 0);
 
   // Get data.
   $request = drupal_http_request($url);
@@ -50,9 +51,13 @@ function ev_migrate_events_from_hrinfo() {
 
       return;
     }
+    else {
+      _ev_migrate_send_chat_message_line('No more events to import, sleeping for a while', array('hrinfo'));
+    }
   }
 
   variable_set('ev_migrate_stop_processing_hrinfo', TRUE);
+  variable_set('ev_migrate_highwater_mark_hrinfo', REQUEST_TIME);
 };
 
 /**
@@ -157,6 +162,10 @@ function ev_migrate_process_row_from_hrinfo($row, $prefix = '') {
   $event->field_event_source_updated[LANGUAGE_NONE][0]['value'] = $row['changed'];
   $event->changed = $row['changed'];
 
+  if (strlen($row['url']) > 255) {
+    $parsed_url = parse_url($row['url']);
+    $row['url'] = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/node/' . $row['nid'];
+  }
   $needs_update = $needs_update || !isset($event->field_event_source_url[LANGUAGE_NONE][0]['value']) || $event->field_event_source_url[LANGUAGE_NONE][0]['value'] != $row['url'];
   $event->field_event_source_url[LANGUAGE_NONE][0]['value'] = $row['url'];
 
