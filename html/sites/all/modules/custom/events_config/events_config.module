@@ -578,6 +578,7 @@ function events_config_fetch_and_sync_locations() {
     cache_clear_all('events_event:locations', 'cache');
     cache_clear_all('events_event:edit-locations', 'cache');
     variable_set('events_config_fetch_and_sync_locations_last_run', REQUEST_TIME);
+    variable_set('ev_migrate_highwater_mark_hrinfo_locations', REQUEST_TIME);
   }
 }
 
@@ -590,6 +591,11 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
 
   while (TRUE) {
     $fetch_url = $url . '&page=' . $page;
+
+    // Add high-water mark.
+    $fetch_url .= '&filter[changed][value]=' . variable_get('ev_migrate_highwater_mark_hrinfo_locations', 0) . '&filter[changed][operator]=>';
+    $fetch_url .= '&sort=changed,id';
+
     _events_config_log('Fetching ' . $fetch_url);
     $request = drupal_http_request($fetch_url);
     if (isset($request->data)) {

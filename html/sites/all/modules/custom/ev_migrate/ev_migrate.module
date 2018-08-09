@@ -86,7 +86,7 @@ function _ev_migrate_events_from_reliefweb() {
     taxonomy_term_save($source_term);
   }
 
-  variable_set('ev_migrate_last_run_hrinfo', REQUEST_TIME);
+  variable_set('ev_migrate_last_run_reliefweb', REQUEST_TIME);
 }
 
 /**
