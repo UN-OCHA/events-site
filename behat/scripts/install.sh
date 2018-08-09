@@ -1,4 +1,3 @@
-cp scripts/sites.php ../html/sites/
 cd ../html
 export PHP_OPTIONS="-d sendmail_path=`which true`"
 ../behat/bin/drush site-install behat --debug --root=$PWD --db-url=sqlite://sites/all/test.db --sites-subdir=8888.localhost --account-pass=admin -y
