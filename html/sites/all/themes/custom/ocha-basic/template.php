@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Template overrides, preprocess, and alter hooks for the OCHA Basic theme.
@@ -19,14 +20,13 @@ function ochabasic_preprocess_html(&$vars) {
   drupal_add_html_head($viewport, 'viewport');
 }
 
-
 /**
  * Implements template_preprocess_page().
  */
 function ochabasic_preprocess_page(&$vars) {
   // Assemble list of active languages in this installation.
   $lang_list = language_list('enabled');
-  foreach($lang_list['1'] as $avail_lang) {
+  foreach ($lang_list['1'] as $avail_lang) {
     $vars['available_languages'][] = $avail_lang;
   }
 }
