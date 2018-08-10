@@ -744,7 +744,7 @@ function events_config_preprocess_page(&$variables) {
       'class' => [
         'cd-global-header__dropdown',
         'cd-dropdown',
-        'cd-user-menu__dropdown'
+        'cd-user-menu__dropdown',
       ],
       'role' => 'menu',
       'id' => 'cd-language',
