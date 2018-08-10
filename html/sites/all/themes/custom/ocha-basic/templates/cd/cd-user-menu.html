@@ -1,3 +1,23 @@
+<?php if ($secondary_menu): ?>
+  <?php print theme('links__system_secondary_menu',
+    [
+      'links' => $secondary_menu,
+      'attributes' => [
+        'id' => 'secondary-menu',
+        'class' => ['cd-user-menu'],
+      ],
+    ]
+  ); ?>
+<?php endif; ?>
+
+<?php if (isset($page['language_switcher'])): ?>
+  <div class="cd-global-header__language-switcher">
+    <?php print $page['language_switcher']; ?>
+  </div>
+<?php endif; ?>
+
+<?php
+/*
 <ul class="cd-user-menu">
   <li>
     <a href="/login" class="cd-user-menu__item">
@@ -21,3 +41,4 @@
     </ul>
   </li>
 </ul>
+*/

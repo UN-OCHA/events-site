@@ -741,7 +741,11 @@ function events_config_preprocess_page(&$variables) {
   $vars = array(
     'links' => $links->links,
     'attributes' => array(
-      'class' => array('cd-dropdown-menu'),
+      'class' => [
+        'cd-global-header__dropdown',
+        'cd-dropdown',
+        'cd-user-menu__dropdown',
+      ],
       'role' => 'menu',
       'id' => 'cd-language',
       'aria-labelledby' => 'cd-language-toggle',
@@ -750,7 +754,7 @@ function events_config_preprocess_page(&$variables) {
 
   $output = '';
   $output .= '<div class="language-switcher">';
-  $output .= '<button type="button" class="cd-global-header__lang-btn" data-toggle="dropdown" id="cd-language-toggle">';
+  $output .= '<button type="button" class="cd-user-menu__item cd-user-menu__item--small cd-global-header__dropdown-btn" data-toggle="dropdown" id="cd-language-toggle">';
   $output .= $language->language;
   $output .= '<i class="icon-arrow-down" aria-hidden="true"></i>';
   $output .= '</button>';
