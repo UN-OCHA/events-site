@@ -741,7 +741,11 @@ function events_config_preprocess_page(&$variables) {
   $vars = array(
     'links' => $links->links,
     'attributes' => array(
-      'class' => array('cd-global-header__dropdown', 'cd-dropdown', 'cd-user-menu__dropdown'),
+      'class' => [
+        'cd-global-header__dropdown',
+        'cd-dropdown',
+        'cd-user-menu__dropdown'
+      ],
       'role' => 'menu',
       'id' => 'cd-language',
       'aria-labelledby' => 'cd-language-toggle',
