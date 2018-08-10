@@ -21,6 +21,7 @@
     position: relative;
 
     &:last-child {
+      li,
       .cd-user-menu__item {
         padding-right: 0;
 
@@ -32,6 +33,7 @@
   }
 }
 
+.cd-user-menu > li a,
 .cd-user-menu__item {
   background: transparent;
   color: $cd-white-text-color;
@@ -77,7 +79,7 @@
 
 // button menu items have extra padding to allow space for the arrow icon.
 button.cd-user-menu__item {
-  padding-right: 26px;
+  padding-right: 30px;
 
   .icon-arrow-down {
     position: absolute;
@@ -118,7 +120,7 @@ button.cd-user-menu__item {
 
 .cd-user-menu__dropdown  {
   left: auto;
-  right: 0;
+  right: 1em;
   list-style: none;
   margin: 0;
   width: 125px;
@@ -171,19 +173,7 @@ button.cd-user-menu__item {
   border-bottom: 1px solid transparent;
 }
 
-#cd-lang-toggle {
-  min-width: 46px;
-
-  .cd-user-menu__label {
-    text-transform: uppercase;
-  }
-  .icon-arrow-down {
-    right: 26px;
-  }
-}
-
 @include tablet {
-
   .cd-user-menu__item {
     max-width: none;
     padding: 0 16px;
@@ -214,5 +204,38 @@ button.cd-user-menu__item {
       @include unhide;
     }
   }
+}
 
+.cd-global-header__language-switcher {
+  position: absolute;
+  right: 0;
+}
+
+#cd-language-toggle {
+  min-width: 46px;
+  color: $cd-white;
+  text-transform: uppercase;
+
+  .icon-arrow-down {
+    right: 12px;
+    top: 16px;
+  }
+
+  &::after {
+    content: none;
+  }
+}
+
+//——————————————————————————————————————————————————————————————————————————————
+// Drupal integrations
+//——————————————————————————————————————————————————————————————————————————————
+
+.language-switcher {
+  .cd-user-menu__dropdown {
+    width: 85px;
+  }
+
+  .language-link {
+    @extend .cd-user-menu__dropdown-link;
+  }
 }
