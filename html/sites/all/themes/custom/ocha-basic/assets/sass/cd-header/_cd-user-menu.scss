@@ -215,6 +215,7 @@ button.cd-user-menu__item {
   min-width: 46px;
   color: $cd-white;
   text-transform: uppercase;
+  @include font-size(12);
 
   .icon-arrow-down {
     right: 12px;
