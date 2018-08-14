@@ -8,7 +8,6 @@
 .cd-header,
 .cd-footer {
   // Setup font
-  -webkit-font-smoothing: antialiased;
   font-family: $cd-font;
   @include font-size($small-font-size);
 
