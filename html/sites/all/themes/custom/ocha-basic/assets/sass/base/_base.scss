@@ -1,7 +1,8 @@
 * {
   box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  &:before, &:after {
+
+  &:before,
+  &:after {
     box-sizing: border-box;
   }
 }
