@@ -1,10 +1,15 @@
 //——————————————————————————————————————————————————————————————————————————————
 // Common Design: Sites Menu ('OCHA Services')
-// Button and dropdown with links to OCHA services.
 //——————————————————————————————————————————————————————————————————————————————
 
 .cd-sites {
   float: left;
+
+  &.open {
+    // Must be static so sites menu can fill page-wrapper horizontal space, but
+    // other instances of `.open` need `position: relative`
+    position: static;
+  }
 }
 
 .cd-sites-btn {
