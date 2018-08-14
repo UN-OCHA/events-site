@@ -578,6 +578,7 @@ function events_config_fetch_and_sync_locations() {
     cache_clear_all('events_event:locations', 'cache');
     cache_clear_all('events_event:edit-locations', 'cache');
     variable_set('events_config_fetch_and_sync_locations_last_run', REQUEST_TIME);
+    variable_set('ev_migrate_highwater_mark_hrinfo_locations', REQUEST_TIME);
   }
 }
 
@@ -590,6 +591,11 @@ function events_config_fetch_and_sync_locations_endpoint($endpoint, $parent_need
 
   while (TRUE) {
     $fetch_url = $url . '&page=' . $page;
+
+    // Add high-water mark.
+    $fetch_url .= '&filter[changed][value]=' . variable_get('ev_migrate_highwater_mark_hrinfo_locations', 0) . '&filter[changed][operator]=>';
+    $fetch_url .= '&sort=changed,id';
+
     _events_config_log('Fetching ' . $fetch_url);
     $request = drupal_http_request($fetch_url);
     if (isset($request->data)) {
@@ -735,7 +741,11 @@ function events_config_preprocess_page(&$variables) {
   $vars = array(
     'links' => $links->links,
     'attributes' => array(
-      'class' => array('cd-dropdown-menu'),
+      'class' => [
+        'cd-global-header__dropdown',
+        'cd-dropdown',
+        'cd-user-menu__dropdown',
+      ],
       'role' => 'menu',
       'id' => 'cd-language',
       'aria-labelledby' => 'cd-language-toggle',
@@ -744,7 +754,7 @@ function events_config_preprocess_page(&$variables) {
 
   $output = '';
   $output .= '<div class="language-switcher">';
-  $output .= '<button type="button" class="cd-global-header__lang-btn" data-toggle="dropdown" id="cd-language-toggle">';
+  $output .= '<button type="button" class="cd-user-menu__item cd-user-menu__item--small cd-global-header__dropdown-btn" data-toggle="dropdown" id="cd-language-toggle">';
   $output .= $language->language;
   $output .= '<i class="icon-arrow-down" aria-hidden="true"></i>';
   $output .= '</button>';

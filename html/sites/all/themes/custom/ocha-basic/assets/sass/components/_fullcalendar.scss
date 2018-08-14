@@ -1635,7 +1635,7 @@ td.fc-list-item-title {
 }
 
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	.fc-day-grid-event .fc-content {
 		white-space: initial;
@@ -1647,7 +1647,7 @@ td.fc-list-item-title {
 
 }
 
-@include media-query(md) {
+@include min-width(md) {
 
 	.fc-list-table td {
 	  display: table-cell;
@@ -1762,7 +1762,7 @@ td.fc-list-item-title {
 
 }
 
-@include media-query(lg) {
+@include min-width(lg) {
 
 	.fc-toolbar .fc-right {
 		float: right;

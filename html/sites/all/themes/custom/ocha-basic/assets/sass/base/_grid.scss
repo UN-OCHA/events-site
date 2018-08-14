@@ -75,7 +75,7 @@ $grid-columns: 12 !default;
         @extend %grid-column;
       }
     }
-    @include media-query($breakpoint) {
+    @include min-width($breakpoint) {
 
       @for $i from 1 through $columns {
         .col-#{$breakpoint}-#{$i} {
@@ -107,7 +107,7 @@ $grid-columns: 12 !default;
   @include make-container();
   @include make-gutters();
 
-  @include media-query(xl) {
+  @include min-width(xl) {
     padding-left: $base-unit*5;
     padding-right: $base-unit*5;
   }

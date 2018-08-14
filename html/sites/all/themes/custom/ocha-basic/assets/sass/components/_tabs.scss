@@ -32,7 +32,7 @@
 	}
 }
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	.tabs.primary {
 

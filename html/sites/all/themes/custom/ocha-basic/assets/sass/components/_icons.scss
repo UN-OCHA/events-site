@@ -1,3 +1,7 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Events: icons
+//——————————————————————————————————————————————————————————————————————————————
+
 @font-face {
   font-family: 'unocha-icons';
   src:  url('../icons/unocha-icons.eot?jb5mn9');
@@ -10,7 +14,7 @@
 }
 
 [class^="icon-"], [class*=" icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
+  // use !important to prevent issues with browser extensions that change fonts */
   font-family: 'unocha-icons' !important;
   speak: none;
   font-style: normal;
@@ -19,7 +23,7 @@
   text-transform: none;
   line-height: 1;
 
-  /* Better Font Rendering =========== */
+  // Better Font Rendering ===========
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

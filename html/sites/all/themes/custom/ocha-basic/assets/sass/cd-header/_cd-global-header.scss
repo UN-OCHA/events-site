@@ -1,0 +1,21 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Global Header
+//——————————————————————————————————————————————————————————————————————————————
+
+.cd-global-header__inner {
+  position: relative;
+
+  // Some magic numbers to keep the user menu consistently spaced as the CD padding
+  // changes at various breakpoints.
+  .cd-user-menu {
+    margin-right: 48px;
+
+    @include tablet {
+      margin-right: 36px;
+    }
+
+    @include xlarge {
+      margin-right: 20px;
+    }
+  }
+}

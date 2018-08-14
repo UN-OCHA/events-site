@@ -34,7 +34,7 @@
   border-bottom: 1px dotted $mid-light-grey;
   padding-bottom: $base-unit*1.5;
   margin-bottom: $base-unit;
-  
+
   > div {
     flex: 0 0 100%;
   }
@@ -43,14 +43,14 @@
     font-weight: 600;
     display: inline;
   }
-  
+
 }
 
 .info-recurring--all-repeats {
   .info-recurring--all-repeats--dates {
     display: none;
   }
-  
+
   &:hover .info-recurring--all-repeats--dates {
     display: block;
     position: absolute;
@@ -62,7 +62,7 @@
   }
 }
 
-@include media-query(sm) {
+@include min-width(sm) {
   .info-recurring {
     padding-bottom: $base-unit*1.5;
     margin-bottom: $base-unit*2;
@@ -70,7 +70,7 @@
     > div {
       flex: 1;
     }
-    
+
     > div + div {
       border-left: 1px solid $mid-light-grey;
       margin-left: $base-unit;
@@ -198,7 +198,7 @@
   }
 }
 
-@include media-query(sm) {
+@include min-width(sm) {
 
 	.node-ev-event {
 
