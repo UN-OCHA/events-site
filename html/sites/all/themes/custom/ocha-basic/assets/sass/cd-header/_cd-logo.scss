@@ -14,7 +14,7 @@
   // original: 348x97, but must fit header bar of 60px height plus some space.
   width: 348px * $logo-height / 97;
   height: $logo-height + px;
-  background: url('../images/humanitarian-events-logo.svg') center no-repeat;
+  background: url('../img/humanitarian-events-logo.svg') center no-repeat;
   background-size: contain;
   float: left;
 
