@@ -18,6 +18,7 @@
   color: $cd-white-text-color;
   display: flex;
   @include font-size($small-font-size);
+  font-weight: 300;
   height: $cd-global-header-height;
   position: relative;
   transition: background 0.3s ease;
