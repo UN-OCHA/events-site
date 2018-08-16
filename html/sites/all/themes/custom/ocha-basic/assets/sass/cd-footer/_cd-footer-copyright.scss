@@ -30,9 +30,9 @@
 }
 
 @include desktop {
-
   .cd-footer-copyright {
-    flex: 0 1 350px;
+    max-width: 350px;
+    flex: 1 1 350px;
     align-items: flex-start;
     display: flex;
     justify-content: flex-end;

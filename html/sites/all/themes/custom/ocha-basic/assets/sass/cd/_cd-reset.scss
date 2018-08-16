@@ -10,6 +10,8 @@
   // Setup font
   font-family: $cd-font;
   @include font-size($small-font-size);
+  font-weight: 300;
+  line-height: 1.5;
 
   // Set box-sizing
   box-sizing: border-box;
@@ -26,6 +28,8 @@
     border-radius: 0;
     box-shadow: none;
     font-family: $cd-font;
+    @include font-size($small-font-size);
+    font-weight: 300;
   }
 }
 
