@@ -39,7 +39,7 @@
   .cd-mandate__logo {
     box-sizing: content-box;
     float: left;
-    margin: 0 $cd-container-padding 0 auto;
+    margin: -4px $cd-container-padding 0 auto;
     padding-right: $cd-container-padding;
     border-right: 1px solid $cd-border-color;
   }
