@@ -16,7 +16,15 @@
   margin: 0 20px 0 0;
   padding: 0;
   position: absolute;
-  right: 36px;
+  right: 36px + $cd-container-padding;
+
+  @include tablet {
+    right: 36px + $cd-container-padding-tablet;
+  }
+
+  @include desktop {
+    right: 36px + $cd-container-padding-xlarge;
+  }
 
   li {
     float: left;
@@ -210,7 +218,14 @@ button.cd-user-menu__item {
 
 .cd-global-header__language-switcher {
   position: absolute;
-  right: 0;
+  right: $cd-container-padding;
+
+  @include tablet {
+    right: $cd-container-padding-tablet;
+  }
+  @include desktop {
+    right: $cd-container-padding-xlarge;
+  }
 }
 
 #cd-language-toggle {
