@@ -36,6 +36,7 @@ body {
   padding: 0 $cd-container-padding;
   margin: 0 auto;
   max-width: $cd-max-width;
+  position: relative; // allow for positioning inside containers
 
   @include tablet {
     padding: 0 $cd-container-padding-tablet;
