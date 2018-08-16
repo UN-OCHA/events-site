@@ -22,8 +22,13 @@
     right: 36px + $cd-container-padding-tablet;
   }
 
+  // Desktop+
+  //
+  // The OCHA Services menu is meant to be full-width but the buttons in the Global
+  // Header are constrained to a grid-max value. In order to position both elements
+  // we are forced to do a bunch of math to get the User Menu in the right position.
   @include desktop {
-    right: 36px + $cd-container-padding-xlarge;
+    right: 36px + $cd-container-padding-xlarge + (($cd-max-body-width - $cd-max-width) / 2);
   }
 
   li {
@@ -223,8 +228,14 @@ button.cd-user-menu__item {
   @include tablet {
     right: $cd-container-padding-tablet;
   }
+
+  // Desktop+
+  //
+  // The OCHA Services menu is meant to be full-width but the buttons in the Global
+  // Header are constrained to a grid-max value. In order to position both elements
+  // we are forced to do a bunch of math to get the User Menu in the right position.
   @include desktop {
-    right: $cd-container-padding-xlarge;
+    right: $cd-container-padding-xlarge + (($cd-max-body-width - $cd-max-width) / 2);
   }
 }
 
