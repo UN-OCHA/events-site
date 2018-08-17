@@ -20,6 +20,7 @@
   @include font-size($small-font-size);
   font-weight: 300;
   height: $cd-global-header-height;
+  padding: 0 0 0 1px;
   position: relative;
   transition: background 0.3s ease;
 
