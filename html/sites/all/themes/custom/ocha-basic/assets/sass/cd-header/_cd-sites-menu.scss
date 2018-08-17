@@ -29,7 +29,8 @@
 }
 
 .cd-sites-btn__logo {
-  background: url('../img/logos-sprite.svg') 0 -144px no-repeat;
+  background: url('../img/ocha-logo-white.svg') center no-repeat;
+  background-size: contain;
   display: inline-block;
   flex-shrink: 0;
   height: 18px;
@@ -38,6 +39,7 @@
 
   .no-svg & {
     background: url('../img/logos-sprite.png') 0 -144px no-repeat;
+    background-size: unset;
   }
 }
 
