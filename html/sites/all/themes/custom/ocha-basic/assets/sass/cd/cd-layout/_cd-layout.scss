@@ -25,6 +25,10 @@ body {
   grid-template-rows: 1fr auto;
 }
 
+.page-wrapper {
+  background: $cd-white;
+}
+
 .cd-container {
   @include clearfix;
   box-sizing: border-box;
