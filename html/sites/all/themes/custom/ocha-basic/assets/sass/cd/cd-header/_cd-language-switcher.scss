@@ -73,10 +73,6 @@
 #cd-language {
   right: $cd-container-padding;
 
-  @include xl {
-    right: 50px;
-  }
-
   li a {
     @extend .cd-user-menu__dropdown-link;
   }
