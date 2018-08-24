@@ -20,10 +20,10 @@ html, input {
 }
 
 body {
-  font-family: $body-font;
-  @include font-size($base-font-size);
+  font-family: $cd-font;
+  @include font-size($cd-font-size-base);
   font-weight: 300;
-  color: $body-text-color;
+  color: $cd-mid-grey;
   line-height: 1.5;
   background: white;
 

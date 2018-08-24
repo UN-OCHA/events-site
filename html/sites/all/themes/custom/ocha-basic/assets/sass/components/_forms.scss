@@ -7,8 +7,8 @@ input[type="tel"],
 input[type="url"],
 input[type="date"],
 textarea {
-	@include font-size($base-font-size);
-	padding: $base-unit;
+	@include font-size($cd-font-size-small);
+	padding: $cd-base-unit;
 	border: 1px solid #ccc;
 	max-width: 100%;
 }
@@ -19,19 +19,19 @@ form {
 		background: white;
 
 		td {
-			padding: $base-unit/2 0;
+			padding: $cd-base-unit/2 0;
 		}
 	}
 }
 
 .form-item {
-	background: $light-bg-color;
-	padding: $base-unit*2;
+	background: $cd-light-grey;
+	padding: $cd-base-unit*2;
 	margin: 0 0 1px 0;
 
 	.form-item, .vertical-tabs & {
 		padding: 0;
-		margin: 0 0 $base-unit 0;
+		margin: 0 0 $cd-base-unit 0;
 		background: none;
 	}
 
@@ -49,8 +49,8 @@ form {
 
 	.form-file {
 		width: 210px;
-		padding: 0 $base-unit/2;
-		margin: $base-unit*1.5 0 $base-unit*2;
+		padding: 0 $cd-base-unit/2;
+		margin: $cd-base-unit*1.5 0 $cd-base-unit*2;
 		position: relative;
 		z-index: map-get($zindex, default);
 	}
@@ -74,7 +74,7 @@ form {
 	}
 
 	tr {
-		border-top: 4px solid $light-bg-color;
+		border-top: 4px solid $cd-light-grey;
 
 		&:first-child {
 			border: none;
@@ -82,7 +82,7 @@ form {
 	}
 
 	.form-item {
-		padding-bottom: $base-unit*4;
+		padding-bottom: $cd-base-unit*4;
 
 		.form-item {
 			padding-bottom: 0;
@@ -98,7 +98,7 @@ form .field-multiple-table {
 	}
 
 	th.field-label, td {
-		padding: $base-unit;
+		padding: $cd-base-unit;
 	}
 
 	td {
@@ -108,7 +108,7 @@ form .field-multiple-table {
 
 	td.field-multiple-drag {
 		position: absolute;
-		right: $base-unit*2;
+		right: $cd-base-unit*2;
 
 		a.tabledrag-handle {
 			float: none;
@@ -129,13 +129,13 @@ form .field-multiple-table {
 
 .form-type-managed-file {
 	label {
-		margin-bottom: $base-unit/2;
+		margin-bottom: $cd-base-unit/2;
 	}
 }
 
 .i-am-dragdropfile.form-submit {
 	display: block;
-	margin: $base-unit/2 0;
+	margin: $cd-base-unit/2 0;
 }
 
 a.tabledrag-handle .handle {
@@ -149,8 +149,8 @@ a.tabledrag-handle .handle {
 
 .tabledrag-toggle-weight-wrapper {
 	position: absolute;
-	left: $base-unit*2;
-	bottom: $base-unit;
+	left: $cd-base-unit*2;
+	bottom: $cd-base-unit;
 }
 
 label {
@@ -164,11 +164,11 @@ label {
 
 .dragdropfile-processed {
 	outline: dotted 1px #ccc;
-	padding: $base-unit/2;
-	margin-right: $base-unit/2;
+	padding: $cd-base-unit/2;
+	margin-right: $cd-base-unit/2;
 
 	&.over {
-		background: $light-bg-color;
+		background: $cd-light-grey;
 	}
 
 	&:before {
@@ -177,7 +177,7 @@ label {
 }
 
 div.vertical-tabs {
-	margin: $base-unit*2 0;
+	margin: $cd-base-unit*2 0;
 
 	ul.vertical-tabs-list {
 		float: none;
@@ -192,7 +192,7 @@ div.vertical-tabs {
 	}
 
 	fieldset.vertical-tabs-pane {
-		padding: $base-unit;
+		padding: $cd-base-unit;
 	}
 }
 
@@ -211,7 +211,7 @@ div.vertical-tabs {
 
 #repeat-settings-fieldset {
 	border-top: 1px dashed white;
-	padding-top: $base-unit*2;
+	padding-top: $cd-base-unit*2;
 }
 
 #edit-field-event-date-und-0-rrule-daily-interval-child {
@@ -219,7 +219,7 @@ div.vertical-tabs {
 }
 
 .date-repeat {
-	margin-bottom: $base-unit;
+	margin-bottom: $cd-base-unit;
 
 	.container-inline-date {
 		display: inline-block;
@@ -228,7 +228,7 @@ div.vertical-tabs {
 	input[type="submit"] {
 		vertical-align: bottom;
 		margin-bottom: 33px;
-		padding: 9px $base-unit*1.5;
+		padding: 9px $cd-base-unit*1.5;
 	}
 }
 
@@ -236,12 +236,12 @@ div.vertical-tabs {
 	#messages {
 		max-width: 600px;
 		margin: 0 auto;
-		padding: 0 $base-unit*2;
+		padding: 0 $cd-base-unit*2;
 
 		.error {
 			background-image: none;
 			border: none;
-			padding: $base-unit;
+			padding: $cd-base-unit;
 		}
 
 		ul {
@@ -266,7 +266,7 @@ div.vertical-tabs {
 	.form-managed-file {
 		.form-file {
 			width: 280px;
-			margin: 0 $base-unit $base-unit*2 0;
+			margin: 0 $cd-base-unit $cd-base-unit*2 0;
 		}
 
 		&:before {
@@ -276,7 +276,7 @@ div.vertical-tabs {
 
 	.field-widget-multifield-table {
 		.form-item {
-			padding-bottom: $base-unit*2;
+			padding-bottom: $cd-base-unit*2;
 		}
 	}
 
@@ -293,8 +293,8 @@ div.vertical-tabs {
 	}
 
 	.tabledrag-toggle-weight-wrapper {
-		bottom: $base-unit*5;
-		right: $base-unit*2;
+		bottom: $cd-base-unit*5;
+		right: $cd-base-unit*2;
 		left: auto;
 	}
 
@@ -328,8 +328,8 @@ div.vertical-tabs {
 	    padding: 8px;
 	    font-weight: bold;
 	    border: none;
-			background: $light-bg-color;
-			@include font-size($base-font-size);
+			background: $cd-light-grey;
+			@include font-size($cd-font-size-small);
 		}
 	}
 
@@ -338,7 +338,7 @@ div.vertical-tabs {
 // Home page search
 #events-event-select-location-form {
 	text-align: right;
-	margin: $base-unit*2 auto $base-unit*5 auto;
+	margin: $cd-base-unit*2 auto $cd-base-unit*5 auto;
 	max-width: 600px;
 
 	.form-item {
@@ -346,11 +346,11 @@ div.vertical-tabs {
 	}
 
 	label {
-		margin-bottom: $base-unit*2;
-		@include font-size($medium-font-size);
-		font-family: $heading-font;
+		margin-bottom: $cd-base-unit*2;
+		@include font-size($cd-font-size-base);
+		font-family: $cd-heading-font;
 		font-weight: 300;
-		color: $heading-text-color;
+		color: $cd-ocha-blue;
 
 		.form-required {
 			display: none;
@@ -363,31 +363,31 @@ div.vertical-tabs {
 }
 
 .form-item-loc {
-	margin-bottom: $base-unit*1.5;
+	margin-bottom: $cd-base-unit*1.5;
 	text-align: left;
 	padding: 0;
 
 	.chosen-single {
-		padding: $base-unit;
+		padding: $cd-base-unit;
 	}
 
 	.chosen-container .chosen-single div b {
-		line-height: $base-unit*5;
+		line-height: $cd-base-unit*5;
 	}
 }
 
 @include min-width(sm) {
 
 	#events-event-select-location-form {
-		padding: $base-unit*2;
+		padding: $cd-base-unit*2;
 
 		label {
-			@include font-size($large-font-size);
+			@include font-size($cd-font-size-xlarge);
 		}
 	}
 
 	.form-item-loc {
-		margin-bottom: $base-unit*2;
+		margin-bottom: $cd-base-unit*2;
 	}
 
 }

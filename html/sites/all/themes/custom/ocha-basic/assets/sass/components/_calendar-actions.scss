@@ -1,10 +1,10 @@
 .block-views {
   display: block;
-  margin: $base-unit 0;
+  margin: $cd-base-unit 0;
 
   label {
-    font-family: $heading-font;
-    margin-bottom: $base-unit/2;
+    font-family: $cd-heading-font;
+    margin-bottom: $cd-base-unit/2;
   }
 }
 
@@ -18,7 +18,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  height: $base-unit*4;
+  height: $cd-base-unit*4;
 }
 
 .calendar-actions, .calendar-actions__section {
@@ -30,7 +30,7 @@
   background: white;
   z-index: map-get($zindex, sidebar);
   overflow: scroll;
-  padding: $base-unit*5 $base-unit*2 $base-unit*2 $base-unit*2;
+  padding: $cd-base-unit*5 $cd-base-unit*2 $cd-base-unit*2 $cd-base-unit*2;
   transition: transform 0.3s ease, visibility 0.3s ease;
   transform: translateX(-100% - 10);
 
@@ -42,12 +42,12 @@
 
 .calendar-actions {
   @include clearfix;
-  font-family: $heading-font;
+  font-family: $cd-heading-font;
 
   .open {
     .dropdown-menu {
       overflow: visible;
-      border-bottom: 1px solid $light-border-color;
+      border-bottom: 1px solid $cd-light-grey;
     }
   }
 
@@ -62,7 +62,7 @@
     background: white;
 
     li {
-      margin: $base-unit 0;
+      margin: $cd-base-unit 0;
       border: none;
 
       &> button {
@@ -75,24 +75,24 @@
       text-transform: uppercase;
 
       &.fc-state-active {
-        color: $heading-text-color;
+        color: $cd-ocha-blue;
 
         &:hover, &:focus {
-          color: $light-text-color;
+          color: $cd-white;
         }
       }
     }
 
     label {
       line-height: 1.3;
-      margin: $base-unit 0;
+      margin: $cd-base-unit 0;
     }
 
 
     a {
       &:hover, &:focus {
         background: none;
-        color: $body-text-color;
+        color: $cd-mid-grey;
       }
     }
 
@@ -106,28 +106,28 @@
 
 .calendar-actions__btn {
   position: absolute;
-  right: $base-unit*1.25;
-  top: $base-unit/2;
-  color: $heading-text-color;
+  right: $cd-base-unit*1.25;
+  top: $cd-base-unit/2;
+  color: $cd-ocha-blue;
   text-transform: uppercase;
-  padding: $base-unit;
+  padding: $cd-base-unit;
 
   .dropdown-menu & {
     height: auto;
     width: auto;
-    padding: $base-unit;
+    padding: $cd-base-unit;
   }
 }
 
 .calendar-actions__toggle, input[type="text"].calendar-search__input {
   width: 100%;
   text-align: left;
-  padding: $base-unit*1.5 $base-unit*3 $base-unit*1.5 0;
-  border-bottom: 1px solid $light-border-color;
+  padding: $cd-base-unit*1.5 $cd-base-unit*3 $cd-base-unit*1.5 0;
+  border-bottom: 1px solid $cd-light-grey;
   position: relative;
-  color: $heading-text-color;
-  @include font-size($medium-font-size);
-  font-family: $heading-font;
+  color: $cd-ocha-blue;
+  @include font-size($cd-font-size-base);
+  font-family: $cd-heading-font;
   @extend .icon-arrow-down;
   background: transparent;
   transition: all 0.3s ease;
@@ -137,17 +137,17 @@
     font-family: 'unocha-icons';
     font-weight: normal;
     position: absolute;
-    right: $base-unit/2;
-    top: $base-unit*2;
-    height: $base-unit*2;
-    line-height: $base-unit*2;
+    right: $cd-base-unit/2;
+    top: $cd-base-unit*2;
+    height: $cd-base-unit*2;
+    line-height: $cd-base-unit*2;
   }
 
   &:hover, &:focus, .open & {
-    color: $link-text-color;
-    background: lighten($light-bg-color, 4%);
-    border-color: $highlight-border-color;
-    padding-left: $base-unit/2;
+    color: $cd-dark-blue;
+    background: lighten($cd-light-grey, 4%);
+    border-color: $cd-ocha-blue;
+    padding-left: $cd-base-unit/2;
     outline: none;
   }
 
@@ -208,8 +208,8 @@
 }
 
 .calendar-filters__current {
-  padding: $base-unit 0;
-  border-bottom: 1px solid $light-border-color;
+  padding: $cd-base-unit 0;
+  border-bottom: 1px solid $cd-light-grey;
   font-style: italic;
 
   strong {
@@ -218,7 +218,7 @@
 }
 
 .calendar-settings__tz-dropdown {
-  padding: $base-unit/2 0 $base-unit*1.5 0;
+  padding: $cd-base-unit/2 0 $cd-base-unit*1.5 0;
 }
 
 .show-ical {
@@ -238,19 +238,19 @@
 
 .calendar-export__ical-link-holder {
   .calendar-export__ical-link {
-    height: $base-unit*4.5;
+    height: $cd-base-unit*4.5;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border: 1px solid $border-color;
-    background: $light-bg-color;
-    padding: 0 $base-unit*5 0 $base-unit;
-    line-height: $base-unit*4.25;
-    color: $heading-text-dark-color;
+    border: 1px solid $cd-mid-light-grey;
+    background: $cd-light-grey;
+    padding: 0 $cd-base-unit*5 0 $cd-base-unit;
+    line-height: $cd-base-unit*4.25;
+    color: $cd-dark-grey;
   }
 
   .calender-export__ical-copy {
-    width: $base-unit*4.5;
+    width: $cd-base-unit*4.5;
     height: 34px;
     position: absolute;
     text-indent: -999999px;
@@ -278,27 +278,27 @@
 
 .calendar-export__ical-link-label {
   font-weight: bold;
-  margin: $base-unit 0;
+  margin: $cd-base-unit 0;
 }
 
 .calendar-export__ical-info {
-  margin-top: $base-unit*2;
+  margin-top: $cd-base-unit*2;
 }
 
 .calendar-search {
   position: relative;
 
   ::-webkit-input-placeholder {
-    color: $heading-text-color;
+    color: $cd-ocha-blue;
   }
   ::-moz-placeholder {
-    color: $heading-text-color;
+    color: $cd-ocha-blue;
   }
   :-ms-input-placeholder {
-    color: $heading-text-color;
+    color: $cd-ocha-blue;
   }
   :-moz-placeholder {
-    color: $heading-text-color;
+    color: $cd-ocha-blue;
   }
 }
 
@@ -315,7 +315,7 @@ input[type="text"].calendar-search__input {
   position: absolute;
   top: 0;
   right: 0;
-  width: $base-unit*4;
+  width: $cd-base-unit*4;
   height: 100%;
   justify-content: center;
   z-index: map-get($zindex, default);
@@ -324,8 +324,8 @@ input[type="text"].calendar-search__input {
 .calendar-search__clear {
   position: absolute;
   top: 0;
-  right: $base-unit*4;
-  width: $base-unit*4;
+  right: $cd-base-unit*4;
+  width: $cd-base-unit*4;
   height: 100%;
   justify-content: center;
   z-index: map-get($zindex, default);
@@ -336,8 +336,8 @@ input[type="text"].calendar-search__input {
   .block-views {
     width: 25%;
     float: left;
-    padding-right: $base-unit;
-    margin: $base-unit/2 0 $base-unit*1.5 0;
+    padding-right: $cd-base-unit;
+    margin: $cd-base-unit/2 0 $cd-base-unit*1.5 0;
 
     &:nth-child(4n) {
       padding: 0;
@@ -391,18 +391,18 @@ input[type="text"].calendar-search__input {
   .calendar-actions__toggle, input[type="text"].calendar-search__input {
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
-    padding: $base-unit $base-unit*2.5 $base-unit $base-unit/2;
-    @include font-size($small-font-size);
+    padding: $cd-base-unit $cd-base-unit*2.5 $cd-base-unit $cd-base-unit/2;
+    @include font-size($cd-font-size-tiny);
 
     &:before {
       top: 10px;
-      right: $base-unit/2;
+      right: $cd-base-unit/2;
     }
 
   }
 
   .calendar-export {
-    width: $base-unit*10;
+    width: $cd-base-unit*10;
     float: right;
     margin: 0;
 
@@ -411,24 +411,24 @@ input[type="text"].calendar-search__input {
 
       li {
         margin: 0;
-        border-bottom: 1px solid $light-border-color;
+        border-bottom: 1px solid $cd-light-grey;
       }
 
       button {
-        padding: $base-unit*1.5 $base-unit;
+        padding: $cd-base-unit*1.5 $cd-base-unit;
       }
     }
   }
 
   .calendar-export__ical-link-holder {
-    padding: $base-unit;
+    padding: $cd-base-unit;
   }
 
   .calendar-settings {
     width: auto;
     max-width: 390px;
     float: left;
-    margin-right: $base-unit;
+    margin-right: $cd-base-unit;
 
     .calendar-actions__toggle {
       height: 35px;
@@ -439,16 +439,16 @@ input[type="text"].calendar-search__input {
     }
 
     .dropdown-menu {
-      padding: 0 $base-unit;
+      padding: 0 $cd-base-unit;
 
       label {
-        margin-top: $base-unit*1.5;
+        margin-top: $cd-base-unit*1.5;
       }
     }
 
     .chosen-container {
       max-width: 100%;
-      margin-bottom: $base-unit*1.5;
+      margin-bottom: $cd-base-unit*1.5;
     }
 
     .chosen-container.chosen-with-drop .chosen-drop {
@@ -470,7 +470,7 @@ input[type="text"].calendar-search__input {
 
     &.open {
       .calendar-actions__toggle {
-        border-color: $highlight-border-color;
+        border-color: $cd-ocha-blue;
       }
 
       .dropdown-menu {
@@ -495,7 +495,7 @@ input[type="text"].calendar-search__input {
 
   .calendar-filters {
     width: 100%;
-    border-bottom: 2px solid $light-border-color;
+    border-bottom: 2px solid $cd-light-grey;
 
     .calendar-actions--filtered & {
       border-bottom: none;
@@ -526,18 +526,18 @@ input[type="text"].calendar-search__input {
   }
 
   .calendar-filters__current {
-    border-top: 2px solid $light-border-color;
+    border-top: 2px solid $cd-light-grey;
     border-bottom: none;
     width: 100%;
     position: relative;
-    padding: $base-unit*1.5 0 0 0;
+    padding: $cd-base-unit*1.5 0 0 0;
     overflow: auto;
 
     p {
       margin: 0;
       float: left;
       max-width: calc(100% - 120px);
-      margin-right: $base-unit;
+      margin-right: $cd-base-unit;
     }
   }
 
@@ -560,9 +560,9 @@ input[type="text"].calendar-search__input {
   .calendar-filters__inner {
 
     &.dropdown-menu {
-      background: lighten($light-bg-color, 4%);
-      border: 2px solid $light-border-color;
-      padding: 0 $base-unit;
+      background: lighten($cd-light-grey, 4%);
+      border: 2px solid $cd-light-grey;
+      padding: 0 $cd-base-unit;
     }
 
     .calendar-actions__section {
@@ -614,14 +614,14 @@ input[type="text"].calendar-search__input {
   }
 
   input[type="text"].calendar-search__input {
-  	background: lighten($light-bg-color, 4%);
-  	border-color: $light-border-color;
+  	background: lighten($cd-light-grey, 4%);
+  	border-color: $cd-light-grey;
   }
 
   .page-calendar .content {
 	  display: flex;
 	  justify-content: space-between;
-	  padding-top: $base-unit*3;
+	  padding-top: $cd-base-unit*3;
 	}
 
 }
@@ -630,7 +630,7 @@ input[type="text"].calendar-search__input {
 
   .calendar-settings {
     max-width: 600px;
-    margin-right: $base-unit*2;
+    margin-right: $cd-base-unit*2;
 
     .calendar-actions__toggle {
     	height: 40px;
@@ -642,12 +642,12 @@ input[type="text"].calendar-search__input {
   }
 
   input[type="text"].calendar-search__input {
-  	@include font-size($base-font-size);
+  	@include font-size($cd-font-size-small);
   }
 
   .calendar-actions__toggle {
-  	@include font-size($base-font-size);
-  	padding-right: $base-unit*3;
+  	@include font-size($cd-font-size-small);
+  	padding-right: $cd-base-unit*3;
 
   	&:before {
   		top: 12px;
@@ -675,7 +675,7 @@ input[type="text"].calendar-search__input {
 @include min-width(xl) {
 
 	.calendar-actions__toggle, input[type="text"].calendar-search__input {
-  	@include font-size($medium-font-size);
+  	@include font-size($cd-font-size-base);
   }
 }
 

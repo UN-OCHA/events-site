@@ -42,7 +42,7 @@
 .fc-unthemed .fc-divider,
 .fc-unthemed .fc-popover .fc-header,
 .fc-unthemed .fc-list-heading td {
-	background: $light-bg-color;
+	background: $cd-light-grey;
 }
 
 .fc-unthemed .fc-popover .fc-header .fc-close {
@@ -174,11 +174,11 @@ NOTE: use percentage font sizes or else old IE chokes
 
 	/* dimensions */
 	margin: 0;
-	height: $base-unit*4;
-	padding: 0 $base-unit*1.5;
+	height: $cd-base-unit*4;
+	padding: 0 $cd-base-unit*1.5;
 
 	/* text & cursor */
-	@include font-size($base-font-size);
+	@include font-size($cd-font-size-small);
 	white-space: nowrap;
 	cursor: pointer;
 
@@ -206,12 +206,12 @@ NOTE: use percentage font sizes or else old IE chokes
   	border: none;
   	background: transparent;
   	text-transform: uppercase;
-  	color: $heading-text-color;
+  	color: $cd-ocha-blue;
   	font-weight: bold;
 
   	&:hover, &:focus {
   		background: none;
-  		color: $active-link-text-color;
+  		color: $cd-ocha-blue;
   	}
   }
 
@@ -221,8 +221,8 @@ NOTE: use percentage font sizes or else old IE chokes
   }
   .fc-state-down,
   .fc-state-active {
-  	background: $secondary-bg-color;
-  	color: $light-text-color;
+  	background: $cd-dark-blue;
+  	color: $cd-white;
   }
 
   .fc-state-disabled {
@@ -235,7 +235,7 @@ NOTE: use percentage font sizes or else old IE chokes
 button.fc-prev-button, button.fc-next-button {
 	background: none;
 	padding: 0;
-	width: $base-unit*4;
+	width: $cd-base-unit*4;
 
 	i {
 		@include font-size(24);
@@ -243,14 +243,14 @@ button.fc-prev-button, button.fc-next-button {
 		transition: background 0.3s ease;
 		height: 100%;
     display: inline-block;
-    line-height: $base-unit*4;
+    line-height: $cd-base-unit*4;
 	}
 
 	&:hover, &:focus {
-		color: $link-text-color;
+		color: $cd-dark-blue;
 
 		i {
-			background: lighten($light-bg-color, 4%);
+			background: lighten($cd-light-grey, 4%);
 		}
 	}
 
@@ -260,10 +260,10 @@ button.fc-prev-button, button.fc-next-button {
 }
 
 button.fc-next-button {
-	margin-left: $base-unit/2!important;
+	margin-left: $cd-base-unit/2!important;
 }
 button.fc-prev-button {
-	margin-right: $base-unit/2!important;
+	margin-right: $cd-base-unit/2!important;
 }
 
 /* Buttons Groups
@@ -388,13 +388,13 @@ hr.fc-divider {
 }
 
 .fc th {
-	font-family: $heading-font;
+	font-family: $cd-heading-font;
 	text-align: center;
-	background: $light-bg-color;
+	background: $cd-light-grey;
 	text-transform: uppercase;
 	font-weight: bold;
-	color: $secondary-heading-text-color;
-	padding: $base-unit 0;
+	color: $cd-ocha-blue;
+	padding: $cd-base-unit 0;
 }
 
 .fc th,
@@ -539,10 +539,10 @@ temporary rendered events).
 .fc-event {
 	position: relative; /* for resize handle and other inner positioning */
 	display: block; /* make the <a> tag block */
-	@include font-size($small-font-size);
+	@include font-size($cd-font-size-tiny);
 	line-height: 1.3;
 	font-weight: 300; /* undo jqui's ui-widget-header bold */
-	color: $link-text-color;
+	color: $cd-dark-blue;
 	text-decoration: none;
 
 	&:hover, &:focus {
@@ -719,13 +719,13 @@ be a descendant of the grid when it is being dragged.
 .fc-day-grid-event, .fc-time-grid-event {
 	margin: 0 4px 4px 4px; /* spacing between events and edges */
 	padding: 2px 0 0 0;
-	border: 1px solid darken($light-bg-color, 10%);
+	border: 1px solid darken($cd-light-grey, 10%);
 	border-top: 0;
 
 	.fc-content {
-		background: $light-bg-color;
-		color: $link-text-color;
-		padding: $base-unit/2;
+		background: $cd-light-grey;
+		color: $cd-dark-blue;
+		padding: $cd-base-unit/2;
 		height: 100%;
 	}
 
@@ -733,7 +733,7 @@ be a descendant of the grid when it is being dragged.
 	.fc-location-details {
 		display: block;
 		background: white;
-		padding: $base-unit/2;
+		padding: $cd-base-unit/2;
 		margin: 4px -4px -4px -4px;
 		height: 100%;
 	}
@@ -846,14 +846,14 @@ display: none;
 --------------------------------------------------------------------------------------------------*/
 
 .fc-toolbar {
-	min-height: $base-unit*4;
+	min-height: $cd-base-unit*4;
 }
 
 .fc-toolbar.fc-header-toolbar {
-	font-family: $heading-font;
+	font-family: $cd-heading-font;
 
 	button {
-		font-family: $heading-font;
+		font-family: $cd-heading-font;
 	}
 }
 
@@ -866,21 +866,21 @@ display: none;
 }
 
 .fc-toolbar .fc-left {
-	margin-bottom: $base-unit/2;
+	margin-bottom: $cd-base-unit/2;
 	@include clearfix;
 
 	.fc-today-button {
-		margin: 0 0 0 $base-unit*8 !important;
-    padding: 0 $base-unit/2;
-    height: $base-unit*4;
+		margin: 0 0 0 $cd-base-unit*8 !important;
+    padding: 0 $cd-base-unit/2;
+    height: $cd-base-unit*4;
     text-transform: none;
-    color: $heading-text-color;
+    color: $cd-ocha-blue;
     font-weight: normal;
-    @include font-size($small-font-size);
+    @include font-size($cd-font-size-tiny);
 
     &:hover, &:focus {
-    	background: lighten($light-bg-color, 4%);
-    	color: $link-text-color;
+    	background: lighten($cd-light-grey, 4%);
+    	color: $cd-dark-blue;
     }
 	}
 }
@@ -914,9 +914,9 @@ display: none;
 }
 
 #fullcalendar .fc-toolbar h2 {
-	padding-left: $base-unit*4.5;
-	line-height: $base-unit*4;
-	@include font-size($small-font-size);
+	padding-left: $cd-base-unit*4.5;
+	line-height: $cd-base-unit*4;
+	@include font-size($cd-font-size-tiny);
 }
 
 
@@ -999,7 +999,7 @@ z-index: 1;
 
 .fc-basic-view .fc-week-number,
 .fc-basic-view .fc-day-number {
-	padding: 2px $base-unit/2 2px 2px;
+	padding: 2px $cd-base-unit/2 2px 2px;
 }
 
 .fc-basic-view th.fc-week-number,
@@ -1190,7 +1190,7 @@ border: 0 hidden transparent;
 .fc-time-grid .fc-bgevent {
 	position: absolute;
 	z-index: 1; /* scope inner z-index's */
-	border: 1px solid darken($light-bg-color, 10%);
+	border: 1px solid darken($cd-light-grey, 10%);
 }
 
 .fc-time-grid .fc-bgevent {
@@ -1442,11 +1442,11 @@ be a descendant of the grid when it is being dragged.
 }
 
 .fc-list-item-title a[href] {
-	color: $link-text-color;
+	color: $cd-dark-blue;
 	border-bottom: 1px solid;
 
 	&:hover, &:focus {
-		color: $active-link-text-color;
+		color: $cd-ocha-blue;
 		border-bottom: none;
 	}
 }
@@ -1492,17 +1492,17 @@ be a descendant of the grid when it is being dragged.
 	box-sizing: border-box;
   width: 288px;
   background: white;
-  padding: $base-unit*2 $base-unit;
+  padding: $cd-base-unit*2 $cd-base-unit;
   box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.1);
   text-align: center;
   position: absolute;
   z-index: 9;
   text-transform: uppercase;
-  color: $heading-text-color;
+  color: $cd-ocha-blue;
   font-weight: bold;
   margin-left: -144px;
   left: 50%;
-  margin-top: $base-unit*3;
+  margin-top: $cd-base-unit*3;
 }
 
 .fc-right {
@@ -1546,7 +1546,7 @@ td.fc-list-item-marker {
 }
 td.fc-list-item-title {
 	border-top: none;
-	padding-left: $base-unit*4;
+	padding-left: $cd-base-unit*4;
 }
 
 #fullcalendar .fc-header-toolbar .fc-left {
@@ -1564,7 +1564,7 @@ td.fc-list-item-title {
 
 .mini-cal-container {
 	position: absolute;
-	top: $base-unit*4;
+	top: $cd-base-unit*4;
 	left: 0;
 	width: 100%;
 }
@@ -1573,22 +1573,22 @@ td.fc-list-item-title {
 	position: absolute;
 	top: -34px;
 	left: 0;
-	width: $base-unit*4;
-  height: $base-unit*4;
+	width: $cd-base-unit*4;
+  height: $cd-base-unit*4;
   justify-content: center;
 
   .open & {
-  	background: $primary-bg-color;
-  	color: $light-text-color;
+  	background: $cd-ocha-blue;
+  	color: $cd-white;
   }
 }
 
 .mini-cal {
 	position: relative;
 	background: white;
-	margin-left: -$base-unit*2;
-	margin-right: -$base-unit*2;
-	padding: $base-unit*2;
+	margin-left: -$cd-base-unit*2;
+	margin-right: -$cd-base-unit*2;
+	padding: $cd-base-unit*2;
 	z-index: map-get($zindex, dropdown);
 	box-shadow: 0 1px 2px 0 rgba(0,0,0,.25);
 
@@ -1642,7 +1642,7 @@ td.fc-list-item-title {
 	}
 
 	#fullcalendar .fc-toolbar h2 {
-		@include font-size($medium-font-size);
+		@include font-size($cd-font-size-base);
 	}
 
 }
@@ -1666,7 +1666,7 @@ td.fc-list-item-title {
 	  border-width: 1px 0 0;
 	}
 	td.fc-list-item-time {
-	  padding-bottom: $base-unit;
+	  padding-bottom: $cd-base-unit;
 	}
 	td.fc-list-item-marker {
 	  position: static;
@@ -1683,7 +1683,7 @@ td.fc-list-item-title {
 			position: relative;
 			top: auto;
 			left: auto;
-			padding: $base-unit*.75 0;
+			padding: $cd-base-unit*.75 0;
 			display: flex;
 	    align-items: center;
 	    float: left;
@@ -1702,16 +1702,16 @@ td.fc-list-item-title {
 
 
 			.fc-today-button {
-			 	@include font-size($medium-font-size);
-			 	padding: $base-unit*1.5 $base-unit/2 $base-unit*1.5 $base-unit/2;
+			 	@include font-size($cd-font-size-base);
+			 	padding: $cd-base-unit*1.5 $cd-base-unit/2 $cd-base-unit*1.5 $cd-base-unit/2;
 			 	line-height: 1.2;
 			 	border-bottom: 2px solid transparent;
 			 	transition: all 0.3s ease;
-			 	margin: 0 $base-unit*1.5 -2px 0 !important;
+			 	margin: 0 $cd-base-unit*1.5 -2px 0 !important;
 			 	height: auto;
 
 			 	&:hover, &:focus {
-			 		border-color: $highlight-border-color;
+			 		border-color: $cd-ocha-blue;
 			 	}
 			 }
 		}
@@ -1729,7 +1729,7 @@ td.fc-list-item-title {
 
 	#fullcalendar {
 	  flex: 0 0 65%;
-	  padding-right: $base-unit*2;
+	  padding-right: $cd-base-unit*2;
 	}
 
 	//mini cal
@@ -1752,7 +1752,7 @@ td.fc-list-item-title {
 
 
 		.fc-toolbar {
-			padding: $base-unit*.75 0;
+			padding: $cd-base-unit*.75 0;
 		}
 	}
 
@@ -1767,7 +1767,7 @@ td.fc-list-item-title {
 	.fc-toolbar .fc-right {
 		float: right;
 		margin-bottom: 0;
-		height: $base-unit*4;
+		height: $cd-base-unit*4;
 	}
 
 	.mini-cal-container {

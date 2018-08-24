@@ -1,17 +1,17 @@
 h1, h2 ,h3 ,h4 ,h5 {
   line-height: 1.2;
   font-weight: bold;
-  font-family: $heading-font;
+  font-family: $cd-heading-font;
 }
 
 h1 {
-  @include font-size($medium-font-size);
-  color: $heading-text-color;
+  @include font-size($cd-font-size-medium);
+  color: $cd-ocha-blue;
   font-weight: normal;
 }
 
 h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
-  margin-bottom: $base-unit;
+  margin-bottom: $cd-base-unit;
 }
 
 h4, h5 {
@@ -19,17 +19,17 @@ h4, h5 {
 }
 
 a {
-  color: $link-text-color;
+  color: $cd-dark-blue;
 
   &:hover, &:focus {
-    color: $active-link-text-color;
+    color: $cd-ocha-blue;
     text-decoration: none;
   }
 }
 
 ol, ul {
   list-style: initial;
-  margin-left: $base-unit*3;
+  margin-left: $cd-base-unit*3;
 }
 
 ol {
@@ -37,25 +37,25 @@ ol {
 }
 
 .event-heading, .node-type-page h1 {
-	padding-bottom: $base-unit*1.5;
-	border-bottom: 1px solid $border-color;
-	color: $heading-text-color;
+	padding-bottom: $cd-base-unit*1.5;
+	border-bottom: 1px solid $cd-mid-light-grey;
+	color: $cd-ocha-blue;
 	font-weight: 300;
 }
 
 .event-heading {
-	color: $heading-text-dark-color;
+	color: $cd-dark-grey;
 	font-weight: normal;
 
 	span {
-		color: $heading-text-color;
+		color: $cd-ocha-blue;
 		font-weight: 300;
 	}
 }
 
 .node-type-page .content {
 	h1, h2 ,h3 ,h4 ,h5 {
-		color: $heading-text-color;
+		color: $cd-ocha-blue;
 	}
 
   h2, h3 {
@@ -63,11 +63,11 @@ ol {
   }
 
 	.submitted {
-		margin-bottom: $base-unit;
+		margin-bottom: $cd-base-unit;
 	}
 
 	li {
-		margin-bottom: $base-unit/4;
+		margin-bottom: $cd-base-unit/4;
 	}
 
 	strong {
@@ -80,33 +80,33 @@ dt {
 }
 
 dd {
-	margin-bottom: $base-unit;
+	margin-bottom: $cd-base-unit;
 }
 
 @include min-width(sm) {
 
 	.event-heading, .node-type-page h1 {
-		@include font-size($large-font-size);
+		@include font-size($cd-font-size-xlarge);
 	}
 
 	.node-type-page .content {
 
 		p, ul, ol, dl {
-	  	@include font-size($medium-font-size);
+	  	@include font-size($cd-font-size-medium);
 	  }
 
 	  li {
-			margin-bottom: $base-unit/2;
+			margin-bottom: $cd-base-unit/2;
 		}
 
 	}
 
 	h2 {
-    @include font-size($medium-font-size);
+    @include font-size($cd-font-size-medium);
   }
 
   h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
-    margin-bottom: $base-unit*2;
+    margin-bottom: $cd-base-unit*2;
   }
 
 }

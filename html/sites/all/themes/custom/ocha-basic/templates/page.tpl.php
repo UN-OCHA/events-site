@@ -10,7 +10,7 @@
 ?>
 <div class="page-wrapper">
   <a href="#main-content" class="skip-link element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>
-  <?php include 'cd/header.inc'; ?>
+  <?php include 'cd/cd-header/cd-header.inc'; ?>
   <?php if($messages): ?>
     <div class="cd-container">
       <?php print $messages; ?>
@@ -34,4 +34,4 @@
 
   </div>
 </div>
-<?php include 'cd/footer.inc'; ?>
+<?php include 'cd/cd-footer/cd-footer.inc'; ?>

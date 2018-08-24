@@ -1,7 +1,7 @@
 button, input[type="submit"] {
 	-webkit-appearance: none;
-	@include font-size($base-font-size);
-	color: $body-text-color;
+	@include font-size($cd-font-size-small);
+	color: $cd-mid-grey;
 	background: none;
 	border: none;
 	box-shadow: none;
@@ -9,14 +9,14 @@ button, input[type="submit"] {
 
 .btn-primary, input[type="submit"].form-submit {
 	border-radius: 4px;
-	background: $primary-bg-color;
+	background: $cd-ocha-blue;
 	text-transform: uppercase;
-	color: $light-text-color;
-	padding: $base-unit*1.5;
+	color: $cd-white;
+	padding: $cd-base-unit*1.5;
 	transition: background 0.3s ease;
 
 	&:hover, &:focus {
-		background: darken($primary-bg-color, 10%);
+		background: darken($cd-ocha-blue, 10%);
 	}
 }
 
@@ -24,15 +24,15 @@ button, input[type="submit"] {
 	@extend .btn-primary;
 
 	&+.form-submit {
-		margin-left: $base-unit;
+		margin-left: $cd-base-unit;
 	}
 }
 
 .btn-icon {
 	padding: 0;
-	@include font-size($small-font-size);
+	@include font-size($cd-font-size-tiny);
 	text-transform: uppercase;
-	color: $heading-text-color;
+	color: $cd-ocha-blue;
 	display: flex;
 	align-items: center;
 	line-height: 22px;
