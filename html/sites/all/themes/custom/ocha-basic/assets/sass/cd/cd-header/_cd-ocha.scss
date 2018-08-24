@@ -4,6 +4,12 @@
 
 .cd-ocha {
   float: left;
+
+  // override a sweeping default whose removal would cause changes throughout the
+  // theme. we just treat our one instance and ensure it's setup properly.
+  &.open {
+    position: static;
+  }
 }
 
 .cd-ocha-btn {

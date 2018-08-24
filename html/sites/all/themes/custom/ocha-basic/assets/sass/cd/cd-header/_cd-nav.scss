@@ -8,6 +8,10 @@
   .cssgrid.flexbox & {
     float: none;
   }
+
+  &.open {
+    position: static;
+  }
 }
 
 .cd-site-header__nav-toggle {

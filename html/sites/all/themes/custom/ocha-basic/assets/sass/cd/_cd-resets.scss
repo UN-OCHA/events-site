@@ -8,6 +8,7 @@
   font-family: $cd-font;
   @include font-size($cd-font-size-tiny);
   font-weight: 300;
+  line-height: 1.2; // override _a-reset.scss
 
   // Set box-sizing
   box-sizing: border-box;

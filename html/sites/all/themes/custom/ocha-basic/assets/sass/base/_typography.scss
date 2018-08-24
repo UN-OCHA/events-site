@@ -1,39 +1,65 @@
-h1, h2 ,h3 ,h4 ,h5 {
-  line-height: 1.2;
-  font-weight: bold;
-  font-family: $cd-heading-font;
-}
+//——————————————————————————————————————————————————————————————————————————————
+// Events: typography defaults
+//——————————————————————————————————————————————————————————————————————————————
 
-h1 {
-  @include font-size($cd-font-size-medium);
-  color: $cd-ocha-blue;
-  font-weight: normal;
-}
-
-h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
-  margin-bottom: $cd-base-unit;
-}
-
-h4, h5 {
-	font-weight: 400;
-}
-
-a {
-  color: $cd-dark-blue;
-
-  &:hover, &:focus {
-    color: $cd-ocha-blue;
-    text-decoration: none;
+// scoping as much as possible to the content element since it interferes with
+// the Common Design styles.
+#main-content {
+  h1, h2 ,h3 ,h4 ,h5 {
+    line-height: 1.2;
+    font-weight: bold;
+    font-family: $cd-heading-font;
   }
-}
 
-ol, ul {
-  list-style: initial;
-  margin-left: $cd-base-unit*3;
-}
+  h1 {
+    @include font-size($cd-font-size-medium);
+    color: $cd-ocha-blue;
+    font-weight: normal;
+  }
 
-ol {
-	list-style: decimal;
+  h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
+    margin-bottom: $cd-base-unit;
+  }
+
+  h4, h5 {
+  	font-weight: 400;
+  }
+
+  a {
+    color: $cd-dark-blue;
+
+    &:hover, &:focus {
+      color: $cd-ocha-blue;
+      text-decoration: none;
+    }
+  }
+
+  ol, ul {
+    list-style: initial;
+    margin-left: $cd-base-unit*3;
+  }
+
+  ol {
+  	list-style: decimal;
+  }
+
+  dt {
+    font-weight: 400;
+  }
+
+  dd {
+    margin-bottom: $cd-base-unit;
+  }
+
+  @include min-width(sm) {
+    h2 {
+      @include font-size($cd-font-size-medium);
+    }
+
+    h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
+      margin-bottom: $cd-base-unit*2;
+    }
+  }
 }
 
 .event-heading, .node-type-page h1 {
@@ -75,22 +101,12 @@ ol {
 	}
 }
 
-dt {
-	font-weight: 400;
-}
-
-dd {
-	margin-bottom: $cd-base-unit;
-}
-
 @include min-width(sm) {
-
 	.event-heading, .node-type-page h1 {
 		@include font-size($cd-font-size-xlarge);
 	}
 
 	.node-type-page .content {
-
 		p, ul, ol, dl {
 	  	@include font-size($cd-font-size-medium);
 	  }
@@ -98,15 +114,5 @@ dd {
 	  li {
 			margin-bottom: $cd-base-unit/2;
 		}
-
 	}
-
-	h2 {
-    @include font-size($cd-font-size-medium);
-  }
-
-  h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
-    margin-bottom: $cd-base-unit*2;
-  }
-
 }
