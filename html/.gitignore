@@ -9,3 +9,4 @@ sites/*/private
 **/.sass-cache/
 **/.DS_Store
 sites/all/themes/custom/ocha-basic/assets/css/*.css
+sites/all/themes/custom/ocha-basic/assets/css/*.css.map
