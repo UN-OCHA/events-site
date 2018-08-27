@@ -42,7 +42,7 @@
 .fc-unthemed .fc-divider,
 .fc-unthemed .fc-popover .fc-header,
 .fc-unthemed .fc-list-heading td {
-	background: $cd-light-grey;
+	background: $cd-light-bluey-grey;
 }
 
 .fc-unthemed .fc-popover .fc-header .fc-close {
@@ -390,7 +390,7 @@ hr.fc-divider {
 .fc th {
 	font-family: $cd-heading-font;
 	text-align: center;
-	background: $cd-light-grey;
+	background: $cd-light-bluey-grey;
 	text-transform: uppercase;
 	font-weight: bold;
 	color: $cd-ocha-blue;
@@ -539,7 +539,7 @@ temporary rendered events).
 .fc-event {
 	position: relative; /* for resize handle and other inner positioning */
 	display: block; /* make the <a> tag block */
-	@include font-size($cd-font-size-tiny);
+	@include font-size($cd-font-size-small);
 	line-height: 1.3;
 	font-weight: 300; /* undo jqui's ui-widget-header bold */
 	color: $cd-dark-blue;
@@ -1016,7 +1016,7 @@ z-index: 1;
 .fc-basic-view .fc-day-top .fc-week-number {
 	min-width: 1.5em;
 	text-align: center;
-	background-color: #f2f2f2;
+	background-color: $cd-light-bluey-grey;
 	color: #808080;
 }
 
@@ -1642,7 +1642,7 @@ td.fc-list-item-title {
 	}
 
 	#fullcalendar .fc-toolbar h2 {
-		@include font-size($cd-font-size-base);
+		@include font-size($cd-font-size-medium);
 	}
 
 }

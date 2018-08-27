@@ -12,7 +12,7 @@
   }
 
   h1 {
-    @include font-size($cd-font-size-medium);
+    @include font-size($cd-font-size-large);
     color: $cd-ocha-blue;
     font-weight: normal;
   }
@@ -108,7 +108,7 @@
 
 	.node-type-page .content {
 		p, ul, ol, dl {
-	  	@include font-size($cd-font-size-medium);
+	  	@include font-size($cd-font-size-large);
 	  }
 
 	  li {

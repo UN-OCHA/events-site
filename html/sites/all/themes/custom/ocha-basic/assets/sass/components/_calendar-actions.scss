@@ -119,14 +119,15 @@
   }
 }
 
-.calendar-actions__toggle, input[type="text"].calendar-search__input {
+.calendar-actions__toggle,
+input[type="text"].calendar-search__input {
   width: 100%;
   text-align: left;
   padding: $cd-base-unit*1.5 $cd-base-unit*3 $cd-base-unit*1.5 0;
   border-bottom: 1px solid $cd-light-grey;
   position: relative;
   color: $cd-ocha-blue;
-  @include font-size($cd-font-size-base);
+  @include font-size($cd-font-size-medium);
   font-family: $cd-heading-font;
   @extend .icon-arrow-down;
   background: transparent;
@@ -388,7 +389,8 @@ input[type="text"].calendar-search__input {
     overflow: visible;
   }
 
-  .calendar-actions__toggle, input[type="text"].calendar-search__input {
+  .calendar-actions__toggle,
+  input[type="text"].calendar-search__input {
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
     padding: $cd-base-unit $cd-base-unit*2.5 $cd-base-unit $cd-base-unit/2;
@@ -673,9 +675,9 @@ input[type="text"].calendar-search__input {
 }
 
 @include min-width(xl) {
-
-	.calendar-actions__toggle, input[type="text"].calendar-search__input {
-  	@include font-size($cd-font-size-base);
+	.calendar-actions__toggle,
+  input[type="text"].calendar-search__input {
+  	@include font-size($cd-font-size-medium);
   }
 }
 
