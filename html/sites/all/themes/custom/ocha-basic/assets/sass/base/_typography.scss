@@ -4,7 +4,7 @@
 
 // scoping as much as possible to the content element since it interferes with
 // the Common Design styles.
-#main-content {
+.region-content {
   h1, h2 ,h3 ,h4 ,h5 {
     line-height: 1.2;
     font-weight: bold;
