@@ -1,16 +1,20 @@
 //——————————————————————————————————————————————————————————————————————————————
-// Common Design: Global
-//——————————————————————————————————————————————————————————————————————————————
-@import 'cd/cd-variables';
-@import 'cd/cd-extends';
-@import 'cd/cd-mixins';
-@import 'cd/cd-reset';
-
-
-//——————————————————————————————————————————————————————————————————————————————
-// Events: global / resets
+// Events legacy code
+//
+// This stuff was here long before our Common Design and makes sweeping changes
+// to properties that we need to have control of. So we define it first and then
+// our CD imports have a chance to override.
 //——————————————————————————————————————————————————————————————————————————————
 @import 'base/_a-reset';
+
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Global
+//——————————————————————————————————————————————————————————————————————————————
+@import 'cd/cd';
+
+//——————————————————————————————————————————————————————————————————————————————
+// Events: global styles
+//——————————————————————————————————————————————————————————————————————————————
 @import 'base/_base';
 @import 'base/_grid';
 @import 'base/_helpers';
@@ -19,36 +23,6 @@
 // Instead of CD icons, Events includes extra icons not in the CD set. It also
 // lacks the social media icons so using their set makes much more sense.
 @import 'components/_icons';
-
-
-//——————————————————————————————————————————————————————————————————————————————
-// Common Design: Header/Footer components
-//——————————————————————————————————————————————————————————————————————————————
-
-// Layout
-@import 'cd-layout/cd-layout';
-@import 'cd-layout/cd-skip-link';
-
-// Header
-@import 'cd-header/cd-header';
-@import 'cd-header/cd-global-header';
-@import 'cd-header/cd-dropdowns';
-@import 'cd-header/cd-dropdowns--drupal';
-@import 'cd-header/cd-logo';
-@import 'cd-header/cd-nav';
-@import 'cd-header/cd-search';
-@import 'cd-header/cd-sites-menu';
-@import 'cd-header/cd-sites-menu--compact';
-@import 'cd-header/cd-user-menu';
-
-// Footer
-@import 'cd-footer/cd-footer';
-@import 'cd-footer/cd-footer-copyright';
-@import 'cd-footer/cd-footer-menu';
-@import 'cd-footer/cd-footer-social';
-@import 'cd-footer/cd-mandate';
-@import 'cd-footer/cd-soft-footer';
-
 
 //——————————————————————————————————————————————————————————————————————————————
 // Events: components

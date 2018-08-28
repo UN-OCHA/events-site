@@ -1,6 +1,6 @@
 .chosen-container {
 	width: 100%!important; //over ride chosen's inline style
-	@include font-size($base-font-size);
+	@include font-size($cd-font-size-small);
 	background: white;
 
 	.chosen-drop {
@@ -8,19 +8,19 @@
 		border-radius: 0;
 		border: 1px solid #ddd;
 		border-top: none;
-		@include font-size($base-font-size);
+		@include font-size($cd-font-size-small);
 	}
 
 	.chosen-results {
 		max-height: 240px;
 
 		li {
-			padding: $base-unit;
+			padding: $cd-base-unit;
 		}
 
 		li.active-result {
 			&.highlighted {
-				background: $primary-bg-color;
+				background: $cd-ocha-blue;
 			}
 		}
 
@@ -34,7 +34,7 @@
 .chosen-container-single.chosen-container-active {
 
 	.chosen-single {
-		border-color: $highlight-border-color;
+		border-color: $cd-ocha-blue;
 	}
 
 }
@@ -45,16 +45,16 @@
 		content: "\e919";
 		font-family: 'unocha-icons' !important;
 		position: absolute;
-    right: $base-unit*.75;
+    right: $cd-base-unit*.75;
     @include font-size(24);
-    margin-top: $base-unit*.25;
+    margin-top: $cd-base-unit*.25;
 	}
 
 	input[type="text"] {
-		@include font-size($medium-font-size);
+		@include font-size($cd-font-size-base);
 		font-weight: 300;
-		color: $body-text-color;
-		padding: $base-unit $base-unit*4 $base-unit $base-unit;
+		color: $cd-mid-grey;
+		padding: $cd-base-unit $cd-base-unit*4 $cd-base-unit $cd-base-unit;
 		background: none!important;
 	}
 
@@ -80,13 +80,13 @@
 		border: 1px solid #ddd;
 		border-radius: 0;
 		height: auto;
-		padding: $base-unit/2 $base-unit;
-		line-height: $base-unit*3;
+		padding: $cd-base-unit/2 $cd-base-unit;
+		line-height: $cd-base-unit*3;
 	}
 
 	.chosen-single {
 		div {
-			width: $base-unit*3;
+			width: $cd-base-unit*3;
 
 			b {
 				font-family: 'unocha-icons';
@@ -101,16 +101,16 @@
 
 .chosen-legend {
 	display: inline-block;
-	width: $base-unit*1.5;
-	height: $base-unit*1.5;
-	margin-right: $base-unit;
+	width: $cd-base-unit*1.5;
+	height: $cd-base-unit*1.5;
+	margin-right: $cd-base-unit;
 }
 
 @include min-width(md) {
 
 	.chosen-legend {
-		width: $base-unit;
-		height: $base-unit;
+		width: $cd-base-unit;
+		height: $cd-base-unit;
 	}
 
 }

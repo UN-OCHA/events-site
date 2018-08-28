@@ -6,6 +6,12 @@
   padding-top: 2em;
   padding-bottom: 4em;
 
+  // Don't sit in front of expanded OCHA Services menu
+  //
+  // @see cd/cd-header/_cd-ocha.scss
+  position: relative;
+  z-index: 0;
+
   // Hide the page title on home/calendar
   .front & .page-heading,
   .page-calendar & .page-heading {

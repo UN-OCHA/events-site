@@ -25,7 +25,6 @@ regions[page_top] = Page Top
 regions[lang_switch] = Language switcher
 regions[page_bottom] = Page Bottom
 
-; CD regions
 regions[header_top] = Header top
 regions[header_search] = Header search
 regions[header_navigation] = Header navigation
@@ -36,10 +35,9 @@ regions[footer_logos] = Footer logos
 regions[footer_info] = Footer info
 regions[footer_license] = Footer license
 
-
-;———————————————————————————————————————————————————————————————————————————————
+; ========================================
 ; Modernizr Test API
-;———————————————————————————————————————————————————————————————————————————————
+; ========================================
 modernizr[tests][] = cssgrid_cssgridlegacy
 modernizr[tests][] = flexbox
 modernizr[tests][] = mediaqueries
