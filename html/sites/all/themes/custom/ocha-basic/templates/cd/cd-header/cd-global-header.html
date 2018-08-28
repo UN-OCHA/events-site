@@ -9,7 +9,12 @@
     <?php endif; ?>
 
     <div class="cd-global-header__user-menu">
-      <?php print render($page['header_top']); ?>
+      <?php print theme('links__system_user_menu', array(
+        'links' => menu_navigation_links('user-menu'),
+        'attributes' => array(
+          'class' => array('cd-user-menu'),
+        )));
+      ?>
     </div>
   </div>
 </div>
