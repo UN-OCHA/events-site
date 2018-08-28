@@ -3,3 +3,4 @@ html/sites/*/files
 html/sites/*/private
 vendor
 composer.lock
+bin

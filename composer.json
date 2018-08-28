@@ -28,7 +28,7 @@
         "drupal/features": "^2.10",
         "drupal/field_extrawidgets": "^1.1",
         "drupal/filefield_nginx_progress": "^2.3",
-        "drupal/filefield_paths": "^1.0",
+        "drupal/filefield_paths": "^1.1",
         "drupal/fullcalendar_api": "1.0-alpha-2",
         "drupal/hybridauth": "^2.15",
         "drupal/i18n": "^1.22",
