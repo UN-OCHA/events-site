@@ -1,4 +1,3 @@
-// @codingStandardsIgnoreStart
 // Node/Gulp Utilities
 const gulp = require('gulp');
 const log = require('fancy-log');
@@ -143,5 +142,3 @@ gulp.task('help', taskListing);
 // Help task is default
 //——————————————————————————————————————————————————————————————————————————————
 gulp.task('default', ['help']);
-
-// @codingStandardsIgnoreEnd
