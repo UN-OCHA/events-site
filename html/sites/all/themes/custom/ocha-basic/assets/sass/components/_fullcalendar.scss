@@ -1589,7 +1589,7 @@ td.fc-list-item-title {
 	margin-left: -$cd-base-unit*2;
 	margin-right: -$cd-base-unit*2;
 	padding: $cd-base-unit*2;
-	z-index: map-get($zindex, dropdown);
+	@include z-index(dropdown);
 	box-shadow: 0 1px 2px 0 rgba(0,0,0,.25);
 
   .fc-toolbar {
@@ -1748,7 +1748,7 @@ td.fc-list-item-title {
 		box-shadow: none;
 		margin: 0;
 		padding: 0;
-		z-index: map-get($zindex, default);
+		@include z-index(default);
 
 
 		.fc-toolbar {

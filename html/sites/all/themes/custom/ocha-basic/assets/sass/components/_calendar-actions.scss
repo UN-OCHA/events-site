@@ -309,7 +309,7 @@ input[type="text"].calendar-search__input {
 	border-right: none;
   width: 100%;
   cursor: initial;
-  z-index: map-get($zindex, default);
+  @include z-index(default);
 }
 
 .calendar-search__btn {
@@ -319,7 +319,7 @@ input[type="text"].calendar-search__input {
   width: $cd-base-unit*4;
   height: 100%;
   justify-content: center;
-  z-index: map-get($zindex, default);
+  @include z-index(default);
 }
 
 .calendar-search__clear {
@@ -329,7 +329,7 @@ input[type="text"].calendar-search__input {
   width: $cd-base-unit*4;
   height: 100%;
   justify-content: center;
-  z-index: map-get($zindex, default);
+  @include z-index(default);
 }
 
 @include min-width(md) {
@@ -506,7 +506,7 @@ input[type="text"].calendar-search__input {
     .calendar-actions__toggle {
     	width: auto;
       max-width: 94px;
-      z-index: map-get($zindex, default);
+      @include z-index(default);
       margin-left: 208px;
     }
 
