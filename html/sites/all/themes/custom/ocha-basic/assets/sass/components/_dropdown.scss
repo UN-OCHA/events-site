@@ -6,7 +6,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  @include z-index(dropdown);;
+  @include z-index(dropdown);
   display: none;
   min-width: $cd-base-unit*12;
   margin: 2px 0 0;
