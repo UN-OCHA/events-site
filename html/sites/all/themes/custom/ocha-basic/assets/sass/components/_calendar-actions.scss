@@ -28,7 +28,7 @@
   bottom: 0;
   left: 0;
   background: white;
-  z-index: map-get($zindex, sidebar);
+  @include z-index(sidebar);
   overflow: scroll;
   padding: $cd-base-unit*5 $cd-base-unit*2 $cd-base-unit*2 $cd-base-unit*2;
   transition: transform 0.3s ease, visibility 0.3s ease;

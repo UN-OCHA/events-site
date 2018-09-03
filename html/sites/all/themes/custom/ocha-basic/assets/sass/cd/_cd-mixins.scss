@@ -138,11 +138,11 @@
 //——————————————————————————————————————————————————————————————————————————————
 // Common Design: z-index
 //
-// syntactic sugar for common z-index values
+// Provides syntactic sugar for common z-index values.
 //
-// Usage: @include z(dropdown);
+// Usage: @include z-index(dropdown);
 //——————————————————————————————————————————————————————————————————————————————
-@mixin z($value: 0) {
+@mixin z-index($value: 0) {
   @if map-has-key($zindex, $value) {
     z-index: #{map-get($zindex, $value)};
   }
@@ -158,8 +158,9 @@
 // Usage:
 //   @include font-size(14);
 //
-// Results in:
+// Results in (with a $cd-font-size-base of 18):
 //   font-size: 14px;
+//   font-size: .777777778rem;
 //
 // If another unit were desired, it could be added to the output after the px
 // declarations to override the pixel value. However, prior experience has shown
