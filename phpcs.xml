@@ -20,7 +20,7 @@
   <exclude-pattern>*.default_environment_indicator_environments.inc</exclude-pattern>
   <exclude-pattern>node_modules/*</exclude-pattern>
   <exclude-pattern>assets/*</exclude-pattern>
-  <exclude-pattern>Gruntfile.js</exclude-pattern>
+  <exclude-pattern>gulpfile.js</exclude-pattern>
 
   <rule ref="Drupal" />
   <rule ref="DrupalPractice" />

@@ -1,18 +1,18 @@
 .sidebar-block {
-  padding: $base-unit*2;
-  margin-bottom: $base-unit;
+  padding: $cd-base-unit*2;
+  margin-bottom: $cd-base-unit;
   background: #E5F1F9;
   word-break: break-word;
 }
 
 .node-type-page .content .sidebar-block {
   h2, h3, h4, h5 {
-    color: $secondary-heading-text-color;
-    margin-bottom: $base-unit;
+    color: $cd-ocha-blue;
+    margin-bottom: $cd-base-unit;
   }
 
   p {
-    @include font-size($base-font-size);
+    @include font-size($cd-font-size-small);
 
     &:last-of-type {
       margin-bottom: 0;

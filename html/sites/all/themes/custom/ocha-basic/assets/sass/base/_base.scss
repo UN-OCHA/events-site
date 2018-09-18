@@ -1,7 +1,8 @@
 * {
   box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  &:before, &:after {
+
+  &:before,
+  &:after {
     box-sizing: border-box;
   }
 }
@@ -15,14 +16,14 @@ html, input {
   // 16px = 100%
   // 18px = 112.5%
   // See http://pxtoem.com/ for conversion chart
-  font-size: 87.5%;
+  font-size: ($cd-font-size-base / 16 * 100) + %;
 }
 
 body {
-  font-family: $body-font;
-  @include font-size($base-font-size);
+  font-family: $cd-font;
+  @include font-size($cd-font-size-base);
   font-weight: 300;
-  color: $body-text-color;
+  color: $cd-mid-grey;
   line-height: 1.5;
   background: white;
 

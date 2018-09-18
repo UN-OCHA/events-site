@@ -1,7 +1,7 @@
 .node-ev-event {
 
 	.field {
-		margin-bottom: $base-unit*3;
+		margin-bottom: $cd-base-unit*3;
 	}
 
 	.field-name-field-event-date {
@@ -9,12 +9,12 @@
 	}
 
 	.field-label {
-		font-family: $heading-font;
-		color: $heading-text-color;
+		font-family: $cd-heading-font;
+		color: $cd-ocha-blue;
 		display: block;
 		float: none;
 		text-transform: uppercase;
-		margin-bottom: $base-unit;
+		margin-bottom: $cd-base-unit;
 	}
 
 	.field-items {
@@ -31,9 +31,9 @@
 .info-recurring {
   display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px dotted $mid-light-grey;
-  padding-bottom: $base-unit*1.5;
-  margin-bottom: $base-unit;
+  border-bottom: 1px dotted $cd-mid-light-grey;
+  padding-bottom: $cd-base-unit*1.5;
+  margin-bottom: $cd-base-unit;
 
   > div {
     flex: 0 0 100%;
@@ -55,8 +55,8 @@
     display: block;
     position: absolute;
     background-color: #ffffff;
-    border: 1px solid $mid-light-grey;
-    padding: $base-unit*2;
+    border: 1px solid $cd-mid-light-grey;
+    padding: $cd-base-unit*2;
     max-height: 50vh;
     overflow: auto;
   }
@@ -64,17 +64,17 @@
 
 @include min-width(sm) {
   .info-recurring {
-    padding-bottom: $base-unit*1.5;
-    margin-bottom: $base-unit*2;
+    padding-bottom: $cd-base-unit*1.5;
+    margin-bottom: $cd-base-unit*2;
 
     > div {
       flex: 1;
     }
 
     > div + div {
-      border-left: 1px solid $mid-light-grey;
-      margin-left: $base-unit;
-      padding-left: $base-unit;
+      border-left: 1px solid $cd-mid-light-grey;
+      margin-left: $cd-base-unit;
+      padding-left: $cd-base-unit;
     }
   }
 }
@@ -84,7 +84,7 @@
 	table {
 		table-layout: fixed;
 		width: 100%;
-		margin-top: $base-unit;
+		margin-top: $cd-base-unit;
 	}
 
 	tr.even, tr.odd {
@@ -97,15 +97,15 @@
 		width: 100%;
 		display: block;
 		word-wrap: break-word;
-		padding: $base-unit;;
-		background: $light-bg-color;
+		padding: $cd-base-unit;
+		background: $cd-light-grey;
 		position: relative;
-		padding-left: $base-unit*9;
+		padding-left: $cd-base-unit*9;
 
 		a {
 			font-style: italic;
 			text-decoration: none;
-			height: $base-unit*2;
+			height: $cd-base-unit*2;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -120,12 +120,12 @@
 				@include font-size(38);
 				position: absolute;
 				background: white;
-				width: $base-unit*8;
+				width: $cd-base-unit*8;
 				height: 65px;
 				line-height: 65px;
 				text-align: center;
 				margin-top: -36px;
-				margin-left: -$base-unit*9 +1;
+				margin-left: -$cd-base-unit*9 +1;
 				position: absolute;
 			}
 
@@ -152,12 +152,12 @@
 
 		&:first-child {
 			font-weight: 400;
-			color: $heading-text-dark-color;
+			color: $cd-dark-grey;
 			padding-bottom: 0;
 		}
 
 		&:last-child {
-			margin-bottom: $base-unit/2;
+			margin-bottom: $cd-base-unit/2;
 		}
 
 		img {
@@ -188,7 +188,7 @@
     content: ' (Loading, please wait...)';
     font-weight: normal;
     font-style: italic;
-    color: $secondary-heading-text-color;
+    color: $cd-ocha-blue;
   }
 
   .js & {
@@ -203,7 +203,7 @@
 	.node-ev-event {
 
 		.field-items {
-			@include font-size($medium-font-size);
+			@include font-size($cd-font-size-base);
 		}
 
 	}
@@ -219,21 +219,21 @@
 		}
 
 		td {
-			padding: 0 $base-unit*2 $base-unit*2 $base-unit*12;
+			padding: 0 $cd-base-unit*2 $cd-base-unit*2 $cd-base-unit*12;
 
 			a {
 				&:before {
 					@include font-size(48);
-					width: $base-unit*10;
+					width: $cd-base-unit*10;
 					height: 82px;
 					line-height: 82px;
 					margin-top: -44px;
-					margin-left: -$base-unit*12 +1;
+					margin-left: -$cd-base-unit*12 +1;
 				}
 			}
 
 			&:first-child {
-				padding: $base-unit*2 $base-unit*2 $base-unit/2 $base-unit*12;
+				padding: $cd-base-unit*2 $cd-base-unit*2 $cd-base-unit/2 $cd-base-unit*12;
 			}
 
 		}

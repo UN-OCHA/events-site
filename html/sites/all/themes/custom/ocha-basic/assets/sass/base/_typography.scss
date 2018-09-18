@@ -1,61 +1,87 @@
-h1, h2 ,h3 ,h4 ,h5 {
-  line-height: 1.2;
-  font-weight: bold;
-  font-family: $heading-font;
-}
+//——————————————————————————————————————————————————————————————————————————————
+// Events: typography defaults
+//——————————————————————————————————————————————————————————————————————————————
 
-h1 {
-  @include font-size($medium-font-size);
-  color: $heading-text-color;
-  font-weight: normal;
-}
+// scoping as much as possible to the content element since it interferes with
+// the Common Design styles.
+.region-content {
+  h1, h2 ,h3 ,h4 ,h5 {
+    line-height: 1.2;
+    font-weight: bold;
+    font-family: $cd-heading-font;
+  }
 
-h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
-  margin-bottom: $base-unit;
-}
+  h1 {
+    @include font-size($cd-font-size-large);
+    color: $cd-ocha-blue;
+    font-weight: normal;
+  }
 
-h4, h5 {
-	font-weight: 400;
-}
+  h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
+    margin-bottom: $cd-base-unit;
+  }
 
-a {
-  color: $link-text-color;
+  h4, h5 {
+  	font-weight: 400;
+  }
 
-  &:hover, &:focus {
-    color: $active-link-text-color;
-    text-decoration: none;
+  a {
+    color: $cd-dark-blue;
+
+    &:hover, &:focus {
+      color: $cd-ocha-blue;
+      text-decoration: none;
+    }
+  }
+
+  ol, ul {
+    list-style: initial;
+    margin-left: $cd-base-unit*3;
+  }
+
+  ol {
+  	list-style: decimal;
+  }
+
+  dt {
+    font-weight: 400;
+  }
+
+  dd {
+    margin-bottom: $cd-base-unit;
+  }
+
+  @include min-width(sm) {
+    h2 {
+      @include font-size($cd-font-size-medium);
+    }
+
+    h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
+      margin-bottom: $cd-base-unit*2;
+    }
   }
 }
 
-ol, ul {
-  list-style: initial;
-  margin-left: $base-unit*3;
-}
-
-ol {
-	list-style: decimal;
-}
-
 .event-heading, .node-type-page h1 {
-	padding-bottom: $base-unit*1.5;
-	border-bottom: 1px solid $border-color;
-	color: $heading-text-color;
+	padding-bottom: $cd-base-unit*1.5;
+	border-bottom: 1px solid $cd-mid-light-grey;
+	color: $cd-ocha-blue;
 	font-weight: 300;
 }
 
 .event-heading {
-	color: $heading-text-dark-color;
+	color: $cd-dark-grey;
 	font-weight: normal;
 
 	span {
-		color: $heading-text-color;
+		color: $cd-ocha-blue;
 		font-weight: 300;
 	}
 }
 
 .node-type-page .content {
 	h1, h2 ,h3 ,h4 ,h5 {
-		color: $heading-text-color;
+		color: $cd-ocha-blue;
 	}
 
   h2, h3 {
@@ -63,11 +89,11 @@ ol {
   }
 
 	.submitted {
-		margin-bottom: $base-unit;
+		margin-bottom: $cd-base-unit;
 	}
 
 	li {
-		margin-bottom: $base-unit/4;
+		margin-bottom: $cd-base-unit/4;
 	}
 
 	strong {
@@ -75,38 +101,18 @@ ol {
 	}
 }
 
-dt {
-	font-weight: 400;
-}
-
-dd {
-	margin-bottom: $base-unit;
-}
-
 @include min-width(sm) {
-
 	.event-heading, .node-type-page h1 {
-		@include font-size($large-font-size);
+		@include font-size($cd-font-size-xlarge);
 	}
 
 	.node-type-page .content {
-
 		p, ul, ol, dl {
-	  	@include font-size($medium-font-size);
+	  	@include font-size($cd-font-size-large);
 	  }
 
 	  li {
-			margin-bottom: $base-unit/2;
+			margin-bottom: $cd-base-unit/2;
 		}
-
 	}
-
-	h2 {
-    @include font-size($medium-font-size);
-  }
-
-  h1, h2 ,h3 ,h4 ,h5, p, ol, ul, dl {
-    margin-bottom: $base-unit*2;
-  }
-
 }

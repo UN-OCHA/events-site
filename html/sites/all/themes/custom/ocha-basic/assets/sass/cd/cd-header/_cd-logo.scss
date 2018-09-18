@@ -1,0 +1,24 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: Logo
+//
+// Replace images with your site logo.
+//——————————————————————————————————————————————————————————————————————————————
+
+// Wrap the logo in a h1 if it's the main heading for the page (e.g. on homepage).
+.cd-site-header h1 {
+  margin: 0;
+}
+
+.cd-site-logo {
+  display: block;
+  float: left;
+  width: 174px;
+  height: 48.5px;
+  margin-top: 6px;
+  background: url('../img/logos/humanitarian-events-logo.svg') center no-repeat;
+  background-size: contain;
+
+  .cssgrid.flexbox & {
+    float: none;
+  }
+}

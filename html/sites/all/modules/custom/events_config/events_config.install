@@ -107,3 +107,16 @@ function events_config_update_7011() {
 function events_config_update_7012() {
   module_enable(array('modernizr'));
 }
+
+/**
+ * Disable fullcalender_api.
+ */
+function events_config_update_7013() {
+  module_disable(array(
+    'fullcalender_api',
+  ));
+
+  drupal_uninstall_modules(array(
+    'fullcalender_api',
+  ));
+}

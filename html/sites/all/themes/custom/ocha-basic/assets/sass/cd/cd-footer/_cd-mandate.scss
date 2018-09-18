@@ -1,0 +1,64 @@
+//——————————————————————————————————————————————————————————————————————————————
+// Common Design: OCHA mandate
+//——————————————————————————————————————————————————————————————————————————————
+
+.cd-mandate {
+  width: 100%;
+}
+
+.cd-mandate__logo {
+  display: block;
+  width: 149px;
+  height: 37px;
+  margin: 0 auto;
+  background: url('../img/logos/ocha-lockup-white.svg') 0 center no-repeat;
+
+  .no-svg & {
+    background: url('../img/logos/ocha-lockup-white@149x37.png') 0 center no-repeat;
+  }
+}
+
+.cd-mandate__heading,
+.cd-mandate__logo,
+.cd-mandate__text {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.cd-mandate__heading {
+  padding: 0 $cd-container-padding;
+}
+
+.cd-mandate__text {
+  padding: 0 $cd-container-padding;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+@include desktop {
+  .cd-mandate {
+    max-width: 780px;
+    flex: 1 1 50%;
+    margin: 0;
+  }
+
+  .cd-mandate__logo {
+    box-sizing: content-box;
+    float: left;
+    margin: -4px $cd-container-padding 0 auto;
+    padding-right: $cd-container-padding;
+    border-right: 1px solid $cd-border-color;
+  }
+
+  .cd-mandate__heading,
+  .cd-mandate__text {
+    text-align: left;
+    padding: 0;
+  }
+
+  .cd-mandate__text {
+    padding-right: $cd-container-padding-xlarge;
+    margin: 0;
+    max-width: 100%;
+  }
+}
