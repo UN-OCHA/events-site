@@ -2174,10 +2174,12 @@ function theme_events_event_fullcalendar_calendar($vars) {
   // Add FullCalendar scripts.
   drupal_add_js('/sites/all/libraries/moment/moment.js');
   drupal_add_js('/sites/all/libraries/fullcalendar/fullcalendar.js');
-  drupal_add_js(array('fullcalendar_api' => array(
-    'calendarId' => $calendar_id,
-    'calendarSettings' => $settings,
-  )), 'setting');
+  drupal_add_js(array(
+    'fullcalendar_api' => array(
+      'calendarId' => $calendar_id,
+      'calendarSettings' => $settings,
+    ),
+  ), 'setting');
 
   return array(
     '#markup' => '<div id="' . check_plain($calendar_id) . '"></div>',
