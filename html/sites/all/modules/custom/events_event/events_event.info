@@ -19,7 +19,6 @@ dependencies[] = field_extrawidgets
 dependencies[] = file
 dependencies[] = filefield_paths
 dependencies[] = filter
-dependencies[] = fullcalendar_api
 dependencies[] = jquery_update
 dependencies[] = markdown
 dependencies[] = menu

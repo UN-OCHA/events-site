@@ -717,7 +717,7 @@ function events_config_libraries_info_alter(&$libraries) {
 }
 
 /**
- * Implements hook_libraries_info_alter().
+ * Log messages.
  */
 function _events_config_log($message, $type = 'notice') {
   if (function_exists('drush_log')) {
