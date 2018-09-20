@@ -23,7 +23,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
      * @link https://developers.facebook.com/docs/facebook-login/permissions
      * @var array $scope
      */
-    public $scope = ['email', 'user_about_me', 'user_birthday', 'user_hometown', 'user_location', 'user_website', 'publish_actions', 'read_custom_friendlists'];
+    public $scope = ['email', 'public_profile'];
 
     /**
      * Provider API client
@@ -52,6 +52,9 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
         }
 
         $trustForwarded = isset($this->config['trustForwarded']) ? (bool)$this->config['trustForwarded'] : false;
+
+        // Include 3rd-party SDK.
+        $this->autoLoaderInit();
 
         $this->api = new FacebookSDK([
             'app_id' => $this->config["keys"]["id"],
@@ -82,6 +85,9 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
     function loginFinish() {
 
         $helper = $this->api->getRedirectLoginHelper();
+        if (isset($_GET['state'])) {
+          $helper->getPersistentDataHandler()->set('state', $_GET['state']);
+        }
         try {
             $accessToken = $helper->getAccessToken($this->params['login_done']);
         } catch (Facebook\Exceptions\FacebookResponseException $e) {
@@ -123,7 +129,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
     function logout() {
         parent::logout();
     }
-    
+
     /**
     * Update user status
     *
@@ -146,7 +152,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
 
           // if post on page, get access_token page
       } else {
-          
+
           foreach ($this->getUserPages(true) as $p) {
               if (isset($p['id']) && intval($p['id']) == intval($pageid)) {
                   $access_token = $p['access_token'];
@@ -172,11 +178,13 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
     * {@inheridoc}
     */
    function getUserPages($writableonly = false) {
-       if (( isset($this->config['scope']) && strpos($this->config['scope'], 'manage_pages') === false ) || (!isset($this->config['scope']) && strpos($this->scope, 'manage_pages') === false ))
-           throw new Exception("User status requires manage_page permission!");
+       if (!in_array('manage_pages', $this->scope)) {
+           throw new Exception("Get user pages requires manage_page permission!");
+       }
 
        try {
            $pages = $this->api->get("/me/accounts", $this->token('access_token'));
+           $pages = $pages->getDecodedBody();
        } catch (FacebookApiException $e) {
            throw new Exception("Cannot retrieve user pages! {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
        }
@@ -230,7 +238,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
         $this->user->profile->displayName = (array_key_exists('name', $data)) ? $data['name'] : "";
         $this->user->profile->firstName = (array_key_exists('first_name', $data)) ? $data['first_name'] : "";
         $this->user->profile->lastName = (array_key_exists('last_name', $data)) ? $data['last_name'] : "";
-        $this->user->profile->photoURL = !empty($this->user->profile->identifier) ? "https://graph.facebook.com/" . $this->user->profile->identifier . "/picture?width=150&height=150" : '';
+        $this->user->profile->photoURL = $this->getUserPhoto($this->user->profile->identifier);
         $this->user->profile->profileURL = (array_key_exists('link', $data)) ? $data['link'] : "";
         $this->user->profile->webSiteURL = (array_key_exists('website', $data)) ? $data['website'] : "";
         $this->user->profile->gender = (array_key_exists('gender', $data)) ? $data['gender'] : "";
@@ -271,6 +279,10 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
      * {@inheritdoc}
      */
     function getUserContacts() {
+        if (!in_array('user_friends', $this->scope)) {
+           throw new Exception("Get user contacts requires user_friends permission!");
+        }
+
         $apiCall = '?fields=link,name';
         $returnedContacts = [];
         $pagedList = true;
@@ -297,14 +309,13 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
         }
 
         $contacts = [];
-
         foreach ($returnedContacts as $item) {
 
             $uc = new Hybrid_User_Contact();
             $uc->identifier = (array_key_exists("id", $item)) ? $item["id"] : "";
             $uc->displayName = (array_key_exists("name", $item)) ? $item["name"] : "";
             $uc->profileURL = (array_key_exists("link", $item)) ? $item["link"] : "https://www.facebook.com/profile.php?id=" . $uc->identifier;
-            $uc->photoURL = "https://graph.facebook.com/" . $uc->identifier . "/picture?width=150&height=150";
+            $uc->photoURL = $this->getUserPhoto($uc->identifier);
 
             $contacts[] = $uc;
         }
@@ -327,6 +338,7 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
             } else {
                 $response = $this->api->get('/me/home', $this->token('access_token'));
             }
+            $response = $response->getDecodedBody();
         } catch (FacebookSDKException $e) {
             throw new Hybrid_Exception("User activity stream request failed! {$this->providerId} returned an error: {$e->getMessage()}", 0, $e);
         }
@@ -336,7 +348,6 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
         }
 
         $activities = [];
-
         foreach ($response['data'] as $item) {
 
             $ua = new Hybrid_User_Activity();
@@ -364,13 +375,28 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model {
                 $ua->user->identifier = (array_key_exists("id", $item["from"])) ? $item["from"]["id"] : "";
                 $ua->user->displayName = (array_key_exists("name", $item["from"])) ? $item["from"]["name"] : "";
                 $ua->user->profileURL = "https://www.facebook.com/profile.php?id=" . $ua->user->identifier;
-                $ua->user->photoURL = "https://graph.facebook.com/" . $ua->user->identifier . "/picture?type=square";
+                $ua->user->photoURL = $this->getUserPhoto($ua->user->identifier);
 
                 $activities[] = $ua;
             }
         }
 
         return $activities;
+    }
+
+    /**
+     * Returns a photo URL for give user.
+     *
+     * @param string $id
+     *   The User ID.
+     *
+     * @return string
+     *   A photo URL.
+     */
+    function getUserPhoto($id) {
+        $photo_size = isset($this->config['photo_size']) ? $this->config['photo_size'] : 150;
+
+        return "https://graph.facebook.com/{$id}/picture?width={$photo_size}&height={$photo_size}";
     }
 
 }

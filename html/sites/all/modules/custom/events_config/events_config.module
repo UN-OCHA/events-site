@@ -774,3 +774,17 @@ function events_config_language_switch_links_alter(array &$links, $type, $path) 
     unset($links[$key]['attributes']['xml:lang']);
   }
 }
+
+/**
+ * Implements hook_hybridauth_destination_options_alter().
+ */
+function events_config_hybridauth_destination_options_alter(&$destination_options) {
+  $destination_options['path'] = 'select-location';
+}
+
+/**
+ * Implements hook_hybridauth_destination_error_options_alter().
+ */
+function events_config_hybridauth_destination_error_options_alter(&$destination_options) {
+  $destination_options['path'] = 'select-location';
+}
