@@ -173,5 +173,5 @@
 //——————————————————————————————————————————————————————————————————————————————
 @mixin font-size($size) {
   font-size: $size + px;
-  font-size: #{$size / $cd-font-size-base}rem;
+  // font-size: #{$size / $cd-font-size-base}rem;
 }
