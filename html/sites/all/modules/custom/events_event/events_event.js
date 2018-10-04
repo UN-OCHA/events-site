@@ -100,7 +100,7 @@ var evExports = function ($) {
     doc.addImage(logoData, 'JPEG', doc.internal.pageSize.width - 158, docMargin, 108, 30);
 
     // Heading.
-    var headingText = $('.fc-toolbar h2').text();
+    var headingText = $('.fc-toolbar .fc-center h2').text();
     var calendarHeading = Drupal.t('CALENDAR', {}, {context: 'events'}) + ': ' + headingText.toUpperCase();
     doc.setFontSize(18);
     doc.setFontType('bold');
