@@ -523,7 +523,7 @@ var evCalendar = function ($) {
   function _addEventDetails(event, element, view) {
     // Add location.
     if (event.location) {
-      if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
+      if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past' || view.name === 'listRange') {
         if (event.locationDetails) {
           element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<div class="fc-location-details">' + event.locationDetails + '</div>');
         }
