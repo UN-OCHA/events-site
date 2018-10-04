@@ -100,7 +100,7 @@ var evExports = function ($) {
     doc.addImage(logoData, 'JPEG', doc.internal.pageSize.width - 158, docMargin, 108, 30);
 
     // Heading.
-    var headingText = $('.fc-toolbar h2').text();
+    var headingText = $('.fc-toolbar .fc-center h2').text();
     var calendarHeading = Drupal.t('CALENDAR', {}, {context: 'events'}) + ': ' + headingText.toUpperCase();
     doc.setFontSize(18);
     doc.setFontType('bold');
@@ -523,7 +523,7 @@ var evCalendar = function ($) {
   function _addEventDetails(event, element, view) {
     // Add location.
     if (event.location) {
-      if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past') {
+      if (view.name === 'listYear' || view.name === 'upcoming' || view.name === 'past' || view.name === 'listRange') {
         if (event.locationDetails) {
           element.find('.fc-list-item-title').html(element.find('.fc-list-item-title').html() + '<div class="fc-location-details">' + event.locationDetails + '</div>');
         }
