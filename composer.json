@@ -21,7 +21,7 @@
         "drupal/date_ical": "^3.9",
         "drupal/devel": "^1.5",
         "drupal/dragdropfile": "^1.7",
-        "drupal/drupal": "^7.61",
+        "drupal/drupal": "^7.63",
         "drupal/ds": "^2.14",
         "drupal/entity_translation": "1.0-beta7",
         "drupal/environment_indicator": "^2.9",
