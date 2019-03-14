@@ -51,7 +51,7 @@
         "drupal/token": "^1.7",
         "drupal/transliteration": "^3.2",
         "drupal/variable": "^2.5",
-        "drupal/views": "^3.18"
+        "drupal/views": "^3.21"
     },
     "require-dev": {
         "drush/drush": "~8.0",
